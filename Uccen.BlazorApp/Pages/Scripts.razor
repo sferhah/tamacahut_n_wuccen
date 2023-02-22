@@ -1,0 +1,34 @@
+﻿@page "/scripts"
+@using Uccen.Transliteration;
+
+<PageTitle>Scripts</PageTitle>
+
+@*<h1>Weather forecast</h1>
+<p>This component demonstrates fetching data from the server.</p>*@
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var column in translations.First())
+            {
+                <th><div class="rotated">@column</div></th>
+            }                
+        </tr>
+    </thead>
+    <tbody>
+          
+        @foreach (var row in translations.Skip(1))
+        {
+            <tr>
+                @foreach (var cell in row)
+                {
+                    <td>@cell</td>
+                }                    
+            </tr>
+        }
+            
+    </tbody>
+</table>
+
+@code {
+    List<List<string>> translations = TransliterationService.GetTransliterations();    
+}

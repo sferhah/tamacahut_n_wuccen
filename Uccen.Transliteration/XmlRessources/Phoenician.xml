@@ -1,0 +1,54 @@
+<Mapping scriptType="Abjad" direction="rtl">
+
+	<Letter key="a" value="𐤀" />
+	<Letter key="â" value="𐤀" />
+	<Letter key="b" value="𐤁" />
+	<Letter key="g" value="𐤂" />
+
+	<Letter key="ǧ" value="𐤂׳" />
+
+	<Letter key="d" value="𐤃" />
+
+	<Letter key="ḏ" value="𐤃׳" />
+
+	<Letter key="h" value="𐤄" />
+	<Letter key="w" value="𐤅" />
+	<Letter key="z" value="𐤆" />
+	<Letter key="ḥ" value="𐤇" />
+	<Letter key="ṭ" value="𐤈" />
+	<Letter key="y" value="𐤉" />
+	<Letter key="k" value="𐤊" />
+	<Letter key="l" value="𐤋" />
+	<Letter key="m" value="𐤌" />
+	<Letter key="n" value="𐤍" />
+	<Letter key="ɛ" value="𐤏" />
+	<Letter key="p" value="𐤐" />
+	<Letter key="s" value="𐤎" />
+	<Letter key="c" value="𐤔" />
+	<Letter key="q" value="𐤒" />
+	<Letter key="r" value="𐤓" />
+	<Letter key="t" value="𐤕" />
+
+	<Letter key="ṯ" value="𐤕׳" />
+
+	<Letter key="ṣ" value="𐤑" />
+
+	<Letter key="f" value="𐤐׳" />
+
+	<Letter key="o" value="𐤅׳" />
+
+	<Letter key="v" value="𐤁׳" />
+	<Letter key="x" value="𐤇׳" />
+	<Letter key="ɣ" value="𐤏׳" />
+
+	<Letter key="ḍ" value="𐤑׳" />
+
+	<Letter key="ẓ" value="𐤈׳" />
+	<Letter key="ṛ" value="𐤓" />
+	<Letter key="j" value="𐤆׳" />
+	<Letter key="č" value="𐤔׳" />
+
+	<Letter key="u" value="𐤀𐤅" />
+	<Letter key="i" value="𐤀𐤉" />
+
+</Mapping>

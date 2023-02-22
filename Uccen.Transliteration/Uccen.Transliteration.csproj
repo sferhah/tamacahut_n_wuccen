@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>		
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="XmlRessources\Arabic.xml" />
+    <None Remove="XmlRessources\Arabic2.xml" />
+    <None Remove="XmlRessources\Aramaic.xml" />
+    <None Remove="XmlRessources\Cyrillic.xml" />
+    <None Remove="XmlRessources\Greek.xml" />
+    <None Remove="XmlRessources\Hebrew.xml" />
+    <None Remove="XmlRessources\Musnad.xml" />
+    <None Remove="XmlRessources\Phoenician.xml" />
+    <None Remove="XmlRessources\Syriac.xml" />
+    <None Remove="XmlRessources\Tifinagh.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="XmlRessources\Arabic2.xml" />
+    <EmbeddedResource Include="XmlRessources\Arabic.xml" />
+    <EmbeddedResource Include="XmlRessources\Aramaic.xml" />
+    <EmbeddedResource Include="XmlRessources\Greek.xml" />
+    <EmbeddedResource Include="XmlRessources\Hebrew.xml" />
+    <EmbeddedResource Include="XmlRessources\Musnad.xml" />
+    <EmbeddedResource Include="XmlRessources\Phoenician.xml" />
+    <EmbeddedResource Include="XmlRessources\Syriac.xml" />
+    <EmbeddedResource Include="XmlRessources\Cyrillic.xml" />
+    <EmbeddedResource Include="XmlRessources\Tifinagh.xml" />
+  </ItemGroup>
+
+</Project>

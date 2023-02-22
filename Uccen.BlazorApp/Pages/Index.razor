@@ -1,0 +1,343 @@
+﻿@page "/{Page:int}"
+@page "/"
+@using Uccen.Transliteration;
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<PageTitle>Tamacahut n wuccen</PageTitle>
+
+@*<h1>Weather forecast</h1>
+<p>This component demonstrates fetching data from the server.</p>*@
+
+@if (tale == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h3>
+        <center>
+            <button @onclick="Previous" disabled=@(Page <= 0)>
+                <span class="oi oi-caret-left" />
+            </button>
+            <text style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
+                unselectable="on"
+                onselectstart="return false;"
+                onmousedown="return false;">
+                @Page
+            </text>
+            <button @onclick="Next" disabled=@(Page >= PageCount - 1)>
+                <span class="oi oi-caret-right" />
+            </button>
+        </center>
+    </h3>
+
+    <table class="table">
+        <thead>
+            
+              <tr>
+                <td width="50%">
+                    <select value="@SelectedString" @onchange="OnScriptChanged">
+                        @foreach (var script in scripts)
+                        {
+                            <option value=@script.Name>@script.DisplayName</option>
+                        }
+                    </select>
+                </td>
+                <td width="50%">
+                    <select>
+                        @foreach (var translation in translations)
+                        {
+                            <option value=@translation>@translation</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th width="50%">
+                    <center>
+                        <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                            @tale.Kabyle.Title
+                        </font>
+                    </center>                    
+                </th>
+                <th width="50%"><center>@tale.French.Title</center></th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @if (tale.Kabyle.Paragraphs.Count == tale.French.Paragraphs.Count)
+            {
+                @for (int i = 0; i < tale.Kabyle.Paragraphs.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                                <p>
+                                    @foreach (var line in tale.Kabyle.Paragraphs[i].Split('\n'))
+                                    {
+                                        @line
+                                        <br />                                        
+                                    }
+                                </p>
+                            </font>
+                        </td>
+                        <td>
+                            <p>
+                                @foreach (var line in tale.French.Paragraphs[i].Split('\n'))
+                                {
+                                    @line
+                                    <br />
+                                }
+                            </p>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                            @foreach (var paragraph in tale.Kabyle.Paragraphs)
+                            {
+                                <p> 
+                                    @foreach (var line in paragraph.Split('\n'))
+                                    {
+                                        @line
+                                        <br />
+                                    }                                    
+                                </p>
+                            }
+                        </font>
+                    </td>
+                    <td>
+                        @foreach (var paragraph in tale.French.Paragraphs)
+                        {
+                            <p>
+                                @foreach (var line in paragraph.Split('\n'))
+                                {
+                                    @line
+                                    <br />
+                                }
+                            </p>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int Page { get; set; }
+
+    public int PageCount { get; set; }
+
+    private KabyleTale? tale;
+    private bool rtl;
+    int increase_size = 0;
+    string face = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";  
+
+
+    List<string> translations = new List<string>() { "Français", "English" };
+
+    List<Script> scripts = new List<Script>()
+    {
+        new Script
+        {
+            Name = "Kabyle",
+            DisplayName = "Taqbaylit",
+            IsRtl = false,
+        },
+        new Script
+        {
+            Name = "Tifinagh",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Tifinagh"),
+            IsRtl = false,
+            FontFace = "Calibri",
+        },
+        new Script
+        {
+            Name = "Arabic",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Arabic"),
+            IsRtl = true,
+            FontFace = "Calibri",
+            IncreaseSize = 2,
+        },
+        new Script
+        {
+            Name = "Arabic2",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit2", "Arabic2"),
+            IsRtl = true,
+            FontFace = "Calibri",
+            IncreaseSize = 2,
+        },
+        new Script
+        {
+            Name = "Hebrew",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Hebrew"),
+            IsRtl = true,
+            FontFace = "Calibri",
+            IncreaseSize = 2,
+        },
+        new Script
+        {
+            Name = "Syriac",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Syriac"),
+            IsRtl = true,
+            FontFace = "Calibri",
+            IncreaseSize = 2,
+        },
+        new Script
+        {
+            Name = "Aramaic",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Aramaic"),
+            IsRtl = true,
+            FontFace = "Calibri",
+        },
+        new Script
+        {
+            Name = "Phoenician",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Phoenician"),
+            IsRtl = true,
+            FontFace = "Calibri",
+        },
+        new Script
+        {
+            Name = "Musnad",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Musnad"),
+            IsRtl = true,
+            FontFace = "Calibri",
+        },
+        new Script
+        {
+            Name = "Cyrillic",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Cyrillic"),
+            IsRtl = false,            
+        },
+        new Script
+        {
+            Name = "Greek",
+            DisplayName = TransliterationService.Transliterate("Taqbaylit", "Greek"),
+            IsRtl = false,
+        },
+    };
+
+    string SelectedString = "Kabyle";
+
+    public class Script
+    {
+        required public string Name { get; init; }
+        required public string DisplayName { get; init; }
+        required public bool IsRtl { get; init; }
+        public string FontFace { get; set; } = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
+        public int IncreaseSize { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        SelectedString = await localStorage.GetItemAsync<string>("SelectedScript") ?? "Kabyle";
+        Page = await localStorage.GetItemAsync<int?>("SelectedIndex") ?? 0;
+        
+        await OnScriptChanged(new ChangeEventArgs
+        {
+            Value = SelectedString,
+        });
+    }
+
+    async Task Previous()
+    {
+        Page--;        
+
+        await OnScriptChanged(new ChangeEventArgs
+        {
+            Value = SelectedString,
+        });
+    }
+
+    async Task Next()
+    {
+        Page++;        
+
+        await OnScriptChanged(new ChangeEventArgs
+        {
+            Value = SelectedString,
+        });
+    }
+
+    protected async override void OnParametersSet()
+    {
+        await OnScriptChanged(new ChangeEventArgs
+        {
+            Value = SelectedString,
+        });
+    }
+
+    async Task OnScriptChanged(ChangeEventArgs e)
+    {
+        var selectedScript = scripts.FirstOrDefault(x => x.Name == e.Value?.ToString());
+
+        if (selectedScript == null)
+        {
+            return;
+        }
+
+        SelectedString = selectedScript.Name;
+
+        await localStorage.SetItemAsync("SelectedScript", SelectedString);
+        await localStorage.SetItemAsync("SelectedIndex", Page);
+
+
+        var _tale = (await GetTales()).Skip(Page).FirstOrDefault();
+
+        if (_tale == null)
+        {
+            return;
+        }
+
+        if (selectedScript.Name != "Kabyle")
+        {
+            _tale.Kabyle.Title = TransliterationService.Transliterate(_tale.Kabyle.Title, selectedScript.Name);
+
+            _tale.Kabyle.Paragraphs = _tale.Kabyle.Paragraphs.Select(x => TransliterationService.Transliterate(x, selectedScript.Name)).ToList();
+        }
+
+       // increase_size = selectedScript.IncreaseSize;
+        rtl = selectedScript.IsRtl;
+        face = selectedScript.FontFace;
+        tale = _tale;        
+    }
+
+
+    KabyleTale[]? tales;
+    async Task<KabyleTale[]> GetTales()
+    {
+        #if DEBUG
+        var result = (await Http.GetFromJsonAsync<KabyleTale[]>($"sample-data/weather.json?{DateTime.UtcNow.ToString()}"))!;
+        #else
+        var result = tales ?? (await Http.GetFromJsonAsync<KabyleTale[]>($"sample-data/weather.json"))!;
+        #endif
+
+        PageCount = result.Count();
+
+        return result;
+    }
+
+    public class KabyleTale
+    {
+        public KabyleTaleContent Kabyle { get; set; } = new KabyleTaleContent();
+        public KabyleTaleContent French { get; set; } = new KabyleTaleContent();
+    }
+
+    public class KabyleTaleContent
+    {
+        public string Title { get; set; } = null!;
+        public List<string> Paragraphs { get; set; } = new List<string>();
+    }
+}

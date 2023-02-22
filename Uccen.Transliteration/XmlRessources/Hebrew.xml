@@ -1,0 +1,40 @@
+<Mapping scriptType="Abjad" direction="rtl" geminizer="0x05BC" nullVowel="0x05B0">
+	<Letter key="a" value="אַ" />
+	<Letter key="â" value="א"/>
+	<Letter key="b" value="ב" />
+	<Letter key="g" value="ג" />
+	<Letter key="ǧ" value="ג׳" />
+	<Letter key="d" value="ד" />
+	<Letter key="ḏ" value="ד׳" />
+	<Letter key="h" value="ה" />
+	<Letter key="w" value="ו" />
+	<Letter key="z" value="ז" />
+	<Letter key="ḥ" value="ח" />
+	<Letter key="ṭ" value="ט" />
+	<Letter key="y" value="י" />
+	<Letter key="k" value="כ" />
+	<Letter key="l" value="ל" />
+	<Letter key="m" value="מ" />
+	<Letter key="n" value="נ" />
+	<Letter key="ɛ" value="ע" />
+	<Letter key="p" value="פ" />
+	<Letter key="s" value="ס" />
+	<Letter key="c" value="ש" />
+	<Letter key="q" value="ק" />
+	<Letter key="r" value="ר" />
+	<Letter key="t" value="ת" />
+	<Letter key="ṯ" value="ת׳" />
+	<Letter key="ṣ" value="צ" />
+	<Letter key="f" value="פ׳" />
+	<Letter key="o" value="וֹ" />
+	<Letter key="v" value="ב׳" />
+	<Letter key="x" value="ה׳" />
+	<Letter key="ɣ" value="ע׳" />
+	<Letter key="ḍ" value="צ׳" />
+	<Letter key="ẓ" value="ט׳" />
+	<Letter key="ṛ" value="ר׳" />
+	<Letter key="j" value="ז׳" />
+	<Letter key="č" value="שׁ׳" />
+	<Letter key="u" value="אֻ"/>
+	<Letter key="i" value="אִ"/>
+</Mapping>
