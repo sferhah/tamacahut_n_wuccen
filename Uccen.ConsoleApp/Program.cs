@@ -213,7 +213,7 @@ static string GetPath()
         path = Directory.GetParent(path).FullName;
     }
 
-    return Path.Combine(path, @"Uccen.BlazorApp\wwwroot\sample-data\weather.json");
+    return Path.Combine(path, @"Uccen.BlazorApp\wwwroot\data\tamacahut_n_wuccen.json");
 }
 
 public class KabyleTale
