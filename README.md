@@ -1,6 +1,6 @@
 # Tamacahut n wuccen
 
-Tamacahut n wuccen in a PWA format (offline usage: Chrome/Edge: click on 'install', Android/iOs: add to homepage).
+**Tamacahut n wuccen** in a PWA format (offline usage: Chrome/Edge: click on 'install', Android/iOs: add to homepage).
 
 * https://tamacahut-n-wuccen.netlify.app
 
