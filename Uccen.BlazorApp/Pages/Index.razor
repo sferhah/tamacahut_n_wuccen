@@ -321,7 +321,7 @@ else
         #if DEBUG
         var result = (await Http.GetFromJsonAsync<KabyleTale[]>($"data/tamacahut_n_wuccen.json?{DateTime.UtcNow.ToString()}"))!;
         #else
-        var result = tales ?? (await Http.GetFromJsonAsync<KabyleTale[]>($"data/tamacahut_n_wuccen.json"))!;
+        var result = tales ??= (await Http.GetFromJsonAsync<KabyleTale[]>($"data/tamacahut_n_wuccen.json"))!;
         #endif
 
         PageCount = result.Count();
