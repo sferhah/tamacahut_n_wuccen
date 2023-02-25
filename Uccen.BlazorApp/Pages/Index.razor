@@ -37,7 +37,7 @@ else
             
               <tr>
                 <td width="50%">
-                    <select value="@SelectedString" @onchange="OnScriptChanged">
+                    <select value="@SelectedScript" @onchange="OnScriptChanged">
                         @foreach (var script in scripts)
                         {
                             <option value=@script.Name>@script.DisplayName</option>
@@ -45,7 +45,7 @@ else
                     </select>
                 </td>
                 <td width="50%">
-                    <select>
+                    <select value="@SelectedTranslation" @onchange="OnTranslationChanged">
                         @foreach (var translation in translations)
                         {
                             <option value=@translation>@translation</option>
@@ -146,6 +146,7 @@ else
 
 
     List<string> translations = new List<string>() { "Français", "English" };
+    string SelectedTranslation = "Français";
 
     List<Script> scripts = new List<Script>()
     {
@@ -229,7 +230,7 @@ else
         },
     };
 
-    string SelectedString = "Kabyle";
+    string SelectedScript = "Kabyle";
 
     public class Script
     {
@@ -242,12 +243,12 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        SelectedString = await localStorage.GetItemAsync<string>("SelectedScript") ?? "Kabyle";
+        SelectedScript = await localStorage.GetItemAsync<string>("SelectedScript") ?? "Kabyle";
         Page = await localStorage.GetItemAsync<int?>("SelectedIndex") ?? 0;
-        
+
         await OnScriptChanged(new ChangeEventArgs
         {
-            Value = SelectedString,
+            Value = SelectedScript,
         });
     }
 
@@ -257,7 +258,7 @@ else
 
         await OnScriptChanged(new ChangeEventArgs
         {
-            Value = SelectedString,
+            Value = SelectedScript,
         });
     }
 
@@ -267,7 +268,7 @@ else
 
         await OnScriptChanged(new ChangeEventArgs
         {
-            Value = SelectedString,
+            Value = SelectedScript,
         });
     }
 
@@ -275,8 +276,13 @@ else
     {
         await OnScriptChanged(new ChangeEventArgs
         {
-            Value = SelectedString,
+            Value = SelectedScript,
         });
+    }
+
+    async Task OnTranslationChanged(ChangeEventArgs e)
+    {
+        //TODO
     }
 
     async Task OnScriptChanged(ChangeEventArgs e)
@@ -288,9 +294,9 @@ else
             return;
         }
 
-        SelectedString = selectedScript.Name;
+        SelectedScript = selectedScript.Name;
 
-        await localStorage.SetItemAsync("SelectedScript", SelectedString);
+        await localStorage.SetItemAsync("SelectedScript", SelectedScript);
         await localStorage.SetItemAsync("SelectedIndex", Page);
 
 
@@ -304,7 +310,6 @@ else
         if (selectedScript.Name != "Kabyle")
         {
             _tale.Kabyle.Title = TransliterationService.Transliterate(_tale.Kabyle.Title, selectedScript.Name);
-
             _tale.Kabyle.Paragraphs = _tale.Kabyle.Paragraphs.Select(x => TransliterationService.Transliterate(x, selectedScript.Name)).ToList();
         }
 
