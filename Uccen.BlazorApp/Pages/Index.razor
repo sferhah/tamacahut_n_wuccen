@@ -43,6 +43,15 @@ else
                             <option value=@script.Name>@script.DisplayName</option>
                         }
                     </select>
+
+                    <span style="float: right">
+                        <button @onclick="IncreaseKabyleTextSizeIncrement" disabled=@(kabyleTextSizeIncrement <= 0)>
+                            <span class="oi oi-minus" />
+                        </button>
+                        <button @onclick="DecreaseKabyleTextSizeIncrement" disabled=@(kabyleTextSizeIncrement >= 4)>
+                            <span class="oi oi-plus" />
+                        </button>
+                    </span>
                 </td>
                 <td width="50%">
                     <select value="@SelectedTranslation" @onchange="OnTranslationChanged">
@@ -51,18 +60,33 @@ else
                             <option value=@translation>@translation</option>
                         }
                     </select>
+                    <span style="float: right">
+                        <button @onclick="IncreaseTranslationTextSizeIncrement" disabled=@(translationTextSizeIncrement <= 0)>
+                            <span class="oi oi-minus" />
+                        </button>
+                        <button @onclick="DecreaseTranslationTextSizeIncrement" disabled=@(translationTextSizeIncrement >= 4)>
+                            <span class="oi oi-plus" />
+                        </button>
+                    </span>
+
                 </td>
             </tr>
 
             <tr>
                 <th width="50%">
                     <center>
-                        <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                        <font face="@face" size="+@kabyleTextSizeIncrement" dir="@(rtl? "rtl" : "ltr")">
                             @tale.Kabyle.Title
                         </font>
                     </center>
                 </th>
-                <th width="50%"><center>@tale.French.Title</center></th>
+                <th width="50%">
+                    <center>
+                        <font size="+@translationTextSizeIncrement">
+                            @tale.French.Title
+                        </font>
+                    </center>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -74,7 +98,7 @@ else
                 {
                     <tr>
                         <td>
-                            <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                            <font face="@face" size="+@kabyleTextSizeIncrement" dir="@(rtl? "rtl" : "ltr")">
                                 <p>
                                     @foreach (var line in tale.Kabyle.Paragraphs[i].Split('\n'))
                                     {
@@ -85,13 +109,15 @@ else
                             </font>
                         </td>
                         <td>
-                            <p>
-                                @foreach (var line in tale.French.Paragraphs[i].Split('\n'))
-                                {
-                                    @line
-                                    <br />
-                                }
-                            </p>
+                            <font size="+@translationTextSizeIncrement">
+                                <p>
+                                    @foreach (var line in tale.French.Paragraphs[i].Split('\n'))
+                                    {
+                                        @line
+                                        <br />
+                                    }
+                                </p>
+                            </font>
                         </td>
                     </tr>
                 }
@@ -100,7 +126,7 @@ else
             {
                 <tr>
                     <td>
-                        <font face="@face" size="+@increase_size" dir="@(rtl? "rtl" : "ltr")">
+                        <font face="@face" size="+@kabyleTextSizeIncrement" dir="@(rtl? "rtl" : "ltr")">
                             @foreach (var paragraph in tale.Kabyle.Paragraphs)
                             {
                                 <p>
@@ -114,16 +140,18 @@ else
                         </font>
                     </td>
                     <td>
-                        @foreach (var paragraph in tale.French.Paragraphs)
-                        {
-                            <p>
-                                @foreach (var line in paragraph.Split('\n'))
-                                {
-                                    @line
-                                    <br />
-                                }
-                            </p>
-                        }
+                        <font size="+@translationTextSizeIncrement">
+                            @foreach (var paragraph in tale.French.Paragraphs)
+                            {
+                                <p>
+                                    @foreach (var line in paragraph.Split('\n'))
+                                    {
+                                        @line
+                                        <br />
+                                    }
+                                </p>
+                            }
+                        </font>
                     </td>
                 </tr>
             }
@@ -141,7 +169,8 @@ else
 
     private KabyleTale? tale;
     private bool rtl;
-    int increase_size = 0;
+    int kabyleTextSizeIncrement = 0;
+    int translationTextSizeIncrement = 0;
     string face = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
 
 
@@ -169,7 +198,6 @@ else
             DisplayName = TransliterationService.Transliterate("Taqbaylit", "Arabic"),
             IsRtl = true,
             FontFace = "Calibri",
-            IncreaseSize = 2,
         },
         new Script
         {
@@ -177,7 +205,6 @@ else
             DisplayName = TransliterationService.Transliterate("Taqbaylit2", "Arabic2"),
             IsRtl = true,
             FontFace = "Calibri",
-            IncreaseSize = 2,
         },
         new Script
         {
@@ -185,7 +212,6 @@ else
             DisplayName = TransliterationService.Transliterate("Taqbaylit", "Hebrew"),
             IsRtl = true,
             FontFace = "Calibri",
-            IncreaseSize = 2,
         },
         new Script
         {
@@ -193,7 +219,6 @@ else
             DisplayName = TransliterationService.Transliterate("Taqbaylit", "Syriac"),
             IsRtl = true,
             FontFace = "Calibri",
-            IncreaseSize = 2,
         },
         new Script
         {
@@ -237,19 +262,44 @@ else
         required public string Name { get; init; }
         required public string DisplayName { get; init; }
         required public bool IsRtl { get; init; }
-        public string FontFace { get; set; } = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
-        public int IncreaseSize { get; set; }
+        public string FontFace { get; set; } = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";        
     }
 
     protected override async Task OnInitializedAsync()
     {
         SelectedScript = await localStorage.GetItemAsync<string>("SelectedScript") ?? "Kabyle";
         Page = await localStorage.GetItemAsync<int?>("SelectedIndex") ?? 0;
+        kabyleTextSizeIncrement = await localStorage.GetItemAsync<int?>("KabyleTextSizeIncrement") ?? 0;
+        translationTextSizeIncrement = await localStorage.GetItemAsync<int?>("TranslationTextSizeIncrement") ?? 0;
 
         await OnScriptChanged(new ChangeEventArgs
             {
                 Value = SelectedScript,
             });
+    }
+
+    async Task DecreaseKabyleTextSizeIncrement()
+    {
+        kabyleTextSizeIncrement++;
+        await localStorage.SetItemAsync("KabyleTextSizeIncrement", kabyleTextSizeIncrement);
+    }
+
+    async Task IncreaseKabyleTextSizeIncrement()
+    {
+        kabyleTextSizeIncrement--;
+        await localStorage.SetItemAsync("KabyleTextSizeIncrement", kabyleTextSizeIncrement);
+    }
+
+    async Task DecreaseTranslationTextSizeIncrement()
+    {
+        translationTextSizeIncrement++;
+        await localStorage.SetItemAsync("TranslationTextSizeIncrement", translationTextSizeIncrement);
+    }
+
+    async Task IncreaseTranslationTextSizeIncrement()
+    {
+        translationTextSizeIncrement--;
+        await localStorage.SetItemAsync("TranslationTextSizeIncrement", translationTextSizeIncrement);
     }
 
     async Task Previous()
@@ -307,7 +357,6 @@ else
             return;
         }
 
-        // increase_size = selectedScript.IncreaseSize;
         rtl = selectedScript.IsRtl;
         face = selectedScript.FontFace;
         tale = _tale;
