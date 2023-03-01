@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Hussein Arbaoui.xlsx" />
     <None Remove="uccen.pptx" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Hussein Arbaoui.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="uccen.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
