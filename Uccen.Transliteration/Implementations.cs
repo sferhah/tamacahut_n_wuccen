@@ -17,7 +17,7 @@ public class Arabizer : Transliterator
     
     protected override string Name => "Arabic";
     protected override string ReplaceHyphenWithKasheeda(string result)
-        => Regex.Replace(result, """(\b\w*)[-'](\w*\b)""", $"$1{ArabizerExt.Kasheeda} {ArabizerExt.Kasheeda}$2")
+        => Regex.Replace(result, """(\b\w*)[-'](\w*\b)""", $"$1{ArabizerExt.Kasheeda}\u00A0{ArabizerExt.Kasheeda}$2")
             .FixKasheeda("a")
             .FixKasheeda("r")
             .FixKasheeda("ṛ")
@@ -33,7 +33,8 @@ public class Arabizer : Transliterator
             .FixKasheeda("d" + Config.Geminizer)
             .FixKasheeda("ḏ" + Config.Geminizer)
             .FixKasheeda("z" + Config.Geminizer)
-            .FixKasheeda("ẓ" + Config.Geminizer);
+            .FixKasheeda("ẓ" + Config.Geminizer)
+        .Replace($"{ArabizerExt.Kasheeda}", $"{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}{ArabizerExt.Kasheeda}");
 }
 
 public static class ArabizerExt
