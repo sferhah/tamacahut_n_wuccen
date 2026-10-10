@@ -121,7 +121,7 @@ function handleScriptChange(e, resetPage = true) {
       try {
         currentConfig = ConfigDeserializer.parse(selectedScript);
         rtl = currentConfig.direction === "rtl";
-        face = currentScriptObj.fontFace;
+        face = scripts.find(s => s.name === selectedScript)?.fontFace || faceDefault;
       } catch (err) {
         console.error(`Unable to load configuration for ${selectedScript}`, err);
         currentConfig = null;
