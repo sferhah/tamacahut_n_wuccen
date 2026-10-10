@@ -1,0 +1,11 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  color: #213547;
+}
+
+body {
+  margin: 0;
+  display: block; /* Supprime le centrage forcé par Vite */
+  min-height: 100vh;
+}
