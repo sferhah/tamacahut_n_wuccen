@@ -20,6 +20,8 @@
   // Configuration
   const translations = ["Français", "English"];
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
+  const MIN_TEXT_SIZE_INCREMENT = -2;
+  const MAX_TEXT_SIZE_INCREMENT = 6;
   
 let scripts = [
   { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
@@ -177,10 +179,16 @@ function handleScriptChange(e, resetPage = true) {
 
   function changeSize(target, direction) {
     if (target === 'kabyle') {
-      kabyleTextSizeIncrement = Math.max(0, Math.min(4, kabyleTextSizeIncrement + direction));
+      kabyleTextSizeIncrement = Math.max(
+        MIN_TEXT_SIZE_INCREMENT,
+        Math.min(MAX_TEXT_SIZE_INCREMENT, kabyleTextSizeIncrement + direction)
+      );
       localStorage.setItem("KabyleTextSizeIncrement", kabyleTextSizeIncrement.toString());
     } else {
-      translationTextSizeIncrement = Math.max(0, Math.min(4, translationTextSizeIncrement + direction));
+      translationTextSizeIncrement = Math.max(
+        MIN_TEXT_SIZE_INCREMENT,
+        Math.min(MAX_TEXT_SIZE_INCREMENT, translationTextSizeIncrement + direction)
+      );
       localStorage.setItem("TranslationTextSizeIncrement", translationTextSizeIncrement.toString());
     }
   }
@@ -228,12 +236,12 @@ function handleScriptChange(e, resetPage = true) {
             </button>
 
             <span class="size-controls">
-              <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= 0} aria-label="Decrease size">
+              <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13H5v-2h14v2z" />
                 </svg>
               </button>
-              <button on:click={() => changeSize('kabyle', 1)} disabled={kabyleTextSizeIncrement >= 4} aria-label="Increase size">
+              <button on:click={() => changeSize('kabyle', 1)} disabled={kabyleTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label="Increase size">
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                 </svg>
@@ -249,12 +257,12 @@ function handleScriptChange(e, resetPage = true) {
               {/each}
             </select>
             <span class="size-controls">
-              <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= 0} aria-label="Decrease size">
+              <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13H5v-2h14v2z" />
                 </svg>
               </button>
-              <button on:click={() => changeSize('translation', 1)} disabled={translationTextSizeIncrement >= 4} aria-label="Increase size">
+              <button on:click={() => changeSize('translation', 1)} disabled={translationTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label="Increase size">
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                 </svg>
