@@ -149,14 +149,14 @@ static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
 
       const rows = [];
       
-      // 1. Générer la ligne d'en-tête (les colonnes)
+      // 1. columns
       const header = ['Latin'];
       Object.keys(loadedConfigs).forEach(scriptName => {
         header.push(scriptName);
       });
       rows.push(header);
 
-      // 2. Générer chaque ligne de caractères
+      // 2. rows
       chars.forEach(c => {
         const row = [c];
         Object.keys(loadedConfigs).forEach(scriptName => {
