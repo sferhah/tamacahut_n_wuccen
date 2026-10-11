@@ -108,7 +108,7 @@ static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
 
 
   static replaceSchwaWithNullVowel(input, nullVowel, geminizer, preserveSchwa = false) {
-    const result = input
+    const result = preserveSchwa? input : input
       .split("ew").join("w" + nullVowel).split("w" + nullVowel + geminizer).join("w" + geminizer)
       .split("ey").join("y" + nullVowel).split("y" + nullVowel + geminizer).join("y" + geminizer);
 
