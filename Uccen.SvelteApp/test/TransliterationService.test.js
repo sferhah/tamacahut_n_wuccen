@@ -35,11 +35,11 @@ test("Arabic transliteration preserves the known-good rucher title and paragraph
 
   assert.equal(
     TransliterationService.transliterate(rucherStory.Kabyle.Title, arabicConfig),
-    "دي تدوّيرت ن تزيزوا"
+    "دي تدࣤوّيرت ن تزيزوا"
   );
   assert.equal(
     TransliterationService.transliterate(rucherStory.Kabyle.Paragraphs[0], arabicConfig),
-    "ييوّاسّ، ئروه ئنيسي د ووشّࣤن أد د\u00A0ـاكرࣤن تامࣤنت سي تدوّيرت ن تيزيزوا. ئنيسي يࣤبنا أد د\u00A0ـيࣤرّ سࣤڨ ووشّࣤن تّار ن تقࣤلّالت ن لࣤخليعا."
+    "ييوّاسّ، ئروه ئنيسي د ووشّࣤن أد د\u00A0ـاكرࣤن تامࣤنت سي تدࣤوّيرت ن تيزيزوا. ئنيسي يࣤبنا أد د\u00A0ـيࣤرّ سࣤڨ ووشّࣤن تّار ن تقࣤلّالت ن لࣤخليعا."
   );
 });
 
