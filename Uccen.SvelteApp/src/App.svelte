@@ -3,119 +3,162 @@
   import { ConfigDeserializer } from './ConfigDeserializer.js';
   import { TransliterationService } from './TransliterationService.js';
 
-
-  
-  // Main state
-  let tales = [];
-  let tale = null;
-  let loading = true;
-  
-  // User state (saved in localStorage)
-  let page = 0;
-  let selectedScript = "Kabyle";
-  let selectedTranslation = "Français";
-  let kabyleTextSizeIncrement = 0;
-  let translationTextSizeIncrement = 0;
-
-  // Configuration
+  const DEFAULT_SCRIPT = "Kabyle";
+  const DEFAULT_TRANSLATION = "Français";
+  const STORAGE_KEYS = {
+    script: "SelectedScript",
+    page: "SelectedIndex",
+    kabyleSize: "KabyleTextSizeIncrement",
+    translationSize: "TranslationTextSizeIncrement"
+  };
   const translations = ["Français", "English"];
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
-  
-let scripts = [
-  { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
-  { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri" },
-  { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "Calibri" },
-  { name: "Arabic2", displayName: "Arabic2", isRtl: true, fontFace: "Calibri" },
-  { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri" },
-  { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri" },
-  { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri" },
-  { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri" },
-  { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri" },
-  { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault },
-  { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault }
-];
-  // Derived reactive variables (recomputed on each change)
-  $: currentScriptObj = scripts.find(s => s.name === selectedScript) || scripts[0];
+
+  const initialScripts = [
+    { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
+    { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri" },
+    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "Calibri" },
+    { name: "Arabic2", displayName: "Arabic2", isRtl: true, fontFace: "Calibri" },
+    { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri" },
+    { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri" },
+    { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri" },
+    { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri" },
+    { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri" },
+    { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault },
+    { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault }
+  ];
+
+  function readStoredInteger(key, fallback, min, max) {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue === null) return fallback;
+
+    const value = Number(storedValue);
+    return Number.isInteger(value) ? Math.max(min, Math.min(max, value)) : fallback;
+  }
+
+  let tales = [];
+  let tale = null;
+  let loading = true;
+  let loadingError = "";
+  let page = 0;
+  let selectedScript = DEFAULT_SCRIPT;
+  let selectedTranslation = DEFAULT_TRANSLATION;
+  let kabyleTextSizeIncrement = 0;
+  let translationTextSizeIncrement = 0;
+  let scripts = initialScripts;
   $: pageCount = tales.length;
-  
+
   let currentConfig = null;
   let rtl = false;
   let face = faceDefault;
+  let dialogElement;
+  let transliterationsData = [];
 
-  let dialogElement; // Controls the <dialog> element
-  let transliterationsData = []; // Holds the generated table
-  let allConfigs = {}; // Stores all loaded configurations
+  onMount(() => {
+    initialize();
+  });
 
-onMount(async () => {
-  // 1. Restore user preferences from localStorage
-  selectedScript = localStorage.getItem("SelectedScript") || "Kabyle";
-  
-
-  page = parseInt(localStorage.getItem("SelectedIndex")) || 0;
-  kabyleTextSizeIncrement = parseInt(localStorage.getItem("KabyleTextSizeIncrement")) || 0;
-  translationTextSizeIncrement = parseInt(localStorage.getItem("TranslationTextSizeIncrement")) || 0;
-
-  try {
-    // 2. Fetch the stories JSON
-    const response = await fetch(`data/tamacahut_n_wuccen.json?${Date.now()}`);
-    tales = await response.json();
-
-    // Load the restored script configuration before displaying the story
-    changeScript(selectedScript);
-    
-    // 3. Translate the script names in the dropdown
-    scripts = scripts.map((s) => {
-        if (s.name === "Kabyle") return s;
-        try {
-          const config = ConfigDeserializer.parse(s.name);
-          const translatedName = (s.name === "Arabic2")? TransliterationService.transliterate("Taqbaylit2", config) : TransliterationService.transliterate("Taqbaylit", config);
-          return { ...s, displayName: translatedName };
-        } catch (e) {
-          console.error(`Unable to transliterate the menu for ${s.name}`, e);
-          return s;
-        }
-      });
-
-  } catch (error) {
-    console.error("Application initialization error", error);
-  } finally {
-    loading = false;
-  }
-
-      // Load all configurations in the background for the reference table
+  async function initialize() {
     try {
-      for (const script of scripts.filter(s => s.name !== "Kabyle")) {
-        allConfigs[script.name] = ConfigDeserializer.parse(script.name);
+      restorePreferences();
+      const response = await fetch(`data/tamacahut_n_wuccen.json?${Date.now()}`);
+      if (!response.ok) {
+        throw new Error(`Story request failed with status ${response.status}`);
       }
 
-      // Generate the table from all loaded configurations
-      transliterationsData = TransliterationService.getTransliterations(allConfigs);
-    } catch (e) {
-      console.error("Error generating help table", e);
-    }  
+      const loadedTales = await response.json();
+      if (!Array.isArray(loadedTales)) {
+        throw new Error("Story data must be an array");
+      }
 
-
-});
-
- // Functions to open and close the modal
-  function openHelp() { dialogElement.showModal(); }
-  function closeHelp() { dialogElement.close(); }
-
-
-function handleScriptChange(e, resetPage = true) {
-  changeScript(e.target.value, resetPage)
-}
-
-  function changeScript(_selectedScript, resetPage = true) {
-    selectedScript = _selectedScript;
-    localStorage.setItem("SelectedScript", selectedScript);
-    if (resetPage) {
-      localStorage.setItem("SelectedIndex", page.toString());
+      tales = loadedTales;
+      page = Math.min(page, Math.max(0, loadedTales.length - 1));
+      localStorage.setItem(STORAGE_KEYS.page, page.toString());
+      changeScript(selectedScript, false);
+      loadTranslatedScriptNames();
+    } catch (error) {
+      loadingError = "Unable to load the stories. Please refresh the page to try again.";
+      console.error("Application initialization error", error);
+    } finally {
+      loading = false;
     }
 
-    if (selectedScript === "Kabyle") {
+    loadHelpTable();
+  }
+
+  function restorePreferences() {
+    const savedScript = localStorage.getItem(STORAGE_KEYS.script);
+    selectedScript = initialScripts.some((script) => script.name === savedScript)
+      ? savedScript
+      : DEFAULT_SCRIPT;
+    page = readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
+    kabyleTextSizeIncrement = readStoredInteger(
+      STORAGE_KEYS.kabyleSize,
+      0,
+      MIN_TEXT_SIZE_INCREMENT,
+      MAX_TEXT_SIZE_INCREMENT
+    );
+    translationTextSizeIncrement = readStoredInteger(
+      STORAGE_KEYS.translationSize,
+      0,
+      MIN_TEXT_SIZE_INCREMENT,
+      MAX_TEXT_SIZE_INCREMENT
+    );
+  }
+
+  function loadTranslatedScriptNames() {
+    scripts = initialScripts.map((script) => {
+      if (script.name === DEFAULT_SCRIPT) return script;
+
+      try {
+        const config = ConfigDeserializer.parse(script.name);
+        const label = script.name === "Arabic2" ? "Taqbaylit2" : "Taqbaylit";
+        return {
+          ...script,
+          displayName: TransliterationService.transliterate(label, config)
+        };
+      } catch (error) {
+        console.error(`Unable to transliterate the menu for ${script.name}`, error);
+        return script;
+      }
+    });
+  }
+
+  function loadHelpTable() {
+    try {
+      const configs = Object.fromEntries(
+        initialScripts
+          .filter((script) => script.name !== DEFAULT_SCRIPT)
+          .map((script) => [script.name, ConfigDeserializer.parse(script.name)])
+      );
+      transliterationsData = TransliterationService.getTransliterations(configs);
+    } catch (error) {
+      console.error("Error generating help table", error);
+    }
+  }
+
+  function openHelp() {
+    dialogElement.showModal();
+  }
+
+  function closeHelp() {
+    dialogElement.close();
+  }
+
+  function handleScriptChange(event) {
+    changeScript(event.target.value);
+  }
+
+  function changeScript(scriptName, persistPage = true) {
+    selectedScript = scriptName;
+    localStorage.setItem(STORAGE_KEYS.script, selectedScript);
+    if (persistPage) {
+      localStorage.setItem(STORAGE_KEYS.page, page.toString());
+    }
+
+    if (selectedScript === DEFAULT_SCRIPT) {
       currentConfig = null;
       rtl = false;
       face = faceDefault;
@@ -123,9 +166,9 @@ function handleScriptChange(e, resetPage = true) {
       try {
         currentConfig = ConfigDeserializer.parse(selectedScript);
         rtl = currentConfig.direction === "rtl";
-        face = scripts.find(s => s.name === selectedScript)?.fontFace || faceDefault;
-      } catch (err) {
-        console.error(`Unable to load configuration for ${selectedScript}`, err);
+        face = scripts.find((script) => script.name === selectedScript)?.fontFace || faceDefault;
+      } catch (error) {
+        console.error(`Unable to load configuration for ${selectedScript}`, error);
         currentConfig = null;
         rtl = false;
         face = faceDefault;
@@ -135,67 +178,63 @@ function handleScriptChange(e, resetPage = true) {
     updateTale();
   }
 
-
   function updateTale() {
-    if (tales.length === 0 || !tales[page]) return;
-    
     const rawTale = tales[page];
-
-    // Transliterate using the loaded configuration
-    let processedKabyleTitle = rawTale.Kabyle.Title;
-    let processedKabyleParagraphs = [...rawTale.Kabyle.Paragraphs];
-
-    if (selectedScript !== "Kabyle" && currentConfig) {
-      processedKabyleTitle = TransliterationService.transliterate(rawTale.Kabyle.Title, currentConfig);
-      processedKabyleParagraphs = rawTale.Kabyle.Paragraphs.map(p => 
-        TransliterationService.transliterate(p, currentConfig)
-      );
+    if (!rawTale) {
+      tale = null;
+      return;
     }
+
+    const transliterate = (text) =>
+      currentConfig ? TransliterationService.transliterate(text, currentConfig) : text;
 
     tale = {
       Kabyle: {
-        Title: processedKabyleTitle,
-        Paragraphs: processedKabyleParagraphs
+        Title: transliterate(rawTale.Kabyle.Title),
+        Paragraphs: rawTale.Kabyle.Paragraphs.map(transliterate)
       },
-      French: { ...rawTale.French }
+      French: rawTale.French
     };
   }
 
+  function setPage(nextPage) {
+    page = nextPage;
+    localStorage.setItem(STORAGE_KEYS.page, page.toString());
+    updateTale();
+  }
+
   function previous() {
-    if (page > 0) {
-      page--;
-      localStorage.setItem("SelectedIndex", page.toString());
-      updateTale();
-    }
+    if (page > 0) setPage(page - 1);
   }
 
   function next() {
-    if (page < pageCount - 1) {
-      page++;
-      localStorage.setItem("SelectedIndex", page.toString());
-      updateTale();
-    }
+    if (page < pageCount - 1) setPage(page + 1);
   }
 
   function changeSize(target, direction) {
-    if (target === 'kabyle') {
-      kabyleTextSizeIncrement = Math.max(
-        MIN_TEXT_SIZE_INCREMENT,
-        Math.min(MAX_TEXT_SIZE_INCREMENT, kabyleTextSizeIncrement + direction)
-      );
-      localStorage.setItem("KabyleTextSizeIncrement", kabyleTextSizeIncrement.toString());
+    const isKabyle = target === "kabyle";
+    const storageKey = isKabyle ? STORAGE_KEYS.kabyleSize : STORAGE_KEYS.translationSize;
+    const currentSize = isKabyle ? kabyleTextSizeIncrement : translationTextSizeIncrement;
+    const nextSize = Math.max(
+      MIN_TEXT_SIZE_INCREMENT,
+      Math.min(MAX_TEXT_SIZE_INCREMENT, currentSize + direction)
+    );
+
+    if (isKabyle) {
+      kabyleTextSizeIncrement = nextSize;
     } else {
-      translationTextSizeIncrement = Math.max(
-        MIN_TEXT_SIZE_INCREMENT,
-        Math.min(MAX_TEXT_SIZE_INCREMENT, translationTextSizeIncrement + direction)
-      );
-      localStorage.setItem("TranslationTextSizeIncrement", translationTextSizeIncrement.toString());
+      translationTextSizeIncrement = nextSize;
     }
+    localStorage.setItem(storageKey, nextSize.toString());
   }
 </script>
 
-{#if loading || !tale}
+{#if loading}
   <div class="loader"><p><em>Loading...</em></p></div>
+{:else if loadingError}
+  <div class="loader" role="alert"><p>{loadingError}</p></div>
+{:else if !tale}
+  <div class="loader"><p>No stories are available.</p></div>
 {:else}
   <main>
     <div class="pagination-header">
