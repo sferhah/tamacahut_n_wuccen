@@ -21,7 +21,12 @@ export class TransliterationService {
       result = this.abjadize(result, config.geminizer);
       result = this.replaceHyphenWithKasheeda(result, config.name, config.geminizer);
       result = this.replaceVowelsWithSemiVowels(result, config.geminizer);
-      result = this.replaceSchwaWithNullVowel(result, config.nullVowel, config.geminizer);
+      result = this.replaceSchwaWithNullVowel(
+        result,
+        config.nullVowel,
+        config.geminizer,
+        config.mapping.e !== undefined
+      );
     }
     
     return this.mapCharacters(result, config);
@@ -102,11 +107,12 @@ static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
   }
 
 
-  static replaceSchwaWithNullVowel(input, nullVowel, geminizer) {
-    return input
+  static replaceSchwaWithNullVowel(input, nullVowel, geminizer, preserveSchwa = false) {
+    const result = input
       .split("ew").join("w" + nullVowel).split("w" + nullVowel + geminizer).join("w" + geminizer)
-      .split("ey").join("y" + nullVowel).split("y" + nullVowel + geminizer).join("y" + geminizer)
-      .split("e").join("");
+      .split("ey").join("y" + nullVowel).split("y" + nullVowel + geminizer).join("y" + geminizer);
+
+    return preserveSchwa ? result : result.split("e").join("");
   }
 
   static mapCharacters(input, config) {

@@ -35,10 +35,15 @@ test("Arabic transliteration preserves the known-good rucher title and paragraph
 
   assert.equal(
     TransliterationService.transliterate(rucherStory.Kabyle.Title, arabicConfig),
-    "دي تدوّيڕت ن تزيزوا"
+    "دي تدوّيرت ن تزيزوا"
   );
   assert.equal(
     TransliterationService.transliterate(rucherStory.Kabyle.Paragraphs[0], arabicConfig),
-    "ييوّاسّ، ئڕوه ئنيسي د ووشّن أد د ـاكرن تامنت سي تدوّيڕت ن تيزيزوا. ئنيسي يبنا أد د ـيرّ سڨ ووشّن تّاڕ ن تقلّالت ن لخليعا."
+    "ييوّاسّ، ئروه ئنيسي د ووشّࣤن أد د\u00A0ـاكرࣤن تامࣤنت سي تدوّيرت ن تيزيزوا. ئنيسي يࣤبنا أد د\u00A0ـيࣤرّ سࣤڨ ووشّࣤن تّار ن تقࣤلّالت ن لࣤخليعا."
   );
+});
+
+test("Arabic transliteration maps schwa e to U+08E4", () => {
+  assert.equal(TransliterationService.transliterate("e", arabicConfig), "\u08E4");
+  assert.equal(TransliterationService.transliterate("be", arabicConfig), "ب\u08E4");
 });
