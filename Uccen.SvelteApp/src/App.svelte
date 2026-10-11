@@ -19,8 +19,8 @@
   const initialScripts = [
     { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
     { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri" },
-    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "Calibri" },
-    { name: "Arabic2", displayName: "Arabic2", isRtl: true, fontFace: "Calibri" },
+    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif" },
+    { name: "Arabic2", displayName: "Arabic2", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif" },
     { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri" },
     { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri" },
     { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri" },

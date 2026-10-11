@@ -1,7 +1,16 @@
+@font-face {
+  font-family: "Noto Naskh Arabic";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/NotoNaskhArabic-Arabic.woff2") format("woff2");
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: #ffffff;
   color: #213547;
+  touch-action: manipulation;
 }
 
 body {
