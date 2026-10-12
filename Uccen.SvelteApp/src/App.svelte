@@ -24,6 +24,7 @@
     { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri" },
     { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri" },
     { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri" },
+    { name: "Nabataean", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif" },
     { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri" },
     { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault },
     { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault }
