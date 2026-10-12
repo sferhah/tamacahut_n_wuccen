@@ -1,4 +1,4 @@
-/** @typedef {{ direction?: string, geminizer?: string, nullVowel?: string, scriptType?: string, mapping?: Record<string, string> }} ScriptConfigData */
+/** @typedef {{ direction?: string, geminizer?: string, nullVowel?: string, initialSchwa?: string, scriptType?: string, mapping?: Record<string, string> }} ScriptConfigData */
 
 /** @type {Record<string, ScriptConfigData>} */
 const configData = import.meta.glob("./transliterationMappings/*.json", {
@@ -31,6 +31,7 @@ export class ConfigDeserializer {
       geminizer: String.fromCharCode(parseInt(data.geminizer || "0x00B2", 16)),
       nullVowel: String.fromCharCode(parseInt(data.nullVowel || "0x00B0", 16)),
       scriptType: data.scriptType || "Alphabet",
+      initialSchwa: data.initialSchwa || undefined,
       mapping
     };
 

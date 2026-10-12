@@ -64,7 +64,7 @@ export class TransliterationService {
   }
 
 static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
-  if (scriptName !== "Arabic" && scriptName !== "Arabic2") return input;
+  if (scriptName !== "Arabic") return input;
 
   const kasheeda = "ـ";
   const W = String.raw`[\p{L}\p{Mn}\p{Nd}\p{Pc}]`;
@@ -125,6 +125,10 @@ static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
                .replace(/\?/g, "⸮")
                .replace(/;/g, "؛")
                .replace(/,/g, "،");
+    }
+
+    if (config.initialSchwa !== undefined) {
+          res = res.replace(/(?<![\p{L}\p{Mn}\p{Nd}\p{Pc}])e/gu, config.initialSchwa);          
     }
 
     let output = "";
