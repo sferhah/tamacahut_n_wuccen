@@ -23,6 +23,6 @@
 
 body {
   margin: 0;
-  display: block; /* Supprime le centrage forcé par Vite */
+  display: block;
   min-height: 100vh;
 }
