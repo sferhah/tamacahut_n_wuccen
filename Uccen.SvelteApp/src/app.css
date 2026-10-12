@@ -6,6 +6,14 @@
   src: url("/fonts/NotoNaskhArabic-Arabic.woff2") format("woff2");
 }
 
+@font-face {
+  font-family: "Noto Sans Nabataean";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/NotoSansNabataean-Regular.ttf") format("truetype");
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: #ffffff;
