@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 namespace ConsoleApp2;
+
 public static class PptxHelper
 {
     public static List<string> ParseParagraphs(this DocumentFormat.OpenXml.Drawing.TableCell pptxCell)
@@ -8,29 +9,46 @@ public static class PptxHelper
 
     public static List<string> ParseParagraphs(this IEnumerable<DocumentFormat.OpenXml.Drawing.Paragraph> pptxParagraphs)
     {
-        var lines = pptxParagraphs.Select(x => x.ParseLine()).ToList();
-
         var paragraphs = new List<List<string>>();
-        List<string>? paragraph = null;
+        List<string>? currentParagraph = null;
 
-        foreach (string v in lines.Select(x => x.Trim()))
+        foreach (var pptxParagraph in pptxParagraphs)
         {
-            if (paragraph == null)
-            {
-                paragraphs.Add(paragraph = new List<string>());
-            }
+            // Retrieve the text and immediately split it at the ¶ character.
+            var rawLine = pptxParagraph.ParseLine();
+            var subLines = rawLine.Split('¶');
 
-            if (string.IsNullOrWhiteSpace(v))
+            for (int i = 0; i < subLines.Length; i++)
             {
-                paragraph = null;
-            }
-            else
-            {
-                paragraph.Add(v);
+                var cleanLine = subLines[i].Trim();
+
+                // If the line (or sub-line) is empty, this marks a break (null paragraph)
+                if (string.IsNullOrWhiteSpace(cleanLine))
+                {
+                    currentParagraph = null;
+                    continue;
+                }
+
+                // If we start a segment AFTER a '¶' (i.e., i > 0), 
+                // we force the creation of a new paragraph
+                if (i > 0)
+                {
+                    currentParagraph = null;
+                }
+
+                if (currentParagraph == null)
+                {
+                    paragraphs.Add(currentParagraph = new List<string>());
+                }
+
+                currentParagraph.Add(cleanLine);
             }
         }
 
-        return paragraphs.Where(x => x.Any()).Select(x=> string.Join("\n", x)).ToList();
+        return paragraphs
+            .Where(x => x.Any())
+            .Select(x => string.Join("\n", x))
+            .ToList();
     }
 
     public static string ParseLine(this DocumentFormat.OpenXml.Drawing.Paragraph pptxParagraph)
