@@ -22,6 +22,7 @@ const arabicConfig = {
   geminizer: String.fromCodePoint(Number.parseInt(arabicData.geminizer, 16)),
   nullVowel: String.fromCodePoint(Number.parseInt(arabicData.nullVowel, 16)),
   scriptType: arabicData.scriptType || "Alphabet",
+  initialSchwa: arabicData.initialSchwa || undefined,
   mapping
 };
 
@@ -43,7 +44,11 @@ test("Arabic transliteration preserves the known-good rucher title and paragraph
   );
 });
 
-test("Arabic transliteration maps schwa e to U+064E", () => {
-  assert.equal(TransliterationService.transliterate("e", arabicConfig), "\u064E");
+test("Arabic transliteration uses alif wasla for word-initial schwa", () => {
+  assert.equal(TransliterationService.transliterate("e", arabicConfig), "ٱ");
+  assert.equal(TransliterationService.transliterate("eb be", arabicConfig), "ٱب ب\u064E");
+});
+
+test("Arabic transliteration maps medial schwa e to U+064E", () => {
   assert.equal(TransliterationService.transliterate("be", arabicConfig), "ب\u064E");
 });
