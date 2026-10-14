@@ -20,9 +20,9 @@ await File.WriteAllTextAsync(GetPath(), JsonSerializer.Serialize(tales, new Json
 
 Console.WriteLine("Hello, World!");
 
-static List<KabyleTale> ExtractJson(string presentationFile)
+static List<Tale> ExtractJson(string presentationFile)
 {
-    List<KabyleTale> tales = new List<KabyleTale>();
+    List<Tale> tales = new List<Tale>();
 
     // Open the presentation as read-only.
     using PresentationDocument presentationDocument = PresentationDocument.Open(presentationFile, false);
@@ -53,7 +53,7 @@ static List<KabyleTale> ExtractJson(string presentationFile)
     // Get the collection of slide IDs from the slide ID list.
     DocumentFormat.OpenXml.OpenXmlElementList slideIds = presentation.SlideIdList.ChildElements;
 
-    KabyleTale? previousTale = null;
+    Tale? previousTale = null;
     // If the slide ID is in range...
     for (int i = 0; i < slideIds.Count; i++)
     {
@@ -69,7 +69,9 @@ static List<KabyleTale> ExtractJson(string presentationFile)
             throw new ArgumentNullException("slidePart");
         }
 
-        var tale = new KabyleTale();        
+        var tale = new Tale();
+        bool sourceStartsWithPilcrow = false;
+        bool translationStartsWithPilcrow = false;
 
         int j = 0;
         foreach (var cell in cells)
@@ -81,12 +83,14 @@ static List<KabyleTale> ExtractJson(string presentationFile)
                     break;
                 case 6:
                     tale.Kabyle.Paragraphs = cell.ParseParagraphs();
+                    sourceStartsWithPilcrow = cell.StartsWithPilcrow();
                     break;
                 case 5:
-                    tale.French.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                    tale.French.Title = string.Join(string.Empty, cell.ParseParagraphs());                    
                     break;
                 case 8:
                     tale.French.Paragraphs = cell.ParseParagraphs();
+                    translationStartsWithPilcrow = cell.StartsWithPilcrow();
                     break;
             }
 
@@ -97,8 +101,35 @@ static List<KabyleTale> ExtractJson(string presentationFile)
             && string.IsNullOrWhiteSpace(tale.French.Title)
             && previousTale != null)
         {
-            previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
-            previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+            if (sourceStartsWithPilcrow)
+            {
+                previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
+            }
+            else
+            {
+                // merge the first paragraph with the last paragraph of the previous tale
+                if (previousTale.Kabyle.Paragraphs.Count > 0 && tale.Kabyle.Paragraphs.Count > 0)
+                {
+                    previousTale.Kabyle.Paragraphs[previousTale.Kabyle.Paragraphs.Count - 1] += tale.Kabyle.Paragraphs[0];
+                    tale.Kabyle.Paragraphs.RemoveAt(0);
+                    previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
+                }
+            }
+
+            if (translationStartsWithPilcrow)
+            {
+                previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+            }
+            else
+            {
+                // merge the first paragraph with the last paragraph of the previous tale
+                if (previousTale.French.Paragraphs.Count > 0 && tale.French.Paragraphs.Count > 0)
+                {
+                    previousTale.French.Paragraphs[previousTale.French.Paragraphs.Count - 1] += tale.French.Paragraphs[0];
+                    tale.French.Paragraphs.RemoveAt(0);
+                    previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+                }
+            }
         }
         else
         {
@@ -122,14 +153,14 @@ static string GetPath()
     return Path.Combine(path, @"Uccen.SvelteApp\public\data\tamacahut_n_wuccen.json");
 }
 
-public class KabyleTale
+public class Tale
 {
-    public KabyleTaleContent Kabyle { get; set; } = new KabyleTaleContent();
-    public KabyleTaleContent French { get; set; } = new KabyleTaleContent();
+    public TaleContent Kabyle { get; set; } = new TaleContent();
+    public TaleContent French { get; set; } = new TaleContent();
 }
 
-public class KabyleTaleContent
-{
+public class TaleContent
+{   
     public string? Title { get; set; }
     public List<string> Paragraphs { get; set; } = new List<string>();    
 }

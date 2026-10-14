@@ -4,8 +4,12 @@ namespace ConsoleApp2;
 
 public static class PptxHelper
 {
+    public static bool StartsWithPilcrow(this DocumentFormat.OpenXml.Drawing.TableCell pptxCell)
+        => pptxCell.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>().FirstOrDefault()?
+        .Descendants<DocumentFormat.OpenXml.Drawing.Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
+
     public static List<string> ParseParagraphs(this DocumentFormat.OpenXml.Drawing.TableCell pptxCell)
-        => pptxCell.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>().ParseParagraphs();
+        => pptxCell.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>().ParseParagraphs();   
 
     public static List<string> ParseParagraphs(this IEnumerable<DocumentFormat.OpenXml.Drawing.Paragraph> pptxParagraphs)
     {
