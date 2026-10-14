@@ -33,7 +33,7 @@ static List<KabyleTale> ExtractJson(string presentationFile)
     }
 
     // Get the presentation part of the presentation document.
-    PresentationPart presentationPart = presentationDocument.PresentationPart;
+    var presentationPart = presentationDocument.PresentationPart;
 
     // Verify that the presentation part and presentation exist.
     if (presentationPart == null || presentationPart.Presentation == null)
