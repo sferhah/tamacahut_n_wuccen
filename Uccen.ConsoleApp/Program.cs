@@ -110,7 +110,7 @@ static List<Tale> ExtractJson(string presentationFile)
                 // merge the first paragraph with the last paragraph of the previous tale
                 if (previousTale.Kabyle.Paragraphs.Count > 0 && tale.Kabyle.Paragraphs.Count > 0)
                 {
-                    previousTale.Kabyle.Paragraphs[previousTale.Kabyle.Paragraphs.Count - 1] += tale.Kabyle.Paragraphs[0];
+                    previousTale.Kabyle.Paragraphs[previousTale.Kabyle.Paragraphs.Count - 1] += "\n" + tale.Kabyle.Paragraphs[0];
                     tale.Kabyle.Paragraphs.RemoveAt(0);
                     previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
                 }
@@ -125,7 +125,7 @@ static List<Tale> ExtractJson(string presentationFile)
                 // merge the first paragraph with the last paragraph of the previous tale
                 if (previousTale.French.Paragraphs.Count > 0 && tale.French.Paragraphs.Count > 0)
                 {
-                    previousTale.French.Paragraphs[previousTale.French.Paragraphs.Count - 1] += tale.French.Paragraphs[0];
+                    previousTale.French.Paragraphs[previousTale.French.Paragraphs.Count - 1] += "\n" + tale.French.Paragraphs[0];
                     tale.French.Paragraphs.RemoveAt(0);
                     previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
                 }
