@@ -60,7 +60,7 @@ public static class PptxHelper
         StringBuilder builder = new StringBuilder();
         foreach (var text in pptxParagraph.Descendants<DocumentFormat.OpenXml.Drawing.Text>())
         {
-            builder.Append(text.Text.Replace("\u00A0", " ").Replace("’", "'").Replace("-", "\u2011").Replace(" ?", "\u00A0?").Replace(" !", "\u00A0!"));
+            builder.Append(text.Text.Replace("\u00A0", " ").Replace("’", "'").Replace("-", "\u2011").Replace(" ?", "\u00A0?").Replace(" !", "\u00A0!").Replace(" :", "\u00A0:"));
         }
         return builder.ToString();
     }
