@@ -53,6 +53,7 @@ static List<KabyleTale> ExtractJson(string presentationFile)
     // Get the collection of slide IDs from the slide ID list.
     DocumentFormat.OpenXml.OpenXmlElementList slideIds = presentation.SlideIdList.ChildElements;
 
+    KabyleTale? previousTale = null;
     // If the slide ID is in range...
     for (int i = 0; i < slideIds.Count; i++)
     {
@@ -68,8 +69,7 @@ static List<KabyleTale> ExtractJson(string presentationFile)
             throw new ArgumentNullException("slidePart");
         }
 
-        var forcast = new KabyleTale();
-        tales.Add(forcast);
+        var tale = new KabyleTale();        
 
         int j = 0;
         foreach (var cell in cells)
@@ -77,23 +77,34 @@ static List<KabyleTale> ExtractJson(string presentationFile)
             switch (j)
             {
                 case 3:
-                    forcast.Kabyle.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                    tale.Kabyle.Title = string.Join(string.Empty, cell.ParseParagraphs());
                     break;
                 case 6:
-                    forcast.Kabyle.Paragraphs = cell.ParseParagraphs();
+                    tale.Kabyle.Paragraphs = cell.ParseParagraphs();
                     break;
                 case 5:
-                    forcast.French.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                    tale.French.Title = string.Join(string.Empty, cell.ParseParagraphs());
                     break;
                 case 8:
-                    forcast.French.Paragraphs = cell.ParseParagraphs();
+                    tale.French.Paragraphs = cell.ParseParagraphs();
                     break;
             }
 
             j++;
         }
 
-        
+        if (string.IsNullOrWhiteSpace(tale.Kabyle.Title) 
+            && string.IsNullOrWhiteSpace(tale.French.Title)
+            && previousTale != null)
+        {
+            previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
+            previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+        }
+        else
+        {
+            tales.Add(tale);
+            previousTale = tale;
+        }
     }
 
     return tales;
