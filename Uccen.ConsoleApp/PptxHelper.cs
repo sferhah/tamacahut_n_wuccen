@@ -64,7 +64,8 @@ public static class PptxHelper
                 .Replace("-", "\u2011")
                 .Replace(" ?", "\u00A0?")
                 .Replace(" !", "\u00A0!")
-                .Replace(" :", "\u00A0:"));
+                .Replace(" :", "\u00A0:")
+                .Replace(" ;", "\u00A0;"));
         }
         return builder.ToString();
     }
