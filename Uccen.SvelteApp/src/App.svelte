@@ -222,6 +222,7 @@
     page = nextPage;
     localStorage.setItem(STORAGE_KEYS.page, page.toString());
     updateTale();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function previous() {
