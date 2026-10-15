@@ -1,0 +1,15 @@
+[build]
+  # Indique à Netlify d'aller dans le dossier de l'application Svelte
+  base = "Uccen.SvelteApp"
+  
+  # Commande pour compiler l'application Svelte/Vite
+  command = "npm run build"
+  
+  # Dossier contenant les fichiers finaux générés
+  publish = "dist"
+
+[[redirects]]
+  # Règle essentielle pour préserver le routage de l'application Svelte (Single Page Application) lors du rafraîchissement des pages
+  from = "/*"
+  status = 200
+  to = "/index.html"
