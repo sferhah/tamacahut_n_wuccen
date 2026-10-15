@@ -210,11 +210,11 @@
       currentConfig ? TransliterationService.transliterate(text, currentConfig) : text;
 
     tale = {
-      Kabyle: {
-        Title: transliterate(rawTale.Kabyle.Title),
-        Paragraphs: rawTale.Kabyle.Paragraphs.map(transliterate)
+      Source: {
+        Title: transliterate(rawTale.Source.Title),
+        Paragraphs: rawTale.Source.Paragraphs.map(transliterate)
       },
-      French: rawTale.French
+      Translation: rawTale.Translation
     };
   }
 
@@ -336,24 +336,24 @@
         <tr>
           <th width="50%">
             <h2 style="font-family: {face}; font-size: {1.2 + kabyleTextSizeIncrement * 0.2}rem;" dir={rtl ? "rtl" : "ltr"}>
-              {tale.Kabyle.Title}
+              {tale.Source.Title}
             </h2>
           </th>
           <th width="50%">
             <h2 style="font-size: {1.2 + translationTextSizeIncrement * 0.2}rem;">
-              {tale.French.Title}
+              {tale.Translation.Title}
             </h2>
           </th>
         </tr>
       </thead>
 
       <tbody>
-        {#if tale.Kabyle.Paragraphs.length === tale.French.Paragraphs.length}
-          {#each tale.Kabyle.Paragraphs as kabylePara, i}
+        {#if tale.Source.Paragraphs.length === tale.Translation.Paragraphs.length}
+          {#each tale.Source.Paragraphs as sourcePara, i}
             <tr>
               <td>
                 <div class="text-content" style="font-family: {face}; font-size: {1 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-                  {#each kabylePara.split('\n') as line}
+                  {#each sourcePara.split('\n') as line}
                     {#each splitQuotedText(line) as segment}
                       {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
                     {/each}<br />
@@ -362,7 +362,7 @@
               </td>
               <td>
                 <div class="text-content" style="font-size: {1 + translationTextSizeIncrement * 0.15}rem;">
-                  {#each tale.French.Paragraphs[i].split('\n') as line}
+                  {#each tale.Translation.Paragraphs[i].split('\n') as line}
                     {#each splitQuotedText(line) as segment}
                       {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
                     {/each}<br />
@@ -375,7 +375,7 @@
           <tr>
             <td>
               <div class="text-content" style="font-family: {face}; font-size: {1 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-                {#each tale.Kabyle.Paragraphs as paragraph}
+                {#each tale.Source.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
                       {#each splitQuotedText(line) as segment}
@@ -388,7 +388,7 @@
             </td>
             <td>
               <div class="text-content" style="font-size: {1 + translationTextSizeIncrement * 0.15}rem;">
-                {#each tale.French.Paragraphs as paragraph}
+                {#each tale.Translation.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
                       {#each splitQuotedText(line) as segment}
