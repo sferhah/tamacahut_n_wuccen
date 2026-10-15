@@ -52,3 +52,10 @@ test("Arabic transliteration uses alif wasla for word-initial schwa", () => {
 test("Arabic transliteration maps medial schwa e to U+064E", () => {
   assert.equal(TransliterationService.transliterate("be", arabicConfig), "ب\u064E");
 });
+
+test("Arabic transliteration replaces non-breaking hyphens with kasheeda", () => {
+  assert.match(
+    TransliterationService.transliterate("s‑yenna", arabicConfig),
+    /ـ\u00A0ـ/
+  );
+});
