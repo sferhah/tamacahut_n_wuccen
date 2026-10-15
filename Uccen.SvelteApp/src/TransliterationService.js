@@ -55,7 +55,7 @@ export class TransliterationService {
   res = res.replace(new RegExp(`([${cls}])\\1`, "gu"), (_, c) => c + geminizer);
 
   // 2. After a hyphen/apostrophe inside a word: i -> y, u -> w, a -> â
-  const afterSeparator = new RegExp(`(${WORD_START}${W}*[-'])`, "u").source;
+  const afterSeparator = new RegExp(`(${WORD_START}${W}*[-\u2011'])`, "u").source;
   res = res.replace(new RegExp(`${afterSeparator}i`, "gu"), "$1y");
   res = res.replace(new RegExp(`${afterSeparator}u`, "gu"), "$1w");
   res = res.replace(new RegExp(`${afterSeparator}a`, "gu"), "$1â");
@@ -70,7 +70,7 @@ static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
   const W = String.raw`[\p{L}\p{Mn}\p{Nd}\p{Pc}]`;
 
   // left side: a word start, or empty when directly preceded by a word char (a-b-c case)
-  const pattern = new RegExp(`((?<!${W})${W}+|(?<=${W}))[-'](${W}+)`, "gu");
+  const pattern = new RegExp(`((?<!${W})${W}+|(?<=${W}))[-\u2011'](${W}+)`, "gu");
 
   let out = input.replace(pattern, (_, left, right) => `${left}${kasheeda}\u00A0${kasheeda}${right}`);
 
