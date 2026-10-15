@@ -79,17 +79,17 @@ static List<Tale> ExtractJson(string presentationFile)
             switch (j)
             {
                 case 3:
-                    tale.Kabyle.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                    tale.Source.Title = string.Join(string.Empty, cell.ParseParagraphs());
                     break;
                 case 6:
-                    tale.Kabyle.Paragraphs = cell.ParseParagraphs();
+                    tale.Source.Paragraphs = cell.ParseParagraphs();
                     sourceStartsWithPilcrow = cell.StartsWithPilcrow();
                     break;
                 case 5:
-                    tale.French.Title = string.Join(string.Empty, cell.ParseParagraphs());                    
+                    tale.Translation.Title = string.Join(string.Empty, cell.ParseParagraphs());                    
                     break;
                 case 8:
-                    tale.French.Paragraphs = cell.ParseParagraphs();
+                    tale.Translation.Paragraphs = cell.ParseParagraphs();
                     translationStartsWithPilcrow = cell.StartsWithPilcrow();
                     break;
             }
@@ -97,37 +97,37 @@ static List<Tale> ExtractJson(string presentationFile)
             j++;
         }
 
-        if (string.IsNullOrWhiteSpace(tale.Kabyle.Title) 
-            && string.IsNullOrWhiteSpace(tale.French.Title)
+        if (string.IsNullOrWhiteSpace(tale.Source.Title) 
+            && string.IsNullOrWhiteSpace(tale.Translation.Title)
             && previousTale != null)
         {
             if (sourceStartsWithPilcrow)
             {
-                previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
+                previousTale.Source.Paragraphs.AddRange(tale.Source.Paragraphs);
             }
             else
             {
                 // merge the first paragraph with the last paragraph of the previous tale
-                if (previousTale.Kabyle.Paragraphs.Count > 0 && tale.Kabyle.Paragraphs.Count > 0)
+                if (previousTale.Source.Paragraphs.Count > 0 && tale.Source.Paragraphs.Count > 0)
                 {
-                    previousTale.Kabyle.Paragraphs[previousTale.Kabyle.Paragraphs.Count - 1] += "\n" + tale.Kabyle.Paragraphs[0];
-                    tale.Kabyle.Paragraphs.RemoveAt(0);
-                    previousTale.Kabyle.Paragraphs.AddRange(tale.Kabyle.Paragraphs);
+                    previousTale.Source.Paragraphs[previousTale.Source.Paragraphs.Count - 1] += "\n" + tale.Source.Paragraphs[0];
+                    tale.Source.Paragraphs.RemoveAt(0);
+                    previousTale.Source.Paragraphs.AddRange(tale.Source.Paragraphs);
                 }
             }
 
             if (translationStartsWithPilcrow)
             {
-                previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+                previousTale.Translation.Paragraphs.AddRange(tale.Translation.Paragraphs);
             }
             else
             {
                 // merge the first paragraph with the last paragraph of the previous tale
-                if (previousTale.French.Paragraphs.Count > 0 && tale.French.Paragraphs.Count > 0)
+                if (previousTale.Translation.Paragraphs.Count > 0 && tale.Translation.Paragraphs.Count > 0)
                 {
-                    previousTale.French.Paragraphs[previousTale.French.Paragraphs.Count - 1] += "\n" + tale.French.Paragraphs[0];
-                    tale.French.Paragraphs.RemoveAt(0);
-                    previousTale.French.Paragraphs.AddRange(tale.French.Paragraphs);
+                    previousTale.Translation.Paragraphs[previousTale.Translation.Paragraphs.Count - 1] += "\n" + tale.Translation.Paragraphs[0];
+                    tale.Translation.Paragraphs.RemoveAt(0);
+                    previousTale.Translation.Paragraphs.AddRange(tale.Translation.Paragraphs);
                 }
             }
         }
@@ -155,8 +155,8 @@ static string GetPath()
 
 public class Tale
 {
-    public TaleContent Kabyle { get; set; } = new TaleContent();
-    public TaleContent French { get; set; } = new TaleContent();
+    public TaleContent Source { get; set; } = new TaleContent();
+    public TaleContent Translation { get; set; } = new TaleContent();
 }
 
 public class TaleContent

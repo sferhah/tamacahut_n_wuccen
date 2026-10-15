@@ -29,17 +29,17 @@ const arabicConfig = {
 const stories = JSON.parse(
   readFileSync(new URL("../public/data/tamacahut_n_wuccen.json", import.meta.url), "utf8")
 );
-const rucherStory = stories.find((story) => story.French.Title === "Dans le rucher");
+const rucherStory = stories.find((story) => story.Translation.Title === "Dans le rucher");
 
 test("Arabic transliteration preserves the known-good rucher title and paragraph", () => {
   assert.ok(rucherStory, 'Expected the "Dans le rucher" story to be present');
 
   assert.equal(
-    TransliterationService.transliterate(rucherStory.Kabyle.Title, arabicConfig),
+    TransliterationService.transliterate(rucherStory.Source.Title, arabicConfig),
     "دي تد\u064Eوّيرت ن تزيزوا"
   );
   assert.equal(
-    TransliterationService.transliterate(rucherStory.Kabyle.Paragraphs[0], arabicConfig),
+    TransliterationService.transliterate(rucherStory.Source.Paragraphs[0], arabicConfig),
     "ييوّاسّ، ئروح ئنيسي د ووشّ\u064Eن أد د\u00A0ـاكر\u064Eن تام\u064Eنت سي تد\u064Eوّيرت ن تيزيزوا. ئنيسي ي\u064Eبنا أد د\u00A0ـي\u064Eرّ س\u064Eڨ ووشّ\u064Eن تّار ن تق\u064Eلّالت ن ل\u064Eخليعا."
   );
 });
