@@ -469,6 +469,12 @@
     vertical-align: top;
     border-bottom: 1px solid #ddd;
   }
+  .table tr > :nth-child(2) {
+    border-left: 2px dashed #bbb;
+  }
+  .table tbody tr:last-child > td {
+    border-bottom: none;
+  }
   .size-controls {
     float: right;
   }
@@ -518,7 +524,17 @@
   }
   
   .table td, .table th {
-    padding: 12px 24px; /* Add horizontal spacing */
+    padding: 12px 16px;
+  }
+
+  @media (max-width: 600px) {
+    main {
+      padding: 0.75rem 0.5rem;
+    }
+
+    .table td, .table th {
+      padding: 8px;
+    }
   }
 
 
