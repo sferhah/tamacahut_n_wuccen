@@ -258,27 +258,27 @@
   <div class="loader"><p>No stories are available.</p></div>
 {:else}
   <main>
-    <div class="pagination-header">
-      <!-- Previous button (left arrow) -->
-      <button on:click={previous} disabled={page <= 0} aria-label="Previous">
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-          <path d="M14 7l-5 5 5 5V7z" />
-        </svg>
-      </button>
-
-      <span class="page-number">{page}</span>
-
-      <!-- Next button (right arrow) -->
-      <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next">
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-          <path d="M10 17l5-5-5-5v10z" />
-        </svg>
-      </button>
-    </div>
-
-
     <table class="table">
       <thead>
+        <tr>
+          <td colspan="2">
+            <div class="pagination-header">
+              <button on:click={previous} disabled={page <= 0} aria-label="Previous">
+                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+                  <path d="M14 7l-5 5 5 5V7z" />
+                </svg>
+              </button>
+
+              <span class="page-number">{page}</span>
+
+              <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next">
+                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+                  <path d="M10 17l5-5-5-5v10z" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
         <tr>
           <!-- Kabyle column: controls and text size -->
           <td width="50%">
@@ -464,6 +464,12 @@
     width: 100%;
     border-collapse: collapse;
   }
+  .table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: white;
+  }
   td, th {
     padding: 12px;
     vertical-align: top;
@@ -504,7 +510,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px; /* Set spacing around the arrow */
+    padding: 6px 12px;
+    width: 80px;
   }
 
   /* Plus and minus buttons */
