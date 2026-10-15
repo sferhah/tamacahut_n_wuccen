@@ -1,17 +1,18 @@
-﻿using System.Text;
+﻿using DocumentFormat.OpenXml.Drawing;
+using System.Text;
 
 namespace ConsoleApp2;
 
 public static class PptxHelper
 {
-    public static bool StartsWithPilcrow(this DocumentFormat.OpenXml.Drawing.TableCell pptxCell)
-        => pptxCell.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>().FirstOrDefault()?
-        .Descendants<DocumentFormat.OpenXml.Drawing.Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
+    public static bool StartsWithPilcrow(this TableCell pptxCell)
+        => pptxCell.Descendants<Paragraph>().FirstOrDefault()?
+        .Descendants<Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
 
-    public static List<string> ParseParagraphs(this DocumentFormat.OpenXml.Drawing.TableCell pptxCell)
-        => pptxCell.Descendants<DocumentFormat.OpenXml.Drawing.Paragraph>().ParseParagraphs();   
+    public static List<string> ParseParagraphs(this TableCell pptxCell)
+        => pptxCell.Descendants<Paragraph>().ParseParagraphs();   
 
-    public static List<string> ParseParagraphs(this IEnumerable<DocumentFormat.OpenXml.Drawing.Paragraph> pptxParagraphs)
+    public static List<string> ParseParagraphs(this IEnumerable<Paragraph> pptxParagraphs)
     {
         var paragraphs = new List<List<string>>();
         List<string>? currentParagraph = null;
@@ -55,11 +56,15 @@ public static class PptxHelper
             .ToList();
     }
 
-    public static string ParseLine(this DocumentFormat.OpenXml.Drawing.Paragraph pptxParagraph)
+    public static string ParseLine(this Paragraph pptxParagraph)
     {
         StringBuilder builder = new StringBuilder();
-        foreach (var text in pptxParagraph.Descendants<DocumentFormat.OpenXml.Drawing.Text>())
+        List<bool> italics = new List<bool>();
+
+        foreach (var text in pptxParagraph.Descendants<Text>())
         {
+            italics.Add(text.IsItalic());
+
             builder.Append(text.Text.Replace("\u00A0", " ").Replace("’", "'")
                 .Replace("-", "\u2011")
                 .Replace(" ?", "\u00A0?")
@@ -67,6 +72,26 @@ public static class PptxHelper
                 .Replace(" :", "\u00A0:")
                 .Replace(" ;", "\u00A0;"));
         }
-        return builder.ToString();
+
+        var res = builder.ToString();
+
+        //return res;
+
+        return italics.All(x => x) && res.Length > 0 ? $"''{res}''" : res;
+    }
+
+    public static bool IsItalic(this Text text)
+    {   
+        if (text.Parent is Run run && run.RunProperties?.Italic?.Value == true)
+        {
+            return true;
+        }
+
+        if (text.Parent is EndParagraphRunProperties endPr && endPr.Italic?.Value == true)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -38,6 +38,28 @@
     return Number.isInteger(value) ? Math.max(min, Math.min(max, value)) : fallback;
   }
 
+  function splitQuotedText(line) {
+    const segments = [];
+    const quotedTextPattern = /''([\s\S]*?)''|"([^"]*)"/g;
+    let previousIndex = 0;
+    let match;
+
+    while ((match = quotedTextPattern.exec(line)) !== null) {
+      if (match.index > previousIndex) {
+        segments.push({ text: line.slice(previousIndex, match.index), quoted: false });
+      }
+
+      segments.push({ text: match[1] ?? match[2], quoted: true });
+      previousIndex = quotedTextPattern.lastIndex;
+    }
+
+    if (previousIndex < line.length || segments.length === 0) {
+      segments.push({ text: line.slice(previousIndex), quoted: false });
+    }
+
+    return segments;
+  }
+
   let tales = [];
   let tale = null;
   let loading = true;
@@ -331,14 +353,18 @@
               <td>
                 <div class="text-content" style="font-family: {face}; font-size: {1 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
                   {#each kabylePara.split('\n') as line}
-                    {line}<br />
+                    {#each splitQuotedText(line) as segment}
+                      {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                    {/each}<br />
                   {/each}
                 </div>
               </td>
               <td>
                 <div class="text-content" style="font-size: {1 + translationTextSizeIncrement * 0.15}rem;">
                   {#each tale.French.Paragraphs[i].split('\n') as line}
-                    {line}<br />
+                    {#each splitQuotedText(line) as segment}
+                      {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                    {/each}<br />
                   {/each}
                 </div>
               </td>
@@ -351,7 +377,9 @@
                 {#each tale.Kabyle.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
-                      {line}<br />
+                      {#each splitQuotedText(line) as segment}
+                        {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                      {/each}<br />
                     {/each}
                   </p>
                 {/each}
@@ -362,7 +390,9 @@
                 {#each tale.French.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
-                      {line}<br />
+                      {#each splitQuotedText(line) as segment}
+                        {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                      {/each}<br />
                     {/each}
                   </p>
                 {/each}
