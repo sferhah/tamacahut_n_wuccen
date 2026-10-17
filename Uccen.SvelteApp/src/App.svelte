@@ -262,25 +262,6 @@
     <table class="table">
       <thead>
         <tr>
-          <td colspan="2">
-            <div class="pagination-header">
-              <button on:click={previous} disabled={page <= 0} aria-label="Previous">
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-                  <path d="M14 7l-5 5 5 5V7z" />
-                </svg>
-              </button>
-
-              <span class="page-number">{page}</span>
-
-              <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next">
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-                  <path d="M10 17l5-5-5-5v10z" />
-                </svg>
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr>
           <!-- Kabyle column: controls and text size -->
           <td width="50%">
             <select value={selectedScript} on:change={handleScriptChange}>
@@ -403,6 +384,22 @@
         {/if}
       </tbody>
     </table>
+
+    <nav class="pagination" aria-label="Story pagination">
+      <button on:click={previous} disabled={page <= 0} aria-label="Previous">
+        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+          <path d="M14 7l-5 5 5 5V7z" />
+        </svg>
+      </button>
+
+      <span class="page-number">{page}</span>
+
+      <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next">
+        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+          <path d="M10 17l5-5-5-5v10z" />
+        </svg>
+      </button>
+    </nav>
   </main>
 
     <!-- Help modal (native dialog) -->
@@ -442,8 +439,12 @@
 <style>
   main {
     max-width: 1200px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 1rem 1rem 6rem;
     font-family: system-ui, sans-serif;
   }
   .loader {
@@ -451,9 +452,16 @@
     padding: 3rem;
     font-family: sans-serif;
   }
-  .pagination-header {
+  .pagination {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
     text-align: center;
-    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid #ddd;
   }
   .page-number {
     font-size: 1.5rem;
@@ -507,7 +515,7 @@
     vertical-align: middle;
   }
 
-  .pagination-header button {
+  .pagination button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -537,7 +545,7 @@
 
   @media (max-width: 600px) {
     main {
-      padding: 0.75rem 0.5rem;
+      padding: 0.75rem 0.5rem 6rem;
     }
 
     .table td, .table th {
