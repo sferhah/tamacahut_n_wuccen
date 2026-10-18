@@ -40,7 +40,7 @@
 
   function splitQuotedText(line) {
     const segments = [];
-    const quotedTextPattern = /''([\s\S]*?)''|"([^"]*)"/g;
+    const quotedTextPattern = /''([\s\S]*?)''/g;
     let previousIndex = 0;
     let match;
 
@@ -49,7 +49,7 @@
         segments.push({ text: line.slice(previousIndex, match.index), quoted: false });
       }
 
-      segments.push({ text: match[1] ?? match[2], quoted: true });
+      segments.push({ text: match[1], quoted: true });
       previousIndex = quotedTextPattern.lastIndex;
     }
 
