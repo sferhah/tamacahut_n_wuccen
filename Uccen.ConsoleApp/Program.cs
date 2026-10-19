@@ -2,21 +2,28 @@
 using ConsoleApp2;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+string[] fileNames = ["uccen.pptx", "uccen.eng.pptx" ];
 
-var tales = ExtractJson(@"uccen.pptx");
-
-await File.WriteAllTextAsync(GetPath(), JsonSerializer.Serialize(tales, new JsonSerializerOptions
+foreach(var fileName in fileNames)
 {
-    Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-    IgnoreReadOnlyProperties = true,
-    WriteIndented = true,
-    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-}));
+    var tales = ExtractJson(fileName);
+    var languageCode = GetLanguageCode(fileName);
+
+    await File.WriteAllTextAsync(GetPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
+    {
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+        IgnoreReadOnlyProperties = true,
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    }));
+}
+
 
 Console.WriteLine("Hello, World!");
 
@@ -141,7 +148,14 @@ static List<Tale> ExtractJson(string presentationFile)
     return tales;
 }
 
-static string GetPath()
+
+static string GetLanguageCode(string fileName)
+{
+    var parts = fileName.Split('.');
+    return parts.Length > 2 ? "." + parts[1] : string.Empty;
+}
+
+static string GetPath(string languageCode = "")
 {
     string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
 
@@ -150,7 +164,7 @@ static string GetPath()
         path = Directory.GetParent(path).FullName;
     }
 
-    return Path.Combine(path, @"Uccen.SvelteApp\public\data\tamacahut_n_wuccen.json");
+    return Path.Combine(path, $@"Uccen.SvelteApp\public\data\tamacahut_n_wuccen{languageCode}.json");
 }
 
 public class Tale

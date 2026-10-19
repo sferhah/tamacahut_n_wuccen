@@ -4,14 +4,18 @@
   import { TransliterationService } from './TransliterationService.js';
 
   const DEFAULT_SCRIPT = "Kabyle";
-  const DEFAULT_TRANSLATION = "Français";
+  const DEFAULT_TRANSLATION = "und";
   const STORAGE_KEYS = {
     script: "SelectedScript",
     page: "SelectedIndex",
     kabyleSize: "KabyleTextSizeIncrement",
     translationSize: "TranslationTextSizeIncrement"
   };
-  const translations = ["Français", "English"];
+  const translations = [
+    { key: "und", displayName: "Français" },
+   // { key: "fra", displayName: "Français2" },
+    { key: "eng", displayName: "English" }
+  ];
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
@@ -64,9 +68,11 @@
   let tale = null;
   let loading = true;
   let loadingError = "";
+  let translationError = "";
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
+  let storyRequestId = 0;
   let kabyleTextSizeIncrement = 0;
   let translationTextSizeIncrement = 0;
   let scripts = initialScripts;
@@ -85,16 +91,7 @@
   async function initialize() {
     try {
       restorePreferences();
-      const response = await fetch(`data/tamacahut_n_wuccen.json?${Date.now()}`);
-      if (!response.ok) {
-        throw new Error(`Story request failed with status ${response.status}`);
-      }
-
-      const loadedTales = await response.json();
-      if (!Array.isArray(loadedTales)) {
-        throw new Error("Story data must be an array");
-      }
-
+      const loadedTales = await fetchStories(selectedTranslation);
       tales = loadedTales;
       page = Math.min(page, Math.max(0, loadedTales.length - 1));
       localStorage.setItem(STORAGE_KEYS.page, page.toString());
@@ -108,6 +105,43 @@
     }
 
     loadHelpTable();
+  }
+
+  async function fetchStories(languageCode) {
+    const requestId = ++storyRequestId;
+    const fileName = languageCode === "und"
+      ? "tamacahut_n_wuccen.json"
+      : `tamacahut_n_wuccen.${languageCode}.json`;
+    const response = await fetch(`data/${fileName}?${Date.now()}`);
+    if (!response.ok) {
+      throw new Error(`Story request failed with status ${response.status}`);
+    }
+
+    const loadedTales = await response.json();
+    if (!Array.isArray(loadedTales)) {
+      throw new Error("Story data must be an array");
+    }
+
+    return requestId === storyRequestId ? loadedTales : null;
+  }
+
+  async function handleTranslationChange(event) {
+    const languageCode = event.currentTarget.value;
+
+    try {
+      const loadedTales = await fetchStories(languageCode);
+      if (!loadedTales) return;
+
+      tales = loadedTales;
+      selectedTranslation = languageCode;
+      page = Math.min(page, Math.max(0, loadedTales.length - 1));
+      localStorage.setItem(STORAGE_KEYS.page, page.toString());
+      translationError = "";
+      updateTale();
+    } catch (error) {
+      translationError = `Unable to load the ${languageCode} translation.`;
+      console.error(`Unable to load the ${languageCode} translation`, error);
+    }
   }
 
   function restorePreferences() {
@@ -293,11 +327,14 @@
 
           <!-- Translation column: controls and text size -->
           <td width="50%">
-            <select bind:value={selectedTranslation}>
+            <select value={selectedTranslation} on:change={handleTranslationChange}>
               {#each translations as translation}
-                <option value={translation}>{translation}</option>
+                <option value={translation.key}>{translation.displayName}</option>
               {/each}
             </select>
+            {#if translationError}
+              <span role="alert">{translationError}</span>
+            {/if}
             <span class="size-controls">
               <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
