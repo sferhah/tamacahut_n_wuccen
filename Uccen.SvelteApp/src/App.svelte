@@ -352,12 +352,12 @@
 
         <tr>
           <th width="50%">
-            <h2 style="font-family: {face}; font-size: {1.2 + kabyleTextSizeIncrement * 0.2}rem;" dir={rtl ? "rtl" : "ltr"}>
+            <h2 style="font-family: {face}; font-size: {0.9 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
               {tale.Source.Title}
             </h2>
           </th>
           <th width="50%">
-            <h2 style="font-size: {1.2 + translationTextSizeIncrement * 0.2}rem;">
+            <h2 style="font-size: {0.9 + translationTextSizeIncrement * 0.15}rem;">
               {tale.Translation.Title}
             </h2>
           </th>
@@ -517,6 +517,17 @@
     top: 0;
     z-index: 2;
     background: white;
+  }
+  .table thead tr:first-child > td {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .table thead th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  .table thead h2 {
+    margin: 0;
   }
   td, th {
     padding: 12px;
