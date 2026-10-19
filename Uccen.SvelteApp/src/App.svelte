@@ -10,7 +10,8 @@
     page: "SelectedIndex",
     translation: "SelectedTranslation",
     kabyleSize: "KabyleTextSizeIncrement",
-    translationSize: "TranslationTextSizeIncrement"
+    translationSize: "TranslationTextSizeIncrement",
+    initialSizeEvaluated: "InitialTextSizeEvaluated"
   };
   const translations = [
     { key: "und", displayName: "Français" },
@@ -20,6 +21,7 @@
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
+  const MOBILE_VIEWPORT_MAX_WIDTH = 600;
 
   const initialScripts = [
     { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
@@ -149,6 +151,21 @@
   function restorePreferences() {
     const savedScript = localStorage.getItem(STORAGE_KEYS.script);
     const savedTranslation = localStorage.getItem(STORAGE_KEYS.translation);
+    const savedKabyleSize = localStorage.getItem(STORAGE_KEYS.kabyleSize);
+    const savedTranslationSize = localStorage.getItem(STORAGE_KEYS.translationSize);
+
+    if (localStorage.getItem(STORAGE_KEYS.initialSizeEvaluated) === null) {
+      if (
+        window.innerWidth <= MOBILE_VIEWPORT_MAX_WIDTH &&
+        savedKabyleSize === null &&
+        savedTranslationSize === null
+      ) {
+        localStorage.setItem(STORAGE_KEYS.kabyleSize, MIN_TEXT_SIZE_INCREMENT.toString());
+        localStorage.setItem(STORAGE_KEYS.translationSize, MIN_TEXT_SIZE_INCREMENT.toString());
+      }
+      localStorage.setItem(STORAGE_KEYS.initialSizeEvaluated, "true");
+    }
+
     selectedScript = initialScripts.some((script) => script.name === savedScript)
       ? savedScript
       : DEFAULT_SCRIPT;
