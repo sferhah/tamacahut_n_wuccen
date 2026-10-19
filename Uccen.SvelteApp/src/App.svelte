@@ -8,6 +8,7 @@
   const STORAGE_KEYS = {
     script: "SelectedScript",
     page: "SelectedIndex",
+    translation: "SelectedTranslation",
     kabyleSize: "KabyleTextSizeIncrement",
     translationSize: "TranslationTextSizeIncrement"
   };
@@ -134,6 +135,7 @@
 
       tales = loadedTales;
       selectedTranslation = languageCode;
+      localStorage.setItem(STORAGE_KEYS.translation, selectedTranslation);
       page = Math.min(page, Math.max(0, loadedTales.length - 1));
       localStorage.setItem(STORAGE_KEYS.page, page.toString());
       translationError = "";
@@ -146,9 +148,13 @@
 
   function restorePreferences() {
     const savedScript = localStorage.getItem(STORAGE_KEYS.script);
+    const savedTranslation = localStorage.getItem(STORAGE_KEYS.translation);
     selectedScript = initialScripts.some((script) => script.name === savedScript)
       ? savedScript
       : DEFAULT_SCRIPT;
+    selectedTranslation = translations.some((translation) => translation.key === savedTranslation)
+      ? savedTranslation
+      : DEFAULT_TRANSLATION;
     page = readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
     kabyleTextSizeIncrement = readStoredInteger(
       STORAGE_KEYS.kabyleSize,
