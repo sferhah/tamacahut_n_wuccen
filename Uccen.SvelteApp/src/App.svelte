@@ -696,7 +696,7 @@
 
   .modal-body {
     padding: 1rem;
-    overflow-auto: auto;
+    overflow: auto;
     max-height: 70vh;
   }
 
@@ -715,31 +715,34 @@
     font-size: 1.1rem;
   }
 
-  .help-table th {
-    /* This is the trick: force a transparent background so text is never clipped */
-    background-color: transparent !important; 
-    height: 40px; 
-    position: relative;
-    vertical-align: bottom;
-    padding: 0;
-    overflow: visible;
+  .help-table tbody td {
+    padding: 3px 4px;
+    vertical-align: baseline;
   }
 
-  /* Rotation adjustment without the bread-slice effect */
+  .help-table th {
+    background-color: white !important;
+    vertical-align: bottom;
+    padding: 4px;
+  }
+
+  .help-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white !important;
+    border-top: none;
+  }
+
   .rotated {
-    transform: rotate(-90deg);
-    transform-origin: bottom left;
-    position: absolute;
-    bottom: 5px;
-    left: 40%;
-    width: 150px;
-    text-align: left;
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
+    text-orientation: sideways-left;
+    margin: 0 auto;
     font-weight: bold;
-    font-size: 0.85rem; /* Changed from 1rem to 0.85rem to reduce the size */
+    font-size: 0.85rem;
     white-space: nowrap;
-    overflow: visible;
     pointer-events: none;
-    z-index: 999;
   }
 
 
