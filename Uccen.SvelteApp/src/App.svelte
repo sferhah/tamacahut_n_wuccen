@@ -727,7 +727,7 @@
 
   /* Rotation adjustment without the bread-slice effect */
   .rotated {
-    transform: rotate(-45deg);
+    transform: rotate(-90deg);
     transform-origin: bottom left;
     position: absolute;
     bottom: 5px;
