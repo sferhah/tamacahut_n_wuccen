@@ -59,11 +59,14 @@ public static class PptxHelper
     public static string ParseLine(this Paragraph pptxParagraph)
     {
         StringBuilder builder = new StringBuilder();
-        List<bool> italics = new List<bool>();
+        List<bool> italics = new List<bool>();        
 
         foreach (var text in pptxParagraph.Descendants<Text>())
         {
-            italics.Add(text.IsItalic());
+            if (!string.IsNullOrWhiteSpace(text.Text))
+            {
+                italics.Add(text.IsItalic());
+            }
 
             builder.Append(text.Text.Replace("\u00A0", " ").Replace("’", "'")
                 .Replace("-", "\u2011")
@@ -74,8 +77,6 @@ public static class PptxHelper
         }
 
         var res = builder.ToString();
-
-        //return res;
 
         return italics.All(x => x) && res.Length > 0 ? $"''{res}''" : res;
     }
