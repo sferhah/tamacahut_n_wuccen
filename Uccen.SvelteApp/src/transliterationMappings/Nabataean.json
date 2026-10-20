@@ -2,6 +2,7 @@
   "direction": "rtl",
   "geminizer": "0x0651",
   "nullVowel": "0x0652",
+  "initialSchwa":  "𐢁\u06EB",
   "scriptType": "Abjad",
   "mapping": {
     "a": "𐢁\u064E",
