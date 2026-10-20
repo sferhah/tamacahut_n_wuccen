@@ -225,6 +225,17 @@
     dialogElement.close();
   }
 
+  function handleDialogClick(event) {
+    const bounds = dialogElement.getBoundingClientRect();
+    const clickedOutside =
+      event.clientX < bounds.left ||
+      event.clientX > bounds.right ||
+      event.clientY < bounds.top ||
+      event.clientY > bounds.bottom;
+
+    if (clickedOutside) closeHelp();
+  }
+
   function handleScriptChange(event) {
     changeScript(event.target.value);
   }
@@ -459,7 +470,7 @@
   </main>
 
     <!-- Help modal (native dialog) -->
-  <dialog bind:this={dialogElement} class="modal">
+  <dialog bind:this={dialogElement} class="modal" on:click={handleDialogClick}>
     <div class="modal-header">
       <h3>Mapping</h3>
       <button on:click={closeHelp} class="close-btn">&times;</button>
