@@ -2,6 +2,7 @@
   "direction": "rtl",
   "geminizer": "0x05BC",
   "nullVowel": "0x05B0",
+  "initialSchwa":  "אֵ",
   "scriptType": "Abjad",
   "mapping": {
     "a": "אַ",
