@@ -19,6 +19,9 @@
     <EmbeddedResource Include="uccen.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+	<EmbeddedResource Include="uccen.arb.pptx">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
 	<EmbeddedResource Include="uccen.eng.pptx">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
