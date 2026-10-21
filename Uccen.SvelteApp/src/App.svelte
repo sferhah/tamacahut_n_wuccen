@@ -125,7 +125,7 @@
     const fileName = languageCode === "und"
       ? "tamacahut_n_wuccen.json"
       : `tamacahut_n_wuccen.${languageCode}.json`;
-    const response = await fetch(`data/${fileName}?${Date.now()}`);
+    const response = await fetch(`data/${fileName}`);
     if (!response.ok) {
       throw new Error(`Story request failed with status ${response.status}`);
     }
