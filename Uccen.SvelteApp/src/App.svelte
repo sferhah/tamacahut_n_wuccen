@@ -15,27 +15,27 @@
   };
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const translations = [
-    { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault },
+    { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
    // { key: "fra", displayName: "Français2" },
-    { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault },
-    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif" }
+    { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
   ];
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
   const MOBILE_VIEWPORT_MAX_WIDTH = 600;
 
   const initialScripts = [
-    { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault },
-    { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri" },
-    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif" },    
-    { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri" },
-    { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri" },
-    { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri" },
-    { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri" },
-    { name: "Nabataean", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif" },
-    { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri" },
-    { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault },
-    { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault }
+    { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
+    { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Nabataean", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif", textSizeIncrement: 0 },
+    { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 }
   ];
 
   function readStoredInteger(key, fallback, min, max) {
@@ -76,14 +76,20 @@
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
+  let currentScript = initialScripts[0];
   let currentTranslation = translations[0];
   let storyRequestId = 0;
   let kabyleTextSizeIncrement = 0;
   let translationTextSizeIncrement = 0;
+  let sourceTextSizeIncrement = 0;
+  let translatedTextSizeIncrement = 0;
   let scripts = initialScripts;
   $: pageCount = tales.length;
+  $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
   $: currentTranslation =
     translations.find((translation) => translation.key === selectedTranslation) || translations[0];
+  $: sourceTextSizeIncrement = kabyleTextSizeIncrement + currentScript.textSizeIncrement;
+  $: translatedTextSizeIncrement = translationTextSizeIncrement + currentTranslation.textSizeIncrement;
 
   let currentConfig = null;
   let rtl = false;
@@ -384,12 +390,12 @@
 
         <tr>
           <th width="50%">
-            <h2 style="font-family: {face}; font-size: {0.9 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
+            <h2 style="font-family: {face}; font-size: {0.9 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
               {tale.Source.Title}
             </h2>
           </th>
           <th width="50%">
-            <h2 style="font-family: {currentTranslation.fontFace}; font-size: {0.9 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
+            <h2 style="font-family: {currentTranslation.fontFace}; font-size: {0.9 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
               {tale.Translation.Title}
             </h2>
           </th>
@@ -401,7 +407,7 @@
           {#each tale.Source.Paragraphs as sourcePara, i}
             <tr>
               <td>
-                <div class="text-content" style="font-family: {face}; font-size: {1 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
+                <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
                   {#each sourcePara.split('\n') as line}
                     {#each splitQuotedText(line) as segment}
                       {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
@@ -410,7 +416,7 @@
                 </div>
               </td>
               <td>
-                <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
+                <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                   {#each tale.Translation.Paragraphs[i].split('\n') as line}
                     {#each splitQuotedText(line) as segment}
                       {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
@@ -423,7 +429,7 @@
         {:else}
           <tr>
             <td>
-              <div class="text-content" style="font-family: {face}; font-size: {1 + kabyleTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
+              <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
                 {#each tale.Source.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
@@ -436,7 +442,7 @@
               </div>
             </td>
             <td>
-              <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
+              <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                 {#each tale.Translation.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
