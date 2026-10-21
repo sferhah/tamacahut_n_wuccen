@@ -13,12 +13,13 @@
     translationSize: "TranslationTextSizeIncrement",
     initialSizeEvaluated: "InitialTextSizeEvaluated"
   };
-  const translations = [
-    { key: "und", displayName: "Français" },
-   // { key: "fra", displayName: "Français2" },
-    { key: "eng", displayName: "English" }
-  ];
   const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
+  const translations = [
+    { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault },
+   // { key: "fra", displayName: "Français2" },
+    { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault },
+    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif" }
+  ];
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
   const MOBILE_VIEWPORT_MAX_WIDTH = 600;
@@ -75,11 +76,14 @@
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
+  let currentTranslation = translations[0];
   let storyRequestId = 0;
   let kabyleTextSizeIncrement = 0;
   let translationTextSizeIncrement = 0;
   let scripts = initialScripts;
   $: pageCount = tales.length;
+  $: currentTranslation =
+    translations.find((translation) => translation.key === selectedTranslation) || translations[0];
 
   let currentConfig = null;
   let rtl = false;
@@ -385,7 +389,7 @@
             </h2>
           </th>
           <th width="50%">
-            <h2 style="font-size: {0.9 + translationTextSizeIncrement * 0.15}rem;">
+            <h2 style="font-family: {currentTranslation.fontFace}; font-size: {0.9 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
               {tale.Translation.Title}
             </h2>
           </th>
@@ -406,7 +410,7 @@
                 </div>
               </td>
               <td>
-                <div class="text-content" style="font-size: {1 + translationTextSizeIncrement * 0.15}rem;">
+                <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                   {#each tale.Translation.Paragraphs[i].split('\n') as line}
                     {#each splitQuotedText(line) as segment}
                       {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
@@ -432,7 +436,7 @@
               </div>
             </td>
             <td>
-              <div class="text-content" style="font-size: {1 + translationTextSizeIncrement * 0.15}rem;">
+              <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translationTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                 {#each tale.Translation.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}

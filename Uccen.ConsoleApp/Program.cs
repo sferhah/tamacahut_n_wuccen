@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
-string[] fileNames = ["uccen.pptx", "uccen.eng.pptx" ];
+string[] fileNames = ["uccen.pptx" , "uccen.eng.pptx", "uccen.arb.pptx" ];
 
 foreach(var fileName in fileNames)
 {
