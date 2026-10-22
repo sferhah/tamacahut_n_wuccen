@@ -5,6 +5,25 @@ namespace ConsoleApp2;
 
 public static class PptxHelper
 {
+    public static void ForceRtl(this TableCell tableCell, bool forceRightAlignment = false)
+    {
+        foreach (var paragraph in tableCell.Descendants<Paragraph>())
+        {
+            var pPr = paragraph.ParagraphProperties;
+            if (pPr == null)
+            {
+                pPr = new ParagraphProperties();         
+                paragraph.PrependChild(pPr);
+            }
+            
+            pPr.RightToLeft = true;
+            if (forceRightAlignment)
+            {
+                pPr.Alignment = TextAlignmentTypeValues.Right;
+            }
+        }
+    }
+
     public static bool StartsWithPilcrow(this TableCell pptxCell)
         => pptxCell.Descendants<Paragraph>().FirstOrDefault()?
         .Descendants<Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
@@ -62,7 +81,7 @@ public static class PptxHelper
         List<bool> italics = new List<bool>();        
 
         foreach (var text in pptxParagraph.Descendants<Text>())
-        {
+        {   
             if (!string.IsNullOrWhiteSpace(text.Text))
             {
                 italics.Add(text.IsItalic());

@@ -8,6 +8,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+//ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
+//return;
+
 string[] fileNames = ["uccen.pptx" , "uccen.eng.pptx", "uccen.arb.pptx" ];
 
 foreach(var fileName in fileNames)
@@ -26,6 +29,78 @@ foreach(var fileName in fileNames)
 
 
 Console.WriteLine("Hello, World!");
+
+static void ForceRtl(string presentationFile)
+{
+    // Open the presentation as read-write.
+    using PresentationDocument presentationDocument = PresentationDocument.Open(presentationFile, true);
+    // Verify that the presentation document exists.
+    if (presentationDocument == null)
+    {
+        throw new ArgumentNullException("presentationDocument");
+    }
+
+    // Get the presentation part of the presentation document.
+    var presentationPart = presentationDocument.PresentationPart;
+
+    // Verify that the presentation part and presentation exist.
+    if (presentationPart == null || presentationPart.Presentation == null)
+    {
+        return;
+    }
+
+    // Get the Presentation object from the presentation part.
+    Presentation presentation = presentationPart.Presentation;
+
+    // Verify that the slide ID list exists.
+    if (presentation.SlideIdList == null)
+    {
+        return;
+    }
+
+    // Get the collection of slide IDs from the slide ID list.
+    DocumentFormat.OpenXml.OpenXmlElementList slideIds = presentation.SlideIdList.ChildElements;
+
+    
+    // If the slide ID is in range...
+    for (int i = 0; i < slideIds.Count; i++)
+    {
+        // Get the specified slide part from the relationship ID.
+        SlidePart slidePart = (SlidePart)presentationPart.GetPartById(((SlideId)slideIds[i]).RelationshipId);
+
+        var table = slidePart.Slide.Descendants<DocumentFormat.OpenXml.Drawing.Table>().First();
+
+        var cells = table.Descendants<DocumentFormat.OpenXml.Drawing.TableCell>();
+
+        if (cells.Count() != 9)
+        {
+            throw new ArgumentNullException("slidePart");
+        }
+
+        var tale = new Tale();        
+
+        int j = 0;
+        foreach (var cell in cells)
+        {
+            switch (j)
+            {   
+                case 5:
+                    cell.ForceRtl();
+                    break;
+                case 8:
+                    cell.ForceRtl(true);                    
+                    break;                
+            }
+
+            j++;
+        }
+
+        slidePart.Slide.Save();
+    }
+
+    presentationDocument.Save();
+
+}
 
 static List<Tale> ExtractJson(string presentationFile)
 {
@@ -165,6 +240,18 @@ static string GetPath(string languageCode = "")
     }
 
     return Path.Combine(path, $@"Uccen.SvelteApp\public\data\tamacahut_n_wuccen{languageCode}.json");
+}
+
+static string GetFullPathWithinProject(string filename)
+{
+    string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+
+    while (!Directory.GetFiles(path).Any(x => x.EndsWith(".csproj")))
+    {
+        path = Directory.GetParent(path).FullName;
+    }
+
+    return Path.Combine(path, filename);
 }
 
 public class Tale
