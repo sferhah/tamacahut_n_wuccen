@@ -74,6 +74,8 @@
   let loading = true;
   let loadingError = "";
   let translationError = "";
+  let isAndroid = false;
+  let openPicker = null;
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
@@ -99,6 +101,7 @@
   let transliterationsData = [];
 
   onMount(() => {
+    isAndroid = /Android/i.test(navigator.userAgent);
     initialize();
   });
 
@@ -140,8 +143,10 @@
   }
 
   async function handleTranslationChange(event) {
-    const languageCode = event.currentTarget.value;
+    await changeTranslation(event.currentTarget.value);
+  }
 
+  async function changeTranslation(languageCode) {
     try {
       const loadedTales = await fetchStories(languageCode);
       if (!loadedTales) return;
@@ -156,6 +161,24 @@
     } catch (error) {
       translationError = `Unable to load the ${languageCode} translation.`;
       console.error(`Unable to load the ${languageCode} translation`, error);
+    }
+  }
+
+  function togglePicker(name) {
+    openPicker = openPicker === name ? null : name;
+  }
+
+  function handlePickerOutsideClick(event) {
+    if (!event.target.closest?.(".custom-picker")) {
+      openPicker = null;
+    }
+  }
+
+  function handlePickerKeydown(event) {
+    if (event.key === "Escape" && openPicker) {
+      const pickerName = openPicker;
+      openPicker = null;
+      document.querySelector(`[data-picker-trigger="${pickerName}"]`)?.focus();
     }
   }
 
@@ -330,6 +353,8 @@
   }
 </script>
 
+<svelte:window on:click={handlePickerOutsideClick} on:keydown={handlePickerKeydown} />
+
 {#if loading}
   <div class="loader"><p><em>Loading...</em></p></div>
 {:else if loadingError}
@@ -343,11 +368,45 @@
         <tr>
           <!-- Kabyle column: controls and text size -->
           <td width="50%">
-            <select value={selectedScript} on:change={handleScriptChange}>
-              {#each scripts as script}
-                <option value={script.name}>{script.displayName}</option>
-              {/each}
-            </select>
+            {#if isAndroid}
+              <div class="custom-picker">
+                <button
+                  type="button"
+                  class="picker-trigger"
+                  data-picker-trigger="script"
+                  aria-haspopup="listbox"
+                  aria-expanded={openPicker === "script"}
+                  on:click={() => togglePicker("script")}
+                >
+                  {currentScript.displayName}
+                  <span class="picker-chevron" aria-hidden="true"></span>
+                </button>
+                {#if openPicker === "script"}
+                  <div class="picker-menu" role="listbox" aria-label="Transliteration">
+                    {#each scripts as script}
+                      <button
+                        type="button"
+                        class="picker-option"
+                        role="option"
+                        aria-selected={selectedScript === script.name}
+                        on:click={() => {
+                          openPicker = null;
+                          changeScript(script.name);
+                        }}
+                      >
+                        {script.displayName}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
+            {:else}
+              <select value={selectedScript} on:change={handleScriptChange}>
+                {#each scripts as script}
+                  <option value={script.name}>{script.displayName}</option>
+                {/each}
+              </select>
+            {/if}
 
             <span class="size-controls">
               <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
@@ -365,11 +424,45 @@
 
           <!-- Translation column: controls and text size -->
           <td width="50%">
-            <select value={selectedTranslation} on:change={handleTranslationChange}>
-              {#each translations as translation}
-                <option value={translation.key}>{translation.displayName}</option>
-              {/each}
-            </select>
+            {#if isAndroid}
+              <div class="custom-picker">
+                <button
+                  type="button"
+                  class="picker-trigger"
+                  data-picker-trigger="translation"
+                  aria-haspopup="listbox"
+                  aria-expanded={openPicker === "translation"}
+                  on:click={() => togglePicker("translation")}
+                >
+                  {currentTranslation.displayName}
+                  <span class="picker-chevron" aria-hidden="true"></span>
+                </button>
+                {#if openPicker === "translation"}
+                  <div class="picker-menu" role="listbox" aria-label="Translation">
+                    {#each translations as translation}
+                      <button
+                        type="button"
+                        class="picker-option"
+                        role="option"
+                        aria-selected={selectedTranslation === translation.key}
+                        on:click={() => {
+                          openPicker = null;
+                          changeTranslation(translation.key);
+                        }}
+                      >
+                        {translation.displayName}
+                      </button>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
+            {:else}
+              <select value={selectedTranslation} on:change={handleTranslationChange}>
+                {#each translations as translation}
+                  <option value={translation.key}>{translation.displayName}</option>
+                {/each}
+              </select>
+            {/if}
             {#if translationError}
               <span role="alert">{translationError}</span>
             {/if}
@@ -699,6 +792,76 @@
 
   select option {
     font-size: 14px;
+  }
+
+  .custom-picker {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: top;
+  }
+
+  .picker-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    max-width: 100%;
+    min-height: 32px;
+    padding: 5px 8px;
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .picker-chevron {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+  }
+
+  .picker-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 5;
+    width: max-content;
+    min-width: 100%;
+    max-width: min(80vw, 280px);
+    max-height: min(40vh, 320px);
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  .picker-option {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 3px;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .picker-option[aria-selected="true"] {
+    background: #f0f0f0;
+    font-weight: 600;
+  }
+
+  .picker-option:hover,
+  .picker-option:focus-visible {
+    background: #f4f4f4;
+    outline: none;
   }
 
   /* Style de la Pop-up Modale */
