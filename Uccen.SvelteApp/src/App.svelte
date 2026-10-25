@@ -18,7 +18,8 @@
     { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
    // { key: "fra", displayName: "Français2" },
     { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
+    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
+   // { key: "arq", displayName: "عربية دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
   ];
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
@@ -692,6 +693,12 @@
     border-radius: 4px;
     padding: 0 8px;
     background: white;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  select option {
+    font-size: 14px;
   }
 
   /* Style de la Pop-up Modale */
