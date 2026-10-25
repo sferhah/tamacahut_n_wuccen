@@ -785,13 +785,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 0 8px;
-    background: white;
-    font-size: 14px;
-    line-height: 1.2;
-  }
-
-  select option {
-    font-size: 14px;
+    background: white;   
   }
 
   .custom-picker {
