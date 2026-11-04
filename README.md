@@ -4,7 +4,7 @@
 
 * https://tamacahut-n-wuccen.netlify.app
 
-Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle text according to the latest transcription standard[^3]. The PWA offers multiple transliterations of the Kabyle text: in addition to the original Latin text, several other scripts are available[^4]: Tifinagh, Arabic, Cyrillic, Greek, Hebrew, Syriac, Musnad, Phoenician and Aramaic.
+Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle text according to the latest transcription standard[^3]. I also added translations in English, Standard Arabic, and Algerian Arabic. The PWA offers multiple transliterations of the Kabyle text: in addition to the original Latin text, several other scripts are available[^4]: Tifinagh, Arabic, Cyrillic, Greek, Hebrew, Syriac, Musnad, Phoenician, Aramaic and Nabataean.
 
 [^1]: PWA: Progressive web app.
 [^2]: Chrome/Edge: click on 'install', Android/iOs: add to homepage [full tuto](https://www.cdc.gov/niosh/mining/content/hearingloss/installPWA.html).
