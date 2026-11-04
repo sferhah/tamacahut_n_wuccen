@@ -1,12 +1,25 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { TransliterationService } from "../src/TransliterationService.js";
+import { TransliterationService } from "../src/TransliterationService.ts";
+
+type ArabicMappingData = {
+  direction?: "ltr" | "rtl";
+  geminizer?: string;
+  nullVowel?: string;
+  initialSchwa?: string;
+  scriptType?: string;
+  mapping: Record<string, string>;
+};
+type Story = {
+  Source: { Title: string; Paragraphs: string[] };
+  Translation: { Title: string; Paragraphs: string[] };
+};
 
 const arabicData = JSON.parse(
   readFileSync(new URL("../src/transliterationMappings/arab.json", import.meta.url), "utf8")
-);
-const mapping = {};
+) as ArabicMappingData;
+const mapping: Record<string, string> = {};
 
 for (const [key, rawValue] of Object.entries(arabicData.mapping)) {
   const value = rawValue.replace(/[\u200E\u200F]/g, "");
@@ -19,8 +32,8 @@ for (const [key, rawValue] of Object.entries(arabicData.mapping)) {
 const arabicConfig = {
   name: "arab",
   direction: arabicData.direction || "ltr",
-  geminizer: String.fromCodePoint(Number.parseInt(arabicData.geminizer, 16)),
-  nullVowel: String.fromCodePoint(Number.parseInt(arabicData.nullVowel, 16)),
+  geminizer: String.fromCodePoint(Number.parseInt(arabicData.geminizer || "0x00B2", 16)),
+  nullVowel: String.fromCodePoint(Number.parseInt(arabicData.nullVowel || "0x00B0", 16)),
   scriptType: arabicData.scriptType || "Alphabet",
   initialSchwa: arabicData.initialSchwa || undefined,
   mapping
@@ -28,7 +41,7 @@ const arabicConfig = {
 
 const stories = JSON.parse(
   readFileSync(new URL("../public/data/tamacahut_n_wuccen.json", import.meta.url), "utf8")
-);
+) as Story[];
 const rucherStory = stories.find((story) => story.Translation.Title === "Dans le rucher");
 
 test("Arabic transliteration preserves the known-good rucher title and paragraph", () => {

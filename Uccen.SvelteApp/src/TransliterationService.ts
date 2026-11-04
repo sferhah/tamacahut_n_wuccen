@@ -1,10 +1,12 @@
+import type { ScriptConfig } from "./ConfigDeserializer";
+
 const LATIN_CHARS = [
   'a', 'i', 'u', 'o', 'e', 'b', 'g', 'ǧ', 'd', 'h', 'w', 'ḥ', 'y', 'k', 'l', 'm', 'n', 's', 'č', 'f', 'p', 'q', 'r', 't', 'c', 'z', 'ț', 'ɛ', 'ṭ', 'v', 'j', 'x', 'ḏ', 'ṯ', 'ṣ', 'ɣ', 'ẓ', 'ḍ', 'ṛ'
 ];
 
 export class TransliterationService {
 
-  static preNormalize(input) {
+  static preNormalize(input: string): string {
     if (!input) return "";
     return input
       .replace(/’/g, "'")
@@ -14,7 +16,7 @@ export class TransliterationService {
       .replace(/ţ/g, "tt");
   }
 
-  static transliterate(input, config) {
+  static transliterate(input: string, config: ScriptConfig): string {
     let result = this.preNormalize(input);
 
     if (config.scriptType === "Abjad") {
@@ -32,7 +34,7 @@ export class TransliterationService {
     return this.mapCharacters(result, config);
   }
 
-  static abjadize(input, geminizer) {
+  static abjadize(input: string, geminizer: string): string {
     let res = input.toLowerCase()
       .replace(/à/g, "a").replace(/ā/g, "a")
       .replace(/ī/g, "i").replace(/í/g, "i")
@@ -43,15 +45,15 @@ export class TransliterationService {
       .replace(/é/g, "a").replace(/è/g, "a")
       .replace(/ç/g, "s").replace(/ț/g, "s");
     // Escape characters with special meaning inside a [...] class
-    const escapeForCharClass = (s) => s.replace(/[\]\\^-]/g, "\\$&");
+    const escapeForCharClass = (s: string) => s.replace(/[\]\\^-]/g, "\\$&");
 
     // Unicode-aware equivalents of .NET's \w and \b (JS's are ASCII-only)
     const W = String.raw`[\p{L}\p{Mn}\p{Nd}\p{Pc}]`;
     
 
     // 1. Doubled letters -> letter + Geminizer
-    const cls = LATIN_CHARS.map(escapeForCharClass).join(","); // use .join("") if the comma is unintended
-    res = res.replace(new RegExp(`([${cls}])\\1`, "gu"), (_, c) => c + geminizer);
+    const cls = LATIN_CHARS.map(escapeForCharClass).join(""); // use .join("") if the comma is unintended
+    res = res.replace(new RegExp(`([${cls}])\\1`, "gu"), (_match, c: string) => c + geminizer);
 
     // 2. After a hyphen/apostrophe inside a word: i -> y, u -> w, a -> â
     
@@ -69,7 +71,7 @@ export class TransliterationService {
     return res;
   }
 
-  static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
+  static replaceHyphenWithKasheeda(input: string, scriptName: string, geminizer: string): string {
     if (scriptName !== "arab") return input;
 
     const kasheeda = "ـ";
@@ -78,9 +80,9 @@ export class TransliterationService {
     // left side: a word start, or empty when directly preceded by a word char (a-b-c case)
     const pattern = new RegExp(`((?<!${W})${W}+|(?<=${W}))[-\u2011'](${W}+)`, "gu");
 
-    let out = input.replace(pattern, (_, left, right) => `${left}${kasheeda}\u00A0${kasheeda}${right}`);
+    let out = input.replace(pattern, (_match, left: string, right: string) => `${left}${kasheeda}\u00A0${kasheeda}${right}`);
 
-    const fixKasheeda = (s, c) => s.replaceAll(c + kasheeda, c);
+    const fixKasheeda = (s: string, c: string) => s.replaceAll(c + kasheeda, c);
     const nonJoining = ["a", "r", "ṛ", "w", "d", "ḏ", "z", "ẓ"];
 
     for (const c of nonJoining) out = fixKasheeda(out, c);
@@ -90,15 +92,15 @@ export class TransliterationService {
   }
 
 
-  static replaceVowelsWithSemiVowels(input, geminizer = "²") {
-    const vowels = { 'i': "y", 'u': "w", 'a': "â" };
+  static replaceVowelsWithSemiVowels(input: string, geminizer = "²"): string {
+    const vowels: Record<string, string> = { 'i': "y", 'u': "w", 'a': "â" };
     let builder = "";
     let previousChar = null;
 
     for (let i = 0; i < input.length; i++) {
       const c = input[i];
 
-      const isWordCharacter = LATIN_CHARS.includes(previousChar) || previousChar === geminizer;
+      const isWordCharacter = (previousChar !== null && LATIN_CHARS.includes(previousChar)) || previousChar === geminizer;
 
       const isFirst = previousChar === null || !isWordCharacter;
 
@@ -113,7 +115,7 @@ export class TransliterationService {
   }
 
 
-  static replaceSchwaWithNullVowel(input, nullVowel, geminizer, preserveSchwa = false) {
+  static replaceSchwaWithNullVowel(input: string, nullVowel: string, geminizer: string, preserveSchwa = false): string {
     const result = preserveSchwa ? input : input
       .split("ew").join("w" + nullVowel).split("w" + nullVowel + geminizer).join("w" + geminizer)
       .split("ey").join("y" + nullVowel).split("y" + nullVowel + geminizer).join("y" + geminizer);
@@ -121,7 +123,7 @@ export class TransliterationService {
     return preserveSchwa ? result : result.split("e").join("");
   }
 
-  static mapCharacters(input, config) {
+  static mapCharacters(input: string, config: ScriptConfig): string {
     let res = input;
 
     if (config.direction === "ltr") {
@@ -152,12 +154,12 @@ export class TransliterationService {
     return output;
   }
 
-  static getTransliterations(loadedConfigs) {
+  static getTransliterations(loadedConfigs: Record<string, ScriptConfig>): string[][] {
     const chars = [
       'a', 'i', 'u', 'o', 'e', 'b', 'g', 'ǧ', 'd', 'h', 'w', 'ḥ', 'y', 'k', 'l', 'm', 'n', 's', 'č', 'f', 'p', 'q', 'r', 't', 'c', 'z', 'ț', 'ɛ', 'ṭ', 'v', 'j', 'x', 'ḏ', 'ṯ', 'ṣ', 'ɣ', 'ẓ', 'ḍ', 'ṛ',
     ];
 
-    const rows = [];
+    const rows: string[][] = [];
 
     // 1. columns
     const header = ['Latin'];

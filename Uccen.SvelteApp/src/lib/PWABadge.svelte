@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { useRegisterSW } from 'virtual:pwa-register/svelte'
 
   // periodic sync is disabled, change the value to enable it, the period is in milliseconds
@@ -10,7 +10,7 @@
    * @param swUrl {string}
    * @param r {ServiceWorkerRegistration}
    */
-  function registerPeriodicSync(swUrl, r) {
+  function registerPeriodicSync(swUrl: string, r: ServiceWorkerRegistration) {
     if (period <= 0) return
 
     setInterval(async () => {
@@ -37,10 +37,9 @@
         registerPeriodicSync(swUrl, r)
       }
       else if (r?.installing) {
-        r.installing.addEventListener('statechange', (e) => {
-          /** @type {ServiceWorker} */
-          const sw = e.target
-          if (sw.state === 'activated')
+        const installingWorker = r.installing
+        installingWorker.addEventListener('statechange', () => {
+          if (installingWorker.state === 'activated')
             registerPeriodicSync(swUrl, r)
         })
       }

@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { ConfigDeserializer } from './ConfigDeserializer.js';
-  import { TransliterationService } from './TransliterationService.js';
+  import { ConfigDeserializer, type ScriptConfig } from './ConfigDeserializer';
+  import { TransliterationService } from './TransliterationService';
   import locales from './locales.json';
 
   const DEFAULT_SCRIPT = "latn";
@@ -39,8 +39,24 @@
     { name: "cyrl", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
     { name: "grek", displayName: "Greek", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 }
   ];
+  type TranslationOption = (typeof translations)[number];
+  type ScriptOption = (typeof initialScripts)[number];
+  type Story = {
+    Source: { Title: string; Paragraphs: string[] };
+    Translation: { Title: string; Paragraphs: string[] };
+  };
+  type DisplayStory = {
+    Source: Story["Source"];
+    Translation: Story["Translation"];
+  };
+  type ContentsItem = {
+    index: number;
+    sourceTitle: string;
+    translationTitle: string;
+  };
+  type LocaleKey = keyof typeof locales;
 
-  function readStoredInteger(key, fallback, min, max) {
+  function readStoredInteger(key: string, fallback: number, min: number, max: number): number {
     const storedValue = localStorage.getItem(key);
     if (storedValue === null) return fallback;
 
@@ -48,8 +64,8 @@
     return Number.isInteger(value) ? Math.max(min, Math.min(max, value)) : fallback;
   }
 
-  function splitQuotedText(line) {
-    const segments = [];
+  function splitQuotedText(line: string): { text: string; quoted: boolean }[] {
+    const segments: { text: string; quoted: boolean }[] = [];
     const quotedTextPattern = /''([\s\S]*?)''/g;
     let previousIndex = 0;
     let match;
@@ -70,25 +86,28 @@
     return segments;
   }
 
-  let tales = [];
-  let tale = null;
+  let tales: Story[] = [];
+  let tale: DisplayStory | null = null;
   let loading = true;
   let loadingError = "";
   let translationError = "";
   let isAndroid = false;
   let isIOS = false;
-  let openPicker = null;
+  let openPicker: "script" | "translation" | null = null;
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
-  let currentScript = initialScripts[0];
-  let currentTranslation = translations[0];
+  let currentScript: ScriptOption = initialScripts[0];
+  let currentTranslation: TranslationOption = translations[0];
   let storyRequestId = 0;
   let kabyleTextSizeIncrement = 0;
   let translationTextSizeIncrement = 0;
   let sourceTextSizeIncrement = 0;
   let translatedTextSizeIncrement = 0;
-  let scripts = initialScripts;
+  let scripts: ScriptOption[] = initialScripts;
+  let pageCount = 0;
+  let uiLocaleKey: LocaleKey = "fra";
+  let uiLocale = locales.fra;
   $: pageCount = tales.length;
   $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
   $: currentTranslation =
@@ -99,13 +118,15 @@
   $: sourceTextSizeIncrement = kabyleTextSizeIncrement + currentScript.textSizeIncrement;
   $: translatedTextSizeIncrement = translationTextSizeIncrement + currentTranslation.textSizeIncrement;
 
-  let currentConfig = null;
+  let currentConfig: ScriptConfig | null = null;
   let rtl = false;
   let face = faceDefault;
-  let dialogElement;
-  let contentsDialogElement;
+  let dialogElement: HTMLDialogElement;
+  let contentsDialogElement: HTMLDialogElement;
   let contentsSearch = "";
-  let transliterationsData = [];
+  let transliterationsData: string[][] = [];
+  let contentsItems: ContentsItem[] = [];
+  let filteredContentsItems: ContentsItem[] = [];
   $: contentsItems = buildContentsItems(tales, currentConfig);
   $: filteredContentsItems = contentsItems.filter((item) =>
     `${item.sourceTitle} ${item.translationTitle}`.toLocaleLowerCase().includes(contentsSearch.trim().toLocaleLowerCase())
@@ -123,6 +144,9 @@
     try {
       restorePreferences();
       const loadedTales = await fetchStories(selectedTranslation);
+      if (!loadedTales) {
+        throw new Error("Initial story request was superseded");
+      }
       tales = loadedTales;
       page = Math.min(page, Math.max(0, loadedTales.length - 1));
       localStorage.setItem(STORAGE_KEYS.page, page.toString());
@@ -138,7 +162,7 @@
     loadHelpTable();
   }
 
-  async function fetchStories(languageCode) {
+  async function fetchStories(languageCode: string): Promise<Story[] | null> {
     const requestId = ++storyRequestId;
     const fileName = languageCode === "und"
       ? "tamacahut_n_wuccen.json"
@@ -148,19 +172,32 @@
       throw new Error(`Story request failed with status ${response.status}`);
     }
 
-    const loadedTales = await response.json();
-    if (!Array.isArray(loadedTales)) {
-      throw new Error("Story data must be an array");
+    const responseData: unknown = await response.json();
+    if (!Array.isArray(responseData) || !responseData.every(isStory)) {
+      throw new Error("Story data must be an array of valid stories");
     }
 
-    return requestId === storyRequestId ? loadedTales : null;
+    return requestId === storyRequestId ? responseData : null;
   }
 
-  async function handleTranslationChange(event) {
-    await changeTranslation(event.currentTarget.value);
+  function isStory(value: unknown): value is Story {
+    if (typeof value !== "object" || value === null) return false;
+    const story = value as Partial<Story>;
+    return typeof story.Source?.Title === "string" &&
+      Array.isArray(story.Source.Paragraphs) &&
+      story.Source.Paragraphs.every((paragraph) => typeof paragraph === "string") &&
+      typeof story.Translation?.Title === "string" &&
+      Array.isArray(story.Translation.Paragraphs) &&
+      story.Translation.Paragraphs.every((paragraph) => typeof paragraph === "string");
   }
 
-  async function changeTranslation(languageCode) {
+  async function handleTranslationChange(event: Event) {
+    if (event.currentTarget instanceof HTMLSelectElement) {
+      await changeTranslation(event.currentTarget.value);
+    }
+  }
+
+  async function changeTranslation(languageCode: string): Promise<void> {
     try {
       const loadedTales = await fetchStories(languageCode);
       if (!loadedTales) return;
@@ -179,25 +216,25 @@
     }
   }
 
-  function togglePicker(name) {
+  function togglePicker(name: "script" | "translation"): void {
     openPicker = openPicker === name ? null : name;
   }
 
-  function handlePickerOutsideClick(event) {
-    if (!event.target.closest?.(".custom-picker")) {
+  function handlePickerOutsideClick(event: MouseEvent) {
+    if (event.target instanceof Element && !event.target.closest(".custom-picker")) {
       openPicker = null;
     }
   }
 
-  function handlePickerKeydown(event) {
+  function handlePickerKeydown(event: KeyboardEvent) {
     if (event.key === "Escape" && openPicker) {
       const pickerName = openPicker;
       openPicker = null;
-      document.querySelector(`[data-picker-trigger="${pickerName}"]`)?.focus();
+      document.querySelector<HTMLButtonElement>(`[data-picker-trigger="${pickerName}"]`)?.focus();
     }
   }
 
-  function restorePreferences() {
+  function restorePreferences(): void {
     const savedScript = localStorage.getItem(STORAGE_KEYS.script);
     const savedTranslation = localStorage.getItem(STORAGE_KEYS.translation);
     const savedKabyleSize = localStorage.getItem(STORAGE_KEYS.kabyleSize);
@@ -219,13 +256,12 @@
       localStorage.setItem(STORAGE_KEYS.initialSizeEvaluated, "true");
     }
 
-    selectedScript = initialScripts.some((script) => script.name === urlScript)
-      ? urlScript
-      : initialScripts.some((script) => script.name === savedScript)
-        ? savedScript
-        : DEFAULT_SCRIPT;
-    selectedTranslation = translations.some((translation) => translation.key === urlTranslation)
-      ? urlTranslation
+    const validUrlScript = initialScripts.find((script) => script.name === urlScript)?.name;
+    const validSavedScript = initialScripts.find((script) => script.name === savedScript)?.name;
+    selectedScript = validUrlScript || validSavedScript || DEFAULT_SCRIPT;
+    const validUrlTranslation = translations.find((translation) => translation.key === urlTranslation)?.key;
+    selectedTranslation = validUrlTranslation
+      ? validUrlTranslation
       : savedTranslation === null
         ? getBrowserTranslation()
         : savedTranslation === "fra"
@@ -250,12 +286,12 @@
     );
   }
 
-  function getBrowserTranslation() {
-    const languageCodes = { en: "eng", fr: "und", ar: "arb" };
+  function getBrowserTranslation(): string {
+    const languageCodes: Record<string, string> = { en: "eng", fr: "und", ar: "arb" };
     const browserLanguages = [...(navigator.languages || []), navigator.language];
 
     for (const browserLanguage of browserLanguages) {
-      const languageCode = browserLanguage?.trim().toLowerCase().split(/[-_]/)[0];
+      const languageCode = browserLanguage?.trim().toLowerCase().split(/[-_]/)[0] || "";
       const translationCode = languageCodes[languageCode];
       if (translations.some((translation) => translation.key === translationCode)) {
         return translationCode;
@@ -265,7 +301,7 @@
     return DEFAULT_TRANSLATION;
   }
 
-  function loadTranslatedScriptNames() {
+  function loadTranslatedScriptNames(): void {
     scripts = initialScripts.map((script) => {
       if (script.name === DEFAULT_SCRIPT) return script;
 
@@ -282,7 +318,7 @@
     });
   }
 
-  function loadHelpTable() {
+  function loadHelpTable(): void {
     try {
       const configs = Object.fromEntries(
         initialScripts
@@ -295,27 +331,31 @@
     }
   }
 
-  function openHelp() {
+  function openHelp(): void {
     dialogElement.showModal();
   }
 
-  function closeHelp() {
+  function closeHelp(): void {
     dialogElement.close();
   }
 
-  function isReadableContentsHeading(value) {
+  function isReadableContentsHeading(value: string): boolean {
     return /[\p{L}]/u.test(value) && !/^#\d+$/u.test(value.trim());
   }
 
-  function getContentsHeading(title, paragraphs, transliterate) {
+  function getContentsHeading(
+    title: string | undefined,
+    paragraphs: string[] | undefined,
+    transliterate: (text: string) => string
+  ): string {
     const heading = transliterate(title || "").trim();
     if (isReadableContentsHeading(heading)) return heading;
 
     return transliterate(paragraphs?.[0] || "").trim().replace(/\s+/g, " ") || heading;
   }
 
-  function buildContentsItems(storyList, config) {
-    const transliterate = (text) =>
+  function buildContentsItems(storyList: Story[], config: ScriptConfig | null): ContentsItem[] {
+    const transliterate = (text: string) =>
       config ? TransliterationService.transliterate(text, config) : text;
 
     return storyList.map((item, index) => ({
@@ -329,22 +369,22 @@
     }));
   }
 
-  function openContents() {
+  function openContents(): void {
     contentsSearch = "";
     contentsDialogElement.showModal();
     document.querySelector(`[data-contents-page="${page}"]`)?.scrollIntoView({ block: "nearest" });
   }
 
-  function closeContents() {
+  function closeContents(): void {
     contentsDialogElement.close();
   }
 
-  function goToContentsPage(nextPage) {
+  function goToContentsPage(nextPage: number): void {
     closeContents();
     setPage(nextPage);
   }
 
-  function handleContentsDialogClick(event) {
+  function handleContentsDialogClick(event: MouseEvent): void {
     const bounds = contentsDialogElement.getBoundingClientRect();
     const clickedOutside =
       event.clientX < bounds.left ||
@@ -355,7 +395,7 @@
     if (clickedOutside) closeContents();
   }
 
-  function handleDialogClick(event) {
+  function handleDialogClick(event: MouseEvent): void {
     const bounds = dialogElement.getBoundingClientRect();
     const clickedOutside =
       event.clientX < bounds.left ||
@@ -366,11 +406,13 @@
     if (clickedOutside) closeHelp();
   }
 
-  function handleScriptChange(event) {
-    changeScript(event.target.value);
+  function handleScriptChange(event: Event): void {
+    if (event.currentTarget instanceof HTMLSelectElement) {
+      changeScript(event.currentTarget.value);
+    }
   }
 
-  function changeScript(scriptName, persistPage = true) {
+  function changeScript(scriptName: string, persistPage = true): void {
     selectedScript = scriptName;
     localStorage.setItem(STORAGE_KEYS.script, selectedScript);
     if (persistPage) {
@@ -398,7 +440,7 @@
     updateUrlPreferences();
   }
 
-  function updateUrlPreferences() {
+  function updateUrlPreferences(): void {
     const url = new URL(window.location.href);
     url.searchParams.set("trans", selectedTranslation);
     url.searchParams.set("script", selectedScript);
@@ -406,14 +448,14 @@
     window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
   }
 
-  function updateTale() {
+  function updateTale(): void {
     const rawTale = tales[page];
     if (!rawTale) {
       tale = null;
       return;
     }
 
-    const transliterate = (text) =>
+    const transliterate = (text: string) =>
       currentConfig ? TransliterationService.transliterate(text, currentConfig) : text;
 
     tale = {
@@ -425,7 +467,7 @@
     };
   }
 
-  async function setPage(nextPage) {
+  async function setPage(nextPage: number): Promise<void> {
     page = nextPage;
     localStorage.setItem(STORAGE_KEYS.page, page.toString());
     updateUrlPreferences();
@@ -438,15 +480,15 @@
     }
   }
 
-  function previous() {
+  function previous(): void {
     if (page > 0) setPage(page - 1);
   }
 
-  function next() {
+  function next(): void {
     if (page < pageCount - 1) setPage(page + 1);
   }
 
-  function changeSize(target, direction) {
+  function changeSize(target: "kabyle" | "translation", direction: number): void {
     const isKabyle = target === "kabyle";
     const storageKey = isKabyle ? STORAGE_KEYS.kabyleSize : STORAGE_KEYS.translationSize;
     const currentSize = isKabyle ? kabyleTextSizeIncrement : translationTextSizeIncrement;
@@ -467,11 +509,11 @@
 <svelte:window on:click={handlePickerOutsideClick} on:keydown={handlePickerKeydown} />
 
 {#if loading}
-  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction}><p><em>{uiLocale.loading}</em></p></div>
+  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p><em>{uiLocale.loading}</em></p></div>
 {:else if loadingError}
-  <div class="loader" role="alert" lang={uiLocale.lang} dir={uiLocale.direction}><p>{loadingError}</p></div>
+  <div class="loader" role="alert" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p>{loadingError}</p></div>
 {:else if !tale}
-  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction}><p>{uiLocale.noStories}</p></div>
+  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p>{uiLocale.noStories}</p></div>
 {:else}
   <main lang={uiLocale.lang} dir="ltr">
     <table class="table">
@@ -594,12 +636,12 @@
 
 
         <tr>
-          <th width="50%">
+          <th style="width: 50%">
             <h2 style="font-family: {face}; font-size: {0.9 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
               {tale.Source.Title}
             </h2>
           </th>
-          <th width="50%">
+          <th style="width: 50%">
             <h2 style="font-family: {currentTranslation.fontFace}; font-size: {0.9 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
               {tale.Translation.Title}
             </h2>
@@ -664,7 +706,7 @@
       </tbody>
     </table>
 
-    <nav class="pagination" aria-label={uiLocale.storyNavigation} dir={uiLocale.direction}>
+    <nav class="pagination" aria-label={uiLocale.storyNavigation} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}>
       <div
         class="reading-progress"
         role="progressbar"
@@ -712,7 +754,7 @@
     aria-labelledby="contents-title"
     aria-describedby="contents-summary"
     lang={uiLocale.lang}
-    dir={uiLocale.direction}
+    dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}
     tabindex="-1"
     on:click={handleContentsDialogClick}
   >
@@ -765,7 +807,7 @@
   </dialog>
 
     <!-- Help modal (native dialog) -->
-  <dialog bind:this={dialogElement} class="modal" lang={uiLocale.lang} dir={uiLocale.direction} on:click={handleDialogClick}>
+  <dialog bind:this={dialogElement} class="modal" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"} on:click={handleDialogClick}>
     <div class="modal-header">
       <h3>{uiLocale.mapping}</h3>
       <button on:click={closeHelp} class="close-btn" aria-label={uiLocale.close}>&times;</button>
@@ -779,7 +821,7 @@
               {#each transliterationsData[0] as column}
                 <th>
                   <div class="rotated">
-                    {column === "Latin" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column] || column}
+                    {column === "Latin" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column as keyof typeof uiLocale.mappingScripts] || column}
                   </div>
                 </th>
               {/each}
