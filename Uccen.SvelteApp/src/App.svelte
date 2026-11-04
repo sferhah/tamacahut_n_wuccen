@@ -936,6 +936,10 @@
     vertical-align: middle;
   }
 
+  .pagination[dir="rtl"] .icon-caret {
+    transform: scaleX(-1);
+  }
+
   .pagination button {
     display: inline-flex;
     align-items: center;
