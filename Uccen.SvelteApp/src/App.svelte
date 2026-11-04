@@ -1165,12 +1165,19 @@
 
   /* Style de la Pop-up Modale */
   .modal {
+    flex-direction: column;
     border: none;
     border-radius: 8px;
     padding: 0;
     max-width: 90%;
     max-height: 85vh;
+    max-height: calc(100dvh - 2rem);
+    box-sizing: border-box;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal[open] {
+    display: flex;
   }
   
   /* Effet d'arrière-plan semi-transparent quand la pop-up est ouverte */
@@ -1202,15 +1209,17 @@
   }
 
   .modal-body {
+    min-height: 0;
+    flex: 1 1 auto;
     padding: 1rem;
     overflow: auto;
-    max-height: 70vh;
   }
 
   .help-footer {
     display: flex;
+    flex: 0 0 auto;
     justify-content: flex-end;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid #ddd;
   }
 
