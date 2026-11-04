@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { ConfigDeserializer } from './ConfigDeserializer.js';
   import { TransliterationService } from './TransliterationService.js';
 
@@ -75,6 +75,7 @@
   let loadingError = "";
   let translationError = "";
   let isAndroid = false;
+  let isIOS = false;
   let openPicker = null;
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
@@ -107,7 +108,10 @@
   );
 
   onMount(() => {
-    isAndroid = /Android/i.test(navigator.userAgent);
+    const userAgent = navigator.userAgent;
+    isAndroid = /Android/i.test(userAgent);
+    isIOS = /iPhone|iPad|iPod/i.test(userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     initialize();
   });
 
@@ -378,11 +382,16 @@
     };
   }
 
-  function setPage(nextPage) {
+  async function setPage(nextPage) {
     page = nextPage;
     localStorage.setItem(STORAGE_KEYS.page, page.toString());
     updateTale();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    await tick();
+    if (isIOS) {
+      window.scrollTo(0, 0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   function previous() {
