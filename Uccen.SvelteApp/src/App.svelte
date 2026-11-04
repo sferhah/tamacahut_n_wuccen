@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { ConfigDeserializer } from './ConfigDeserializer.js';
   import { TransliterationService } from './TransliterationService.js';
 
@@ -98,7 +98,14 @@
   let rtl = false;
   let face = faceDefault;
   let dialogElement;
+  let contentsDialogElement;
+  let contentsSearchInput;
+  let contentsSearch = "";
   let transliterationsData = [];
+  $: contentsItems = buildContentsItems(tales, currentConfig);
+  $: filteredContentsItems = contentsItems.filter((item) =>
+    `${item.sourceTitle} ${item.translationTitle}`.toLocaleLowerCase().includes(contentsSearch.trim().toLocaleLowerCase())
+  );
 
   onMount(() => {
     isAndroid = /Android/i.test(navigator.userAgent);
@@ -257,6 +264,60 @@
 
   function closeHelp() {
     dialogElement.close();
+  }
+
+  function isReadableContentsHeading(value) {
+    return /[\p{L}]/u.test(value) && !/^#\d+$/u.test(value.trim());
+  }
+
+  function getContentsHeading(title, paragraphs, transliterate) {
+    const heading = transliterate(title || "").trim();
+    if (isReadableContentsHeading(heading)) return heading;
+
+    return transliterate(paragraphs?.[0] || "").trim().replace(/\s+/g, " ") || heading;
+  }
+
+  function buildContentsItems(storyList, config) {
+    const transliterate = (text) =>
+      config ? TransliterationService.transliterate(text, config) : text;
+
+    return storyList.map((item, index) => ({
+      index,
+      sourceTitle: getContentsHeading(item.Source?.Title, item.Source?.Paragraphs, transliterate),
+      translationTitle: getContentsHeading(
+        item.Translation?.Title,
+        item.Translation?.Paragraphs,
+        (text) => text
+      )
+    }));
+  }
+
+  async function openContents() {
+    contentsSearch = "";
+    contentsDialogElement.showModal();
+    await tick();
+    contentsSearchInput?.focus();
+    document.querySelector(`[data-contents-page="${page}"]`)?.scrollIntoView({ block: "nearest" });
+  }
+
+  function closeContents() {
+    contentsDialogElement.close();
+  }
+
+  function goToContentsPage(nextPage) {
+    closeContents();
+    setPage(nextPage);
+  }
+
+  function handleContentsDialogClick(event) {
+    const bounds = contentsDialogElement.getBoundingClientRect();
+    const clickedOutside =
+      event.clientX < bounds.left ||
+      event.clientX > bounds.right ||
+      event.clientY < bounds.top ||
+      event.clientY > bounds.bottom;
+
+    if (clickedOutside) closeContents();
   }
 
   function handleDialogClick(event) {
@@ -553,25 +614,102 @@
       </tbody>
     </table>
 
-    <nav class="pagination" aria-label="Story pagination">
-      <button on:click={openHelp} class="help-btn" aria-label="Transliteration help">
-        <span aria-hidden="true">?</span>
-      </button>
-      <button on:click={previous} disabled={page <= 0} aria-label="Previous">
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-          <path d="M14 7l-5 5 5 5V7z" />
-        </svg>
-      </button>
-
-      <span class="page-number">{page}</span>
-
-      <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next">
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-          <path d="M10 17l5-5-5-5v10z" />
-        </svg>
-      </button>
+    <nav class="pagination" aria-label="Story navigation">
+      <div
+        class="reading-progress"
+        role="progressbar"
+        aria-label="Reading progress"
+        aria-valuemin="0"
+        aria-valuemax={pageCount}
+        aria-valuenow={page + 1}
+      >
+        <span class="reading-progress-fill" style={`width: ${((page + 1) / pageCount) * 100}%`}></span>
+      </div>
+      <div class="pagination-tools">
+        <button on:click={openHelp} class="help-btn" aria-label="Transliteration help" title="Transliteration help">
+          <span aria-hidden="true">?</span>
+        </button>
+        <button on:click={openContents} class="contents-btn" aria-label="Table of contents" title="Table of contents">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="contents-icon">
+            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h8" />
+          </svg>
+          <span class="contents-label">Contents</span>
+        </button>
+      </div>
+      <div class="pagination-controls">
+        <button on:click={previous} disabled={page <= 0} aria-label="Previous page">
+          <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+            <path d="M14 7l-5 5 5 5V7z" />
+          </svg>
+        </button>
+        <span class="page-number" aria-label={`Page ${page + 1} of ${pageCount}`}>
+          <span>{String(page + 1).padStart(2, "0")}</span>
+          <span class="page-separator" aria-hidden="true">/</span>
+          <span>{pageCount}</span>
+        </span>
+        <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next page">
+          <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
+            <path d="M10 17l5-5-5-5v10z" />
+          </svg>
+        </button>
+      </div>
     </nav>
   </main>
+
+  <dialog
+    bind:this={contentsDialogElement}
+    class="modal contents-modal"
+    aria-labelledby="contents-title"
+    aria-describedby="contents-summary"
+    on:click={handleContentsDialogClick}
+  >
+    <div class="contents-header">
+      <div>
+        <p class="contents-eyebrow">STORY INDEX</p>
+        <h3 id="contents-title">Contents</h3>
+      </div>
+      <button on:click={closeContents} class="close-btn" aria-label="Close contents">&times;</button>
+    </div>
+    <div class="contents-body">
+      <div class="contents-summary-row">
+        <p id="contents-summary">Pick up where you left off, or skip to another story.</p>
+        <span class="contents-count">{pageCount} entries</span>
+      </div>
+      <label class="contents-search">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="10.8" cy="10.8" r="6.3" />
+          <path d="m15.5 15.5 4.2 4.2" />
+        </svg>
+        <input bind:this={contentsSearchInput} bind:value={contentsSearch} type="search" placeholder="Find a story" aria-label="Find a story" />
+      </label>
+      {#if filteredContentsItems.length > 0}
+        <ol class="contents-list">
+          {#each filteredContentsItems as item}
+            <li>
+              <button
+                type="button"
+                class:current={item.index === page}
+                aria-current={item.index === page ? "page" : undefined}
+                data-contents-page={item.index}
+                on:click={() => goToContentsPage(item.index)}
+              >
+                <span class="contents-index">{String(item.index + 1).padStart(2, "0")}</span>
+                <span class="contents-entry">
+                  <span class="contents-source">{item.sourceTitle}</span>
+                  {#if item.translationTitle && item.translationTitle !== item.sourceTitle}
+                    <span class="contents-translation">{item.translationTitle}</span>
+                  {/if}
+                </span>
+                {#if item.index === page}<span class="now-reading">NOW READING</span>{/if}
+              </button>
+            </li>
+          {/each}
+        </ol>
+      {:else}
+        <p class="contents-empty" role="status">No stories match “{contentsSearch}”.</p>
+      {/if}
+    </div>
+  </dialog>
 
     <!-- Help modal (native dialog) -->
   <dialog bind:this={dialogElement} class="modal" on:click={handleDialogClick}>
@@ -629,16 +767,92 @@
     bottom: 0;
     left: 0;
     z-index: 3;
-    text-align: center;
-    padding: 1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    padding: 0.75rem 1rem;
     background: white;
     border-top: 1px solid #ddd;
   }
+  .reading-progress {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    left: 0;
+    height: 3px;
+    overflow: hidden;
+    background: #eee;
+  }
+  .reading-progress-fill {
+    display: block;
+    height: 100%;
+    background: #3F716B;
+    transition: width 240ms ease;
+  }
+  .pagination-tools,
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pagination-tools {
+    grid-column: 1;
+    justify-self: start;
+  }
+  .pagination-controls {
+    grid-column: 2;
+  }
+  .pagination-tools .help-btn,
+  .contents-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 40px;
+    padding: 0 0.75rem;
+    border-color: #e2e2e2;
+    border-radius: 6px;
+    color: #36434a;
+  }
+  .pagination-tools .help-btn {
+    width: 40px;
+    padding: 0;
+    margin: 0;
+  }
+  .contents-btn {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .contents-icon {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+  .pagination-tools button:hover,
+  .pagination-controls button:hover:not(:disabled) {
+    border-color: #b6c0c5;
+    background: #f7f8f8;
+  }
   .page-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0 1.5rem;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 5.2rem;
+    color: #24343c;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
     user-select: none;
+  }
+  .page-separator {
+    color: #9ba4a8;
+    font-size: 0.8rem;
+    font-weight: 400;
   }
   .table {
     width: 100%;
@@ -704,6 +918,9 @@
     padding: 6px 12px;
     width: 80px;
   }
+  .pagination-tools button {
+    width: auto;
+  }
 
   /* Plus and minus buttons */
   .icon-btn {
@@ -733,6 +950,55 @@
     .table td, .table th {
       padding: 8px;
     }
+
+    .pagination {
+      padding: 0.65rem 0.5rem;
+    }
+
+    .pagination-tools {
+      gap: 0.35rem;
+    }
+
+    .pagination-tools .help-btn,
+    .contents-btn {
+      width: 38px;
+      min-height: 38px;
+      padding: 0;
+    }
+
+    .contents-label {
+      display: none;
+    }
+
+    .pagination-controls {
+      gap: 0.25rem;
+    }
+
+    .pagination-controls button {
+      width: 48px;
+      padding: 6px;
+    }
+
+    .page-number {
+      min-width: 4.5rem;
+      font-size: 0.92rem;
+    }
+
+    .contents-modal {
+      max-height: 88vh;
+    }
+
+    .contents-header {
+      padding: 0.9rem 1rem;
+    }
+
+    .contents-body {
+      padding: 0.9rem 1rem 1rem;
+    }
+
+    .contents-list {
+      max-height: 57vh;
+    }
   }
 
 
@@ -752,15 +1018,6 @@
     box-sizing: border-box;
     height: 32px; /* Match the plus and minus buttons */
     width: 32px;
-  }
-
-  .pagination .help-btn {
-    position: absolute;
-    top: 50%;
-    left: 1rem;
-    width: 32px;
-    margin-left: 0;
-    transform: translateY(-50%);
   }
 
   .help-btn:hover {
@@ -900,6 +1157,195 @@
     padding: 1rem;
     overflow: auto;
     max-height: 70vh;
+  }
+
+  .contents-modal {
+    width: min(560px, calc(100vw - 2rem));
+    max-width: 560px;
+    max-height: min(82vh, 760px);
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+    color: #24343c;
+  }
+
+  .contents-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.35rem;
+    border-bottom: 1px solid #e8e8e8;
+    background: #fff;
+  }
+
+  .contents-header h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .contents-eyebrow {
+    margin: 0 0 0.2rem;
+    color: #718087;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .contents-header .close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    color: #5b686e;
+  }
+
+  .contents-body {
+    padding: 1rem 1.35rem 1.25rem;
+  }
+
+  .contents-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .contents-summary-row p {
+    margin: 0;
+    color: #637178;
+    font-size: 0.88rem;
+  }
+
+  .contents-count {
+    flex: 0 0 auto;
+    color: #718087;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .contents-search {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 42px;
+    padding: 0 0.75rem;
+    border: 1px solid #dfe4e6;
+    border-radius: 7px;
+    background: #fafbfb;
+  }
+
+  .contents-search:focus-within {
+    border-color: #aab8bf;
+    outline: 2px solid #e7edef;
+  }
+
+  .contents-search svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: #718087;
+    stroke-linecap: round;
+    stroke-width: 1.7;
+  }
+
+  .contents-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+  }
+
+  .contents-list {
+    max-height: min(52vh, 470px);
+    overflow-y: auto;
+    margin: 0.85rem -0.45rem 0;
+    padding: 0 0.45rem;
+    list-style: none;
+    overscroll-behavior: contain;
+  }
+
+  .contents-list li + li {
+    margin-top: 0.2rem;
+  }
+
+  .contents-list button {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    min-height: 58px;
+    padding: 0.65rem 0.7rem;
+    border-color: transparent;
+    border-radius: 7px;
+    text-align: left;
+  }
+
+  .contents-list button:hover {
+    background: #f5f7f7;
+  }
+
+  .contents-list button.current {
+    border-color: #cbded9;
+    background: #f3f8f6;
+  }
+
+  .contents-index {
+    width: 2rem;
+    flex: 0 0 auto;
+    color: #859197;
+    font-size: 0.74rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  .contents-entry {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .contents-source,
+  .contents-translation {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .contents-source {
+    color: #29383f;
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .contents-translation {
+    color: #778389;
+    font-size: 0.78rem;
+  }
+
+  .current .contents-index,
+  .current .contents-source {
+    color: #3F716B;
+  }
+
+  .now-reading {
+    flex: 0 0 auto;
+    color: #3F716B;
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .contents-empty {
+    margin: 1.5rem 0;
+    color: #637178;
+    text-align: center;
   }
 
   /* Internal mapping table */
