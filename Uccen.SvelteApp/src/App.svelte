@@ -217,9 +217,13 @@
     selectedScript = initialScripts.some((script) => script.name === savedScript)
       ? savedScript
       : DEFAULT_SCRIPT;
-    selectedTranslation = translations.some((translation) => translation.key === savedTranslation)
-      ? savedTranslation
-      : DEFAULT_TRANSLATION;
+    selectedTranslation = savedTranslation === null
+      ? getBrowserTranslation()
+      : savedTranslation === "fra"
+        ? "und"
+        : translations.some((translation) => translation.key === savedTranslation)
+          ? savedTranslation
+          : DEFAULT_TRANSLATION;
     page = readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
     kabyleTextSizeIncrement = readStoredInteger(
       STORAGE_KEYS.kabyleSize,
@@ -233,6 +237,21 @@
       MIN_TEXT_SIZE_INCREMENT,
       MAX_TEXT_SIZE_INCREMENT
     );
+  }
+
+  function getBrowserTranslation() {
+    const languageCodes = { en: "eng", fr: "und", ar: "arb" };
+    const browserLanguages = [...(navigator.languages || []), navigator.language];
+
+    for (const browserLanguage of browserLanguages) {
+      const languageCode = browserLanguage?.trim().toLowerCase().split(/[-_]/)[0];
+      const translationCode = languageCodes[languageCode];
+      if (translations.some((translation) => translation.key === translationCode)) {
+        return translationCode;
+      }
+    }
+
+    return DEFAULT_TRANSLATION;
   }
 
   function loadTranslatedScriptNames() {
