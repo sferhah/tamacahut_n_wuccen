@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import { ConfigDeserializer } from './ConfigDeserializer.js';
   import { TransliterationService } from './TransliterationService.js';
 
@@ -99,7 +99,6 @@
   let face = faceDefault;
   let dialogElement;
   let contentsDialogElement;
-  let contentsSearchInput;
   let contentsSearch = "";
   let transliterationsData = [];
   $: contentsItems = buildContentsItems(tales, currentConfig);
@@ -292,11 +291,9 @@
     }));
   }
 
-  async function openContents() {
+  function openContents() {
     contentsSearch = "";
     contentsDialogElement.showModal();
-    await tick();
-    contentsSearchInput?.focus();
     document.querySelector(`[data-contents-page="${page}"]`)?.scrollIntoView({ block: "nearest" });
   }
 
@@ -626,9 +623,6 @@
         <span class="reading-progress-fill" style={`width: ${((page + 1) / pageCount) * 100}%`}></span>
       </div>
       <div class="pagination-tools">
-        <button on:click={openHelp} class="help-btn" aria-label="Transliteration help" title="Transliteration help">
-          <span aria-hidden="true">?</span>
-        </button>
         <button on:click={openContents} class="contents-btn" aria-label="Table of contents" title="Table of contents">
           <svg aria-hidden="true" viewBox="0 0 24 24" class="contents-icon">
             <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h8" />
@@ -653,6 +647,9 @@
           </svg>
         </button>
       </div>
+      <button on:click={openHelp} class="help-btn pagination-help" aria-label="Transliteration help" title="Transliteration help">
+        <span aria-hidden="true">?</span>
+      </button>
     </nav>
   </main>
 
@@ -661,6 +658,7 @@
     class="modal contents-modal"
     aria-labelledby="contents-title"
     aria-describedby="contents-summary"
+    tabindex="-1"
     on:click={handleContentsDialogClick}
   >
     <div class="contents-header">
@@ -680,7 +678,7 @@
           <circle cx="10.8" cy="10.8" r="6.3" />
           <path d="m15.5 15.5 4.2 4.2" />
         </svg>
-        <input bind:this={contentsSearchInput} bind:value={contentsSearch} type="search" placeholder="Find a story" aria-label="Find a story" />
+        <input bind:value={contentsSearch} type="search" placeholder="Find a story" aria-label="Find a story" />
       </label>
       {#if filteredContentsItems.length > 0}
         <ol class="contents-list">
@@ -802,7 +800,7 @@
   .pagination-controls {
     grid-column: 2;
   }
-  .pagination-tools .help-btn,
+  .pagination-help,
   .contents-btn {
     display: inline-flex;
     align-items: center;
@@ -814,7 +812,9 @@
     border-radius: 6px;
     color: #36434a;
   }
-  .pagination-tools .help-btn {
+  .pagination-help {
+    grid-column: 3;
+    justify-self: end;
     width: 40px;
     padding: 0;
     margin: 0;
@@ -959,7 +959,7 @@
       gap: 0.35rem;
     }
 
-    .pagination-tools .help-btn,
+    .pagination-help,
     .contents-btn {
       width: 38px;
       min-height: 38px;
