@@ -749,6 +749,12 @@
         <p>Loading the help table...</p>
       {/if}
     </div>
+    <div class="help-footer">
+      <a href="https://github.com/sferhah/tamacahut_n_wuccen" target="_blank" rel="noopener noreferrer">
+        Source code on GitHub
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
   </dialog>
 {/if}
 
@@ -1166,6 +1172,27 @@
     padding: 1rem;
     overflow: auto;
     max-height: 70vh;
+  }
+
+  .help-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #ddd;
+  }
+
+  .help-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #3F716B;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .help-footer a:hover {
+    text-decoration: underline;
   }
 
   .contents-modal {
