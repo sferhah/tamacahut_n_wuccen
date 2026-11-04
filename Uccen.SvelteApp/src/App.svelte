@@ -4,7 +4,7 @@
   import { TransliterationService } from './TransliterationService.js';
   import locales from './locales.json';
 
-  const DEFAULT_SCRIPT = "Kabyle";
+  const DEFAULT_SCRIPT = "latn";
   const DEFAULT_TRANSLATION = "und";
   const STORAGE_KEYS = {
     script: "SelectedScript",
@@ -27,17 +27,17 @@
   const MOBILE_VIEWPORT_MAX_WIDTH = 600;
 
   const initialScripts = [
-    { name: "Kabyle", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { name: "Tifinagh", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Arabic", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-    { name: "Hebrew", displayName: "Hebrew", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Syriac", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Aramaic", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Phoenician", displayName: "Phoenician", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Nabataean", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif", textSizeIncrement: 0 },
-    { name: "Musnad", displayName: "Musnad", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "Cyrillic", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { name: "Greek", displayName: "Greek", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 }
+    { name: "latn", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { name: "tfng", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "arab", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
+    { name: "hebr", displayName: "Hebrew", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "syrc", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "armi", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "phnx", displayName: "Phoenician", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "nbat", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif", textSizeIncrement: 0 },
+    { name: "sarb", displayName: "Musnad", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
+    { name: "cyrl", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { name: "grek", displayName: "Greek", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 }
   ];
 
   function readStoredInteger(key, fallback, min, max) {
