@@ -2,33 +2,41 @@
 using ConsoleApp2;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+
+
 //ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
 
-string[] fileNames = ["uccen.pptx" , "uccen.eng.pptx", "uccen.arb.pptx" ];
+await GenerateJsonFiles();
 
-foreach(var fileName in fileNames)
+//GenerateBilingualPdf();
+
+static async Task GenerateJsonFiles()
 {
-    var tales = ExtractJson(fileName);
-    var languageCode = GetLanguageCode(fileName);
+    string[] fileNames = ["uccen.pptx", "uccen.eng.pptx", "uccen.arb.pptx", "uccen.arq.pptx"];
 
-    await File.WriteAllTextAsync(GetPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
+    foreach (var fileName in fileNames)
     {
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-        IgnoreReadOnlyProperties = true,
-        WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    }));
+        var tales = ExtractJson(fileName);
+        var languageCode = GetLanguageCode(fileName);
+
+        await File.WriteAllTextAsync(GetPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        }));
+    }
 }
-
-
-Console.WriteLine("Hello, World!");
 
 static void ForceRtl(string presentationFile)
 {
@@ -252,6 +260,105 @@ static string GetFullPathWithinProject(string filename)
     }
 
     return Path.Combine(path, filename);
+}
+
+static string GetOutputPath()
+{
+    string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+
+    while (!Directory.GetFiles(path).Any(x => x.EndsWith(".sln")))
+    {
+        path = Directory.GetParent(path).FullName;
+    }
+
+    return Path.Combine(path, "Uccen.ConsoleApp", "tamacahut_n_wuccen.pdf");
+}
+
+static void GenerateBilingualPdf()
+{
+    QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+    QuestPDF.Settings.UseSystemFonts = true;
+
+    // Read JSON file
+    string jsonPath = GetFullPathWithinProject("tamacahut_n_wuccen.json");
+    string jsonContent = File.ReadAllText(jsonPath);
+    var tales = JsonSerializer.Deserialize<List<Tale>>(jsonContent) ?? new List<Tale>();
+
+    if (tales.Count == 0)
+    {
+        Console.WriteLine("No tales found in JSON file.");
+        return;
+    }
+
+    // Generate PDF
+    var pdfPath = GetOutputPath();
+    Document.Create(container =>
+    {
+        container.Page(page =>
+        {
+            // A5 page size: 148mm x 210mm
+            page.Size(148, 210, Unit.Millimetre);
+            page.Margin(20); // uniform margin in mm (2cm = 20mm)
+            page.MarginTop(20);
+            page.MarginBottom(20);
+            page.MarginLeft(20);
+            page.MarginRight(15);
+            page.DefaultTextStyle(x => x.FontSize(11).LineHeight(1.5f));
+
+            page.Content().Column(column =>
+            {
+                for (int i = 0; i < tales.Count; i++)
+                {
+                    var tale = tales[i];
+
+                    // Render Source content
+                    column.Item().RenderTaleContent(tale.Source);
+
+                    // Page break after source
+                    column.Item().PageBreak();
+
+                    // Render Translation content
+                    column.Item().RenderTaleContent(tale.Translation);
+
+                    // Page break after translation (unless it's the last tale)
+                    if (i < tales.Count - 1)
+                    {
+                        column.Item().PageBreak();
+                    }
+                }
+            });
+        });
+    }).GeneratePdf(pdfPath);
+
+    Console.WriteLine($"PDF generated successfully: {pdfPath}");
+}
+
+static class TaleContentExtensions
+{
+    public static void RenderTaleContent(this IContainer container, TaleContent content)
+    {
+        container.Column(column =>
+        {
+            // Render title
+            if (!string.IsNullOrWhiteSpace(content.Title))
+            {
+                column.Item().Text(content.Title)
+                    .FontSize(16)
+                    .Bold();
+            }
+
+            // Render paragraphs
+            foreach (var paragraph in content.Paragraphs)
+            {
+                if (!string.IsNullOrWhiteSpace(paragraph))
+                {
+                    column.Item().Text(paragraph)
+                        .FontSize(11)
+                        .LineHeight(1.5f);
+                }
+            }
+        });
+    }
 }
 
 public class Tale

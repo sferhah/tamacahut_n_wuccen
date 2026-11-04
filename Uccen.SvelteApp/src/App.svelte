@@ -19,7 +19,7 @@
    // { key: "fra", displayName: "Français2" },
     { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
     { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-   // { key: "arq", displayName: "عربية دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
+    { key: "arq", displayName: "عربية دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
   ];
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
