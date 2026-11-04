@@ -2,6 +2,7 @@
   import { onMount, tick } from 'svelte';
   import { ConfigDeserializer } from './ConfigDeserializer.js';
   import { TransliterationService } from './TransliterationService.js';
+  import locales from './locales.json';
 
   const DEFAULT_SCRIPT = "Kabyle";
   const DEFAULT_TRANSLATION = "und";
@@ -92,6 +93,9 @@
   $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
   $: currentTranslation =
     translations.find((translation) => translation.key === selectedTranslation) || translations[0];
+  $: uiLocaleKey = selectedTranslation === "eng" ? "eng" : selectedTranslation === "arb" || selectedTranslation === "arq" ? "arb" : "fra";
+  $: uiLocale = locales[uiLocaleKey];
+  $: if (typeof document !== "undefined") document.documentElement.lang = uiLocale.lang;
   $: sourceTextSizeIncrement = kabyleTextSizeIncrement + currentScript.textSizeIncrement;
   $: translatedTextSizeIncrement = translationTextSizeIncrement + currentTranslation.textSizeIncrement;
 
@@ -125,7 +129,7 @@
       changeScript(selectedScript, false);
       loadTranslatedScriptNames();
     } catch (error) {
-      loadingError = "Unable to load the stories. Please refresh the page to try again.";
+      loadingError = uiLocale.storyLoadError;
       console.error("Application initialization error", error);
     } finally {
       loading = false;
@@ -169,7 +173,7 @@
       translationError = "";
       updateTale();
     } catch (error) {
-      translationError = `Unable to load the ${languageCode} translation.`;
+      translationError = uiLocale.translationLoadError;
       console.error(`Unable to load the ${languageCode} translation`, error);
     }
   }
@@ -236,7 +240,7 @@
       if (script.name === DEFAULT_SCRIPT) return script;
 
       try {
-        const config = ConfigDeserializer.parse(script.name);        
+        const config = ConfigDeserializer.parse(script.name);
         return {
           ...script,
           displayName: TransliterationService.transliterate("Taqbaylit", config)
@@ -423,13 +427,13 @@
 <svelte:window on:click={handlePickerOutsideClick} on:keydown={handlePickerKeydown} />
 
 {#if loading}
-  <div class="loader"><p><em>Loading...</em></p></div>
+  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction}><p><em>{uiLocale.loading}</em></p></div>
 {:else if loadingError}
-  <div class="loader" role="alert"><p>{loadingError}</p></div>
+  <div class="loader" role="alert" lang={uiLocale.lang} dir={uiLocale.direction}><p>{loadingError}</p></div>
 {:else if !tale}
-  <div class="loader"><p>No stories are available.</p></div>
+  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction}><p>{uiLocale.noStories}</p></div>
 {:else}
-  <main>
+  <main lang={uiLocale.lang} dir="ltr">
     <table class="table">
       <thead>
         <tr>
@@ -449,7 +453,7 @@
                   <span class="picker-chevron" aria-hidden="true"></span>
                 </button>
                 {#if openPicker === "script"}
-                  <div class="picker-menu" role="listbox" aria-label="Transliteration">
+                  <div class="picker-menu" role="listbox" aria-label={uiLocale.transliteration}>
                     {#each scripts as script}
                       <button
                         type="button"
@@ -476,12 +480,12 @@
             {/if}
 
             <span class="size-controls">
-              <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
+              <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label={uiLocale.decreaseSize}>
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13H5v-2h14v2z" />
                 </svg>
               </button>
-              <button on:click={() => changeSize('kabyle', 1)} disabled={kabyleTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label="Increase size">
+              <button on:click={() => changeSize('kabyle', 1)} disabled={kabyleTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label={uiLocale.increaseSize}>
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                 </svg>
@@ -505,7 +509,7 @@
                   <span class="picker-chevron" aria-hidden="true"></span>
                 </button>
                 {#if openPicker === "translation"}
-                  <div class="picker-menu" role="listbox" aria-label="Translation">
+                  <div class="picker-menu" role="listbox" aria-label={uiLocale.translation}>
                     {#each translations as translation}
                       <button
                         type="button"
@@ -534,12 +538,12 @@
               <span role="alert">{translationError}</span>
             {/if}
             <span class="size-controls">
-              <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label="Decrease size">
+              <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label={uiLocale.decreaseSize}>
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13H5v-2h14v2z" />
                 </svg>
               </button>
-              <button on:click={() => changeSize('translation', 1)} disabled={translationTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label="Increase size">
+              <button on:click={() => changeSize('translation', 1)} disabled={translationTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label={uiLocale.increaseSize}>
                 <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                 </svg>
@@ -620,11 +624,11 @@
       </tbody>
     </table>
 
-    <nav class="pagination" aria-label="Story navigation">
+    <nav class="pagination" aria-label={uiLocale.storyNavigation} dir={uiLocale.direction}>
       <div
         class="reading-progress"
         role="progressbar"
-        aria-label="Reading progress"
+        aria-label={uiLocale.readingProgress}
         aria-valuemin="0"
         aria-valuemax={pageCount}
         aria-valuenow={page + 1}
@@ -632,31 +636,31 @@
         <span class="reading-progress-fill" style={`width: ${((page + 1) / pageCount) * 100}%`}></span>
       </div>
       <div class="pagination-tools">
-        <button on:click={openContents} class="contents-btn" aria-label="Table of contents" title="Table of contents">
+        <button on:click={openContents} class="contents-btn" aria-label={uiLocale.tableOfContents} title={uiLocale.tableOfContents}>
           <svg aria-hidden="true" viewBox="0 0 24 24" class="contents-icon">
             <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h8" />
           </svg>
-          <span class="contents-label">Contents</span>
+          <span class="contents-label">{uiLocale.contents}</span>
         </button>
       </div>
       <div class="pagination-controls">
-        <button on:click={previous} disabled={page <= 0} aria-label="Previous page">
+        <button on:click={previous} disabled={page <= 0} aria-label={uiLocale.previousPage}>
           <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
             <path d="M14 7l-5 5 5 5V7z" />
           </svg>
         </button>
-        <span class="page-number" aria-label={`Page ${page + 1} of ${pageCount}`}>
+        <span class="page-number" aria-label={uiLocale.pageOf.replace("{current}", String(page + 1)).replace("{total}", String(pageCount))}>
           <span>{String(page + 1).padStart(2, "0")}</span>
           <span class="page-separator" aria-hidden="true">/</span>
           <span>{pageCount}</span>
         </span>
-        <button on:click={next} disabled={page >= pageCount - 1} aria-label="Next page">
+        <button on:click={next} disabled={page >= pageCount - 1} aria-label={uiLocale.nextPage}>
           <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
             <path d="M10 17l5-5-5-5v10z" />
           </svg>
         </button>
       </div>
-      <button on:click={openHelp} class="help-btn pagination-help" aria-label="Transliteration help" title="Transliteration help">
+      <button on:click={openHelp} class="help-btn pagination-help" aria-label={uiLocale.transliterationHelp} title={uiLocale.transliterationHelp}>
         <span aria-hidden="true">?</span>
       </button>
     </nav>
@@ -667,27 +671,29 @@
     class="modal contents-modal"
     aria-labelledby="contents-title"
     aria-describedby="contents-summary"
+    lang={uiLocale.lang}
+    dir={uiLocale.direction}
     tabindex="-1"
     on:click={handleContentsDialogClick}
   >
     <div class="contents-header">
       <div>
-        <p class="contents-eyebrow">STORY INDEX</p>
-        <h3 id="contents-title">Contents</h3>
+        <p class="contents-eyebrow">{uiLocale.storyIndex}</p>
+        <h3 id="contents-title">{uiLocale.contents}</h3>
       </div>
-      <button on:click={closeContents} class="close-btn" aria-label="Close contents">&times;</button>
+      <button on:click={closeContents} class="close-btn" aria-label={uiLocale.closeContents}>&times;</button>
     </div>
     <div class="contents-body">
       <div class="contents-summary-row">
-        <p id="contents-summary">Pick up where you left off, or skip to another story.</p>
-        <span class="contents-count">{pageCount} entries</span>
+        <p id="contents-summary">{uiLocale.contentsSummary}</p>
+        <span class="contents-count">{uiLocale.entries.replace("{count}", String(pageCount))}</span>
       </div>
       <label class="contents-search">
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <circle cx="10.8" cy="10.8" r="6.3" />
           <path d="m15.5 15.5 4.2 4.2" />
         </svg>
-        <input bind:value={contentsSearch} type="search" placeholder="Find a story" aria-label="Find a story" />
+        <input bind:value={contentsSearch} type="search" placeholder={uiLocale.findStory} aria-label={uiLocale.findStory} />
       </label>
       {#if filteredContentsItems.length > 0}
         <ol class="contents-list">
@@ -707,22 +713,22 @@
                     <span class="contents-translation">{item.translationTitle}</span>
                   {/if}
                 </span>
-                {#if item.index === page}<span class="now-reading">NOW READING</span>{/if}
+                {#if item.index === page}<span class="now-reading">{uiLocale.nowReading}</span>{/if}
               </button>
             </li>
           {/each}
         </ol>
       {:else}
-        <p class="contents-empty" role="status">No stories match “{contentsSearch}”.</p>
+        <p class="contents-empty" role="status">{uiLocale.noSearchResults.replace("{query}", contentsSearch)}</p>
       {/if}
     </div>
   </dialog>
 
     <!-- Help modal (native dialog) -->
-  <dialog bind:this={dialogElement} class="modal" on:click={handleDialogClick}>
+  <dialog bind:this={dialogElement} class="modal" lang={uiLocale.lang} dir={uiLocale.direction} on:click={handleDialogClick}>
     <div class="modal-header">
-      <h3>Mapping</h3>
-      <button on:click={closeHelp} class="close-btn">&times;</button>
+      <h3>{uiLocale.mapping}</h3>
+      <button on:click={closeHelp} class="close-btn" aria-label={uiLocale.close}>&times;</button>
     </div>
     
     <div class="modal-body">
@@ -731,7 +737,11 @@
           <thead>
             <tr>              
               {#each transliterationsData[0] as column}
-                <th><div class="rotated">{column}</div></th>
+                <th>
+                  <div class="rotated">
+                    {column === "Latin" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column] || column}
+                  </div>
+                </th>
               {/each}
             </tr>
           </thead>
@@ -746,12 +756,12 @@
           </tbody>
         </table>
       {:else}
-        <p>Loading the help table...</p>
+        <p>{uiLocale.loadingHelp}</p>
       {/if}
     </div>
     <div class="help-footer">
       <a href="https://github.com/sferhah/tamacahut_n_wuccen" target="_blank" rel="noopener noreferrer">
-        Source code on GitHub
+        {uiLocale.sourceCode}
         <span aria-hidden="true">↗</span>
       </a>
     </div>
@@ -1318,7 +1328,7 @@
     padding: 0.65rem 0.7rem;
     border-color: transparent;
     border-radius: 7px;
-    text-align: left;
+    text-align: start;
   }
 
   .contents-list button:hover {
