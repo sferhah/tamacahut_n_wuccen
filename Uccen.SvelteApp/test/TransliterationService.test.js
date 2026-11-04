@@ -4,7 +4,7 @@ import test from "node:test";
 import { TransliterationService } from "../src/TransliterationService.js";
 
 const arabicData = JSON.parse(
-  readFileSync(new URL("../src/transliterationMappings/Arabic.json", import.meta.url), "utf8")
+  readFileSync(new URL("../src/transliterationMappings/arab.json", import.meta.url), "utf8")
 );
 const mapping = {};
 
@@ -17,7 +17,7 @@ for (const [key, rawValue] of Object.entries(arabicData.mapping)) {
 }
 
 const arabicConfig = {
-  name: "Arabic",
+  name: "arab",
   direction: arabicData.direction || "ltr",
   geminizer: String.fromCodePoint(Number.parseInt(arabicData.geminizer, 16)),
   nullVowel: String.fromCodePoint(Number.parseInt(arabicData.nullVowel, 16)),

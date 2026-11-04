@@ -70,7 +70,7 @@ export class TransliterationService {
   }
 
   static replaceHyphenWithKasheeda(input, scriptName, geminizer) {
-    if (scriptName !== "Arabic") return input;
+    if (scriptName !== "arab") return input;
 
     const kasheeda = "ـ";
     const W = String.raw`[\p{L}\p{Mn}\p{Nd}\p{Pc}]`;
