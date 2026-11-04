@@ -172,6 +172,7 @@
       localStorage.setItem(STORAGE_KEYS.page, page.toString());
       translationError = "";
       updateTale();
+      updateUrlPreferences();
     } catch (error) {
       translationError = uiLocale.translationLoadError;
       console.error(`Unable to load the ${languageCode} translation`, error);
@@ -201,6 +202,10 @@
     const savedTranslation = localStorage.getItem(STORAGE_KEYS.translation);
     const savedKabyleSize = localStorage.getItem(STORAGE_KEYS.kabyleSize);
     const savedTranslationSize = localStorage.getItem(STORAGE_KEYS.translationSize);
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlScript = urlParams.get("script");
+    const urlTranslation = urlParams.get("trans");
+    const urlPage = urlParams.get("page");
 
     if (localStorage.getItem(STORAGE_KEYS.initialSizeEvaluated) === null) {
       if (
@@ -214,17 +219,23 @@
       localStorage.setItem(STORAGE_KEYS.initialSizeEvaluated, "true");
     }
 
-    selectedScript = initialScripts.some((script) => script.name === savedScript)
-      ? savedScript
-      : DEFAULT_SCRIPT;
-    selectedTranslation = savedTranslation === null
-      ? getBrowserTranslation()
-      : savedTranslation === "fra"
-        ? "und"
-        : translations.some((translation) => translation.key === savedTranslation)
-          ? savedTranslation
-          : DEFAULT_TRANSLATION;
-    page = readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
+    selectedScript = initialScripts.some((script) => script.name === urlScript)
+      ? urlScript
+      : initialScripts.some((script) => script.name === savedScript)
+        ? savedScript
+        : DEFAULT_SCRIPT;
+    selectedTranslation = translations.some((translation) => translation.key === urlTranslation)
+      ? urlTranslation
+      : savedTranslation === null
+        ? getBrowserTranslation()
+        : savedTranslation === "fra"
+          ? "und"
+          : translations.some((translation) => translation.key === savedTranslation)
+            ? savedTranslation
+            : DEFAULT_TRANSLATION;
+    page = urlPage !== null && /^[1-9]\d*$/.test(urlPage)
+      ? Number(urlPage) - 1
+      : readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
     kabyleTextSizeIncrement = readStoredInteger(
       STORAGE_KEYS.kabyleSize,
       0,
@@ -384,6 +395,15 @@
     }
 
     updateTale();
+    updateUrlPreferences();
+  }
+
+  function updateUrlPreferences() {
+    const url = new URL(window.location.href);
+    url.searchParams.set("trans", selectedTranslation);
+    url.searchParams.set("script", selectedScript);
+    url.searchParams.set("page", (page + 1).toString());
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
   }
 
   function updateTale() {
@@ -408,6 +428,7 @@
   async function setPage(nextPage) {
     page = nextPage;
     localStorage.setItem(STORAGE_KEYS.page, page.toString());
+    updateUrlPreferences();
     updateTale();
     await tick();
     if (isIOS) {
