@@ -35,6 +35,8 @@ static async Task GenerateJsonFiles()
             WriteIndented = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         }));
+
+        Console.WriteLine($"JSON files generated successfully for: {fileName}");
     }
 }
 
