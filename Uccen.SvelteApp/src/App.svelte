@@ -30,7 +30,7 @@
     { name: "latn", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
     { name: "tfng", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
     { name: "arab", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-    { name: "hebr", displayName: "Hebrew", isRtl: true, fontFace: "Calibri", textSizeIncrement: 3 },
+    { name: "hebr", displayName: "Hebrew", isRtl: true, fontFace: "'Noto Sans Hebrew', sans-serif", textSizeIncrement: 3 },
     { name: "syrc", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
     { name: "armi", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
     { name: "phnx", displayName: "Phoenician", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },

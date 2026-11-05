@@ -7,11 +7,19 @@
 }
 
 @font-face {
-  font-family: "Noto Sans Nabataean";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/NotoSansNabataean-Regular.ttf") format("truetype");
+    font-family: "Noto Sans Hebrew";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/NotoSansHebrew-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Noto Sans Nabataean";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/NotoSansNabataean-Regular.ttf") format("truetype");
 }
 
 :root {
