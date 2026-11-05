@@ -13,19 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Hussein Arbaoui.xlsx">
+    <EmbeddedResource Include="Resources\Hussein Arbaoui.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="uccen.pptx">
+    <EmbeddedResource Include="Resources\pptx\uccen.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-	<EmbeddedResource Include="uccen.arb.pptx">
+	<EmbeddedResource Include="Resources\pptx\uccen.arb.pptx">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
-	<EmbeddedResource Include="uccen.arq.pptx">
+	<EmbeddedResource Include="Resources\pptx\uccen.arq.pptx">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
-	<EmbeddedResource Include="uccen.eng.pptx">
+	<EmbeddedResource Include="Resources\pptx\uccen.eng.pptx">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>	
   </ItemGroup>

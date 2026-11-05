@@ -23,7 +23,7 @@ args = new string[]
      @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.arq.json",
      @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.arq.pdf",
      "Calibri",          // source (Kabyle) font
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\fonts\NotoNaskhArabic-VariableFont_wght.ttf",   // translation (Arabic) font
+     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.ConsoleApp\Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf",   // translation (Arabic) font
 };
 
 //PdfHelper.GenerateBilingualPdf(args);
@@ -34,7 +34,7 @@ static async Task GenerateJsonFiles()
 
     foreach (var fileName in fileNames)
     {
-        var tales = PptxHelper.ExtractJson(fileName);
+        var tales = PptxHelper.ExtractJson(GetFullPathWithinProject($"Resources\\pptx\\{fileName}"));
         var languageCode = GetLanguageCode(fileName);
 
         await File.WriteAllTextAsync(GetPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
