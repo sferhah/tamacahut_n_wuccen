@@ -129,10 +129,7 @@ export class TransliterationService {
     if (config.direction === "ltr") {
       res = res.replace(/\u200F/g, "");
     } else {
-      res = res.replace(/\u200E/g, "")
-        .replace(/\?/g, "⸮")
-        .replace(/;/g, "؛")
-        .replace(/,/g, "،");
+      res = res.replace(/\u200E/g, "");
     }
 
     if (config.initialSchwa !== undefined) {
