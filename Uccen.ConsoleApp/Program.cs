@@ -38,13 +38,14 @@ static async Task GenerateJsonFiles()
 static async Task GenerateBilingualPdf()
 {
     await GenerateJsonFiles();
-    return;
 
     if (!ExecuteNpmTest())
     {
         Console.WriteLine("Failed to execute npm test.");
         return;
     }
+
+    return;
 
     var languages = new[]
     {
