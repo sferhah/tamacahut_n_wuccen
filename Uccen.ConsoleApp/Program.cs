@@ -17,11 +17,11 @@ static async Task GenerateJsonFiles()
 
     foreach (var fileName in fileNames)
     {
-        var tales = PptxHelper.ExtractJson(GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
+        var book = PptxHelper.ExtractJson(GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
         var languageCode = GetLanguageCode(fileName);
         var svelteDataPath = GetSvelteDataPath(languageCode);
 
-        await File.WriteAllTextAsync(svelteDataPath, JsonSerializer.Serialize(tales, new JsonSerializerOptions
+        await File.WriteAllTextAsync(svelteDataPath, JsonSerializer.Serialize(book, new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
             IgnoreReadOnlyProperties = true,
@@ -38,7 +38,6 @@ static async Task GenerateJsonFiles()
 static async Task GenerateBilingualPdf()
 {
     await GenerateJsonFiles();
-
     if (!ExecuteNpmTest())
     {
         Console.WriteLine("Failed to execute npm test.");
@@ -58,7 +57,7 @@ static async Task GenerateBilingualPdf()
         new { Name = "", Font = "Consolas" },
         new { Name = "_tfng", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_arab", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        /*new { Name = "_hebr", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        /*new { Name = "_hebr", Font = GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
         new { Name = "_syrc", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_armi", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_phnx", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },

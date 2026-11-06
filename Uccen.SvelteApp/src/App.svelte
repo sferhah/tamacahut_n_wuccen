@@ -45,6 +45,9 @@
     Source: { Title: string; Paragraphs: string[] };
     Translation: { Title: string; Paragraphs: string[] };
   };
+  type Book = {
+    Tales: Story[];
+  };
   type DisplayStory = {
     Source: Story["Source"];
     Translation: Story["Translation"];
@@ -173,11 +176,17 @@
     }
 
     const responseData: unknown = await response.json();
-    if (!Array.isArray(responseData) || !responseData.every(isStory)) {
-      throw new Error("Story data must be an array of valid stories");
+    if (!isBook(responseData)) {
+      throw new Error("Story data must be a book containing valid tales");
     }
 
-    return requestId === storyRequestId ? responseData : null;
+    return requestId === storyRequestId ? responseData.Tales : null;
+  }
+
+  function isBook(value: unknown): value is Book {
+    if (typeof value !== "object" || value === null) return false;
+    const book = value as Partial<Book>;
+    return Array.isArray(book.Tales) && book.Tales.every(isStory);
   }
 
   function isStory(value: unknown): value is Story {

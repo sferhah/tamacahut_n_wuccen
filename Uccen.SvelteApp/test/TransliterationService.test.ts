@@ -13,9 +13,13 @@ type MappingData = {
   mapping: Record<string, string>;
 };
 
-type Story = {
+type Tale = {
   Source: { Title: string; Paragraphs: string[] };
   Translation: { Title: string; Paragraphs: string[] };
+};
+
+type Book = {
+  Tales: Tale[];
 };
 
 function parseConfig(scriptName: string): ScriptConfig {
@@ -49,10 +53,10 @@ function parseConfig(scriptName: string): ScriptConfig {
 
 const arabicConfig = parseConfig("arab");
 
-const stories = JSON.parse(
+const book = JSON.parse(
   readFileSync(new URL("../public/data/tamacahut_n_wuccen.json", import.meta.url), "utf8")
-) as Story[];
-const rucherStory = stories.find((story) => story.Translation.Title === "Dans le rucher");
+) as Book;
+const rucherStory = book.Tales.find((story) => story.Translation.Title === "Dans le rucher");
 
 test("Arabic transliteration preserves the known-good rucher title and paragraph", () => {
   assert.ok(rucherStory, 'Expected the "Dans le rucher" story to be present');
@@ -100,28 +104,31 @@ test("generates transliterated story files for every script mapping", () => {
 
   let generatedFileCount = 0;
   for (const inputFile of inputFiles) {
-    const stories = JSON.parse(
+    const book = JSON.parse(
       readFileSync(new URL(inputFile, sourceDataDirectory), "utf8")
-    ) as Story[];
+    ) as Book;
 
     for (const scriptName of scriptNames) {
       const config = parseConfig(scriptName);
-      const transliteratedStories = stories.map((story) => ({
-        ...story,
-        Source: {
-          ...story.Source,
-          Title: TransliterationService.transliterate(story.Source.Title, config),
-          Paragraphs: story.Source.Paragraphs.map((paragraph) =>
-            TransliterationService.transliterate(paragraph, config)
-          )
-        }
-      }));
+      const transliteratedBook: Book = {
+        ...book,
+        Tales: book.Tales.map((tale) => ({
+          ...tale,
+          Source: {
+            ...tale.Source,
+            Title: TransliterationService.transliterate(tale.Source.Title, config),
+            Paragraphs: tale.Source.Paragraphs.map((paragraph) =>
+              TransliterationService.transliterate(paragraph, config)
+            )
+          }
+        }))
+      };
       const localeSuffix = inputFile.match(/^tamacahut_n_wuccen(\.[a-z]{3})?\.json$/)?.[1] || "";
       const outputFile = `tamacahut_n_wuccen_${scriptName}${localeSuffix}.json`;
       const outputUrl = new URL(outputFile, outputDirectory);
 
-      writeFileSync(outputUrl, `${JSON.stringify(transliteratedStories, null, 2)}\n`, "utf8");
-      assert.deepEqual(JSON.parse(readFileSync(outputUrl, "utf8")), transliteratedStories);
+      writeFileSync(outputUrl, `${JSON.stringify(transliteratedBook, null, 2)}\n`, "utf8");
+      assert.deepEqual(JSON.parse(readFileSync(outputUrl, "utf8")), transliteratedBook);
       generatedFileCount++;
     }
   }

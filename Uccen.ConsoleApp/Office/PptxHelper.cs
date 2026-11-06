@@ -4,9 +4,9 @@ using System.Text;
 
 public static class PptxHelper
 {
-    public static List<Tale> ExtractJson(string presentationFile)
+    public static Book ExtractJson(string presentationFile)
     {
-        List<Tale> tales = new List<Tale>();
+        Book book = new Book();        
 
         // Open the presentation as read-only.
         using PresentationDocument presentationDocument = PresentationDocument.Open(presentationFile, false);
@@ -22,7 +22,7 @@ public static class PptxHelper
         // Verify that the presentation part and presentation exist.
         if (presentationPart == null || presentationPart.Presentation == null)
         {
-            return tales;
+            return book;
         }
 
         // Get the Presentation object from the presentation part.
@@ -31,7 +31,7 @@ public static class PptxHelper
         // Verify that the slide ID list exists.
         if (presentation.SlideIdList == null)
         {
-            return tales;
+            return book;
         }
 
         // Get the collection of slide IDs from the slide ID list.
@@ -117,14 +117,14 @@ public static class PptxHelper
             }
             else
             {
-                tales.Add(tale);
+                book.Tales.Add(tale);
                 previousTale = tale;
             }
         }
 
-        tales.Validate();
+        book.Tales.Validate();
 
-        return tales;
+        return book;
     }
 
 

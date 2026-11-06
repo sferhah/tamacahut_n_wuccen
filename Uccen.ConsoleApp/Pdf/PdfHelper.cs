@@ -24,10 +24,10 @@ public static class PdfHelper
         if (args.Length > 3) options.TranslationFont = Font(args[3]);
 
         var json = File.ReadAllText(args[0]);
-        var tales = JsonSerializer.Deserialize<List<Tale>>(json,
+        var book = JsonSerializer.Deserialize<Book>(json,
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                    ?? new List<Tale>();
+                    ?? new Book();
 
-        new FacingPagesRenderer(options).Render(tales, args[1]);        
+        new FacingPagesRenderer(options).Render(book.Tales, args[1]);        
     }
 }
