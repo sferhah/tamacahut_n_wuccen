@@ -40,4 +40,9 @@
 		<PackageReference Include="Topten.RichTextKit" Version="0.4.167" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Resources\json\" />
+	  <Folder Include="Resources\pdf\" />
+	</ItemGroup>
+
 </Project>
