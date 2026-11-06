@@ -7,26 +7,8 @@ using System.Text.Unicode;
 //PptxHelper.ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
 
-await GenerateJsonFiles();
-
-args = new string[]
-{
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.json",
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.pdf",
-     "Calibri",          // source (Kabyle) font
-     "Sakkal Majalla",   // translation (Arabic) font
-};
-
-
-args = new string[]
-{
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.arq.json",
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.SvelteApp\public\data\tamacahut_n_wuccen.arq.pdf",
-     "Calibri",          // source (Kabyle) font
-     @"C:\Users\user\source\repos\tamacahut_n_wuccen\Uccen.ConsoleApp\Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf",   // translation (Arabic) font
-};
-
-//PdfHelper.GenerateBilingualPdf(args);
+//await GenerateJsonFiles();
+GenerateBilingualPdf();
 
 static async Task GenerateJsonFiles()
 {
@@ -37,7 +19,7 @@ static async Task GenerateJsonFiles()
         var tales = PptxHelper.ExtractJson(GetFullPathWithinProject($"Resources\\pptx\\{fileName}"));
         var languageCode = GetLanguageCode(fileName);
 
-        await File.WriteAllTextAsync(GetPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
+        await File.WriteAllTextAsync(GetSvelteDataPath(languageCode), JsonSerializer.Serialize(tales, new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
             IgnoreReadOnlyProperties = true,
@@ -49,8 +31,19 @@ static async Task GenerateJsonFiles()
     }
 }
 
-static async Task GenerateBilingualPdf()
-{
+static void GenerateBilingualPdf()
+{   
+    var languageCode = ".arq";
+
+    var args = new string[]
+    {
+         GetSvelteDataPath(languageCode),
+         Path.ChangeExtension(GetSvelteDataPath(languageCode), "pdf"),         
+         "Consolas",          // source
+         GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf"), // translation
+    };
+
+    PdfHelper.GenerateBilingualPdf(args);
 }
 
 static string GetLanguageCode(string fileName)
@@ -59,7 +52,7 @@ static string GetLanguageCode(string fileName)
     return parts.Length > 2 ? "." + parts[1] : string.Empty;
 }
 
-static string GetPath(string languageCode = "")
+static string GetSvelteDataPath(string languageCode = "")
 {
     string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
 
