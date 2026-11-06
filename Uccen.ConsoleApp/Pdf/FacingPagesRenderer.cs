@@ -96,10 +96,7 @@ public sealed class FacingPagesRenderer
 
         foreach (var tale in tales)
         {
-            if (tale.Source.Paragraphs.Count != tale.Translation.Paragraphs.Count)
-                throw new InvalidDataException(
-                    $"Tale '{tale.Source.Title}': {tale.Source.Paragraphs.Count} source vs " +
-                    $"{tale.Translation.Paragraphs.Count} translation paragraphs.");
+            tale.Validate(); // throws if source/translation paragraph counts differ
 
             if (_o.NewSpreadPerTale && !cur.IsEmpty) NewSpread();
 

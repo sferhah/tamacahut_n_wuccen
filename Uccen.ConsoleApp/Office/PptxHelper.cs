@@ -122,6 +122,8 @@ public static class PptxHelper
             }
         }
 
+        tales.Validate();
+
         return tales;
     }
 
