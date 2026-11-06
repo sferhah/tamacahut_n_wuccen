@@ -36,9 +36,9 @@
 
 	<ItemGroup>
 		<!-- All MIT-licensed. RichTextKit targets SkiaSharp 2.88.x, so keep SkiaSharp on 2.88. -->
-		<PackageReference Include="SkiaSharp" Version="2.88.8" />
-		<PackageReference Include="Topten.RichTextKit" Version="0.4.167" />
-		<PackageReference Include="Svg.Skia" Version="1.0.0.18" />
+		<PackageReference Include="SkiaSharp" Version="4.155.0" />
+		<PackageReference Include="Topten.RichTextKit" Version="0.6.170" />
+		<PackageReference Include="Svg.Skia" Version="5.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>

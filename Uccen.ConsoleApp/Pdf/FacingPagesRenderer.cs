@@ -236,9 +236,8 @@ public sealed class FacingPagesRenderer
                 using var image = SKImage.FromEncodedData(_o.CoverSvgPath)
                                   ?? throw new InvalidDataException($"Cannot load image: {_o.CoverSvgPath}");
                 if (boxH > 0)
-                {
-                    using var paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High };
-                    canvas.DrawImage(image, Fit(image.Width, image.Height), paint);
+                {   
+                    canvas.DrawImage(image, Fit(image.Width, image.Height), new SKSamplingOptions(SKCubicResampler.Mitchell));
                 }
             }
         }

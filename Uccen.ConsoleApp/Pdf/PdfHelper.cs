@@ -26,12 +26,12 @@ public static class PdfHelper
         var json = File.ReadAllText(args[0]);
         var book = JsonSerializer.Deserialize<Book>(json,
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                    ?? new Book();        
+                    ?? new Book();
 
         //options.CoverTitle = book.CoverTitle ?? "Tamacahut n wuccen";
         //options.CoverSubtitle = "Subtitle";
-        //options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
-        //options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\cover.png");
+        ////options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
+        //options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\cover.svg");
 
         new FacingPagesRenderer(options).Render(book, args[1]);
     }
