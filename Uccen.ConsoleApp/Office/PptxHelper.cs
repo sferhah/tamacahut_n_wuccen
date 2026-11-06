@@ -210,7 +210,7 @@ public static class PptxHelper
                 .Replace(" :", "\u00A0:")
                 .Replace(" ;", "\u00A0;");
 
-        return italics.All(x => x) && res.Length > 0 ? $"''{res}''" : res;
+        return italics.All(x => x) && !string.IsNullOrWhiteSpace(res) ? $"''{res}''" : res;
     }
 
     public static bool IsItalic(this Text text)

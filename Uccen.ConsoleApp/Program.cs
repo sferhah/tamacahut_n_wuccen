@@ -7,8 +7,8 @@ using System.Text.Unicode;
 //PptxHelper.ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
 
-//await GenerateJsonFiles();
-GenerateBilingualPdf();
+await GenerateJsonFiles();
+//GenerateBilingualPdf();
 
 static async Task GenerateJsonFiles()
 {
