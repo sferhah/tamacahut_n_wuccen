@@ -43,9 +43,7 @@ static async Task GenerateBilingualPdf()
     {
         Console.WriteLine("Failed to execute npm test.");
         return;
-    }
-
-    return;
+    }    
 
     var languages = new[]
     {
