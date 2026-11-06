@@ -17,9 +17,9 @@ static async Task GenerateJsonFiles()
 
     foreach (var fileName in fileNames)
     {
-        var book = PptxHelper.ExtractJson(GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
+        var book = PptxHelper.ExtractJson(PathHelper.GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
         var languageCode = GetLanguageCode(fileName);
-        var svelteDataPath = GetSvelteDataPath(languageCode);
+        var svelteDataPath = PathHelper.GetSvelteDataPath(languageCode);
 
         await File.WriteAllTextAsync(svelteDataPath, JsonSerializer.Serialize(book, new JsonSerializerOptions
         {
@@ -29,7 +29,7 @@ static async Task GenerateJsonFiles()
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         }));
 
-        File.Copy(svelteDataPath, GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{languageCode}.json"), true);
+        File.Copy(svelteDataPath, PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{languageCode}.json"), true);
 
         Console.WriteLine($"JSON files generated successfully for: {fileName}");
     }
@@ -48,31 +48,31 @@ static async Task GenerateBilingualPdf()
     {
         new { Name = "", Font = "Consolas" }, // .fra
         new { Name = ".eng", Font = "Consolas" },
-        new { Name = ".arb", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = ".arq", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") }
+        new { Name = ".arb", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = ".arq", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") }
     }.ToList();
 
     var scripts = new[]
     {
         new { Name = "", Font = "Consolas" },
-        new { Name = "_tfng", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_arab", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        /*new { Name = "_hebr", Font = GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
-        new { Name = "_syrc", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_armi", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_phnx", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_nbat", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_sarb", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_cyrl", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_grek", Font = GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
+        new { Name = "_tfng", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_arab", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        /*new { Name = "_hebr", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
+        new { Name = "_syrc", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_armi", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_phnx", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_nbat", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_sarb", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_cyrl", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_grek", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
     }.ToList();
 
     foreach(var language in languages)
     {
         foreach (var script in scripts)
         {   
-            var jsonFile = GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{language.Name}.json");
-            var pdfFile = GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{language.Name}.pdf");
+            var jsonFile = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{language.Name}.json");
+            var pdfFile = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{language.Name}.pdf");
 
             var args = new string[]
             {
@@ -90,7 +90,7 @@ static async Task GenerateBilingualPdf()
 
 static bool ExecuteNpmTest()
 {   
-    string projectDirectory = GetSveltePath();
+    string projectDirectory = PathHelper.GetSveltePath();
 
     if (!Directory.Exists(projectDirectory))
     {
@@ -170,31 +170,36 @@ static string GetLanguageCode(string fileName)
     return parts.Length > 2 ? "." + parts[1] : string.Empty;
 }
 
-static string GetSvelteDataPath(string languageCode)
-{
-    return Path.Combine(GetSveltePath(), $@"public\data\tamacahut_n_wuccen{languageCode}.json");
-}
 
-static string GetSveltePath()
-{
-    string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
 
-    while (!Directory.GetFiles(path).Any(x => x.EndsWith(".sln")))
+public static class PathHelper
+{
+    public static string GetSvelteDataPath(string languageCode)
     {
-        path = Directory.GetParent(path).FullName;
+        return Path.Combine(GetSveltePath(), $@"public\data\tamacahut_n_wuccen{languageCode}.json");
     }
 
-    return Path.Combine(path, $@"Uccen.SvelteApp");
-}
-
-static string GetFullPathWithinProject(string filename)
-{
-    string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
-
-    while (!Directory.GetFiles(path).Any(x => x.EndsWith(".csproj")))
+    public static string GetSveltePath()
     {
-        path = Directory.GetParent(path).FullName;
+        string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+
+        while (!Directory.GetFiles(path).Any(x => x.EndsWith(".sln")))
+        {
+            path = Directory.GetParent(path).FullName;
+        }
+
+        return Path.Combine(path, $@"Uccen.SvelteApp");
     }
 
-    return Path.Combine(path, filename);
+    public static string GetFullPathWithinProject(string filename)
+    {
+        string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
+
+        while (!Directory.GetFiles(path).Any(x => x.EndsWith(".csproj")))
+        {
+            path = Directory.GetParent(path).FullName;
+        }
+
+        return Path.Combine(path, filename);
+    }
 }

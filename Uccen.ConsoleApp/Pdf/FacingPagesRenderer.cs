@@ -1,5 +1,6 @@
-﻿using System.Text;
-using SkiaSharp;
+﻿using SkiaSharp;
+using Svg.Skia;
+using System.Text;
 using Topten.RichTextKit;
 // ---------- engine ----------
 public sealed class FacingPagesRenderer
@@ -145,15 +146,22 @@ public sealed class FacingPagesRenderer
     }
 
     // 3) Draw to PDF.
-    public void Render(IEnumerable<Tale> tales, string outputPath)
+    public void Render(Book book, string outputPath)
     {
-        var spreads = Paginate(tales);
+        var spreads = Paginate(book.Tales);
 
         using var stream = File.Create(outputPath);
         using var doc = SKDocument.CreatePdf(stream);
         int pageNumber = 0;
 
-        if (_o.LeadingBlankPage)
+        // Page 1: the cover if there is one, otherwise (optionally) blank.
+        // Either way the spreads stay on pages (2,3), (4,5)...
+        if (_o.HasCover)
+        {
+            DrawCover(doc);
+            pageNumber++;
+        }
+        else if (_o.LeadingBlankPage)
         {
             doc.BeginPage((float)_pageW, (float)_pageH);
             doc.EndPage();
@@ -169,6 +177,99 @@ public sealed class FacingPagesRenderer
 
         doc.Close();
         Console.WriteLine($"{spreads.Count} spreads, {pageNumber} pages -> {outputPath}");
+    }
+
+
+    // ----- cover: title, optional subtitle, then the SVG centred in the remaining space -----
+    private void DrawCover(SKDocument doc)
+    {
+        var canvas = doc.BeginPage((float)_pageW, (float)_pageH);
+
+        double margin = Mm(_o.OuterMm);       // symmetric margins: the cover isn't bound like a spread
+        double width = _pageW - 2 * margin;
+        double y = _pageH * _o.CoverTitleTop;
+
+        y = DrawCoverText(canvas, _o.CoverTitle, _o.SourceFont, _o.CoverTitleSize, 700, margin, y, width);
+        if (!string.IsNullOrWhiteSpace(_o.CoverSubtitle))
+            y = DrawCoverText(canvas, _o.CoverSubtitle, _o.TranslationFont, _o.CoverSubtitleSize, 400,
+                              margin, y + Mm(4), width);
+
+        if (!string.IsNullOrWhiteSpace(_o.CoverSvgPath))
+        {
+            // Box for the image: below the title, above the bottom margin.
+            double boxTop = y + Mm(14);
+            double boxBottom = _pageH - Mm(_o.BottomMm);
+            double boxW = width * _o.CoverImageMaxWidth;
+            double boxH = boxBottom - boxTop;
+
+            // Fits a w x h image into the box, centred; returns its rectangle on the page.
+            SKRect Fit(float w, float h)
+            {
+                double scale = Math.Min(boxW / w, boxH / h);
+                double x = (_pageW - w * scale) / 2;
+                double top = boxTop + (boxH - h * scale) / 2;
+                return SKRect.Create((float)x, (float)top, (float)(w * scale), (float)(h * scale));
+            }
+
+            if (_o.CoverSvgPath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            {
+                // Simple SVGs: drawn as vectors. Heavy filters/masks may not render; use a PNG then.
+                using var svg = new SKSvg();
+                var picture = svg.Load(_o.CoverSvgPath)
+                              ?? throw new InvalidDataException($"Cannot load SVG: {_o.CoverSvgPath}");
+                var r = picture.CullRect;
+
+                if (r.Width > 0 && r.Height > 0 && boxH > 0)
+                {
+                    var dest = Fit(r.Width, r.Height);
+                    canvas.Save();
+                    canvas.Translate(dest.Left, dest.Top);
+                    canvas.Scale(dest.Width / r.Width);
+                    canvas.Translate(-r.Left, -r.Top);
+                    canvas.DrawPicture(picture);
+                    canvas.Restore();
+                }
+            }
+            else
+            {
+                // PNG / JPG: embedded at full resolution (transparency is kept).
+                using var image = SKImage.FromEncodedData(_o.CoverSvgPath)
+                                  ?? throw new InvalidDataException($"Cannot load image: {_o.CoverSvgPath}");
+                if (boxH > 0)
+                {
+                    using var paint = new SKPaint { IsAntialias = true, FilterQuality = SKFilterQuality.High };
+                    canvas.DrawImage(image, Fit(image.Width, image.Height), paint);
+                }
+            }
+        }
+
+        doc.EndPage();
+    }
+
+
+    /// <summary>Draws centred text (RTL-aware) and returns the y just below it.</summary>
+    private double DrawCoverText(SKCanvas canvas, string? text, string font, double size, int weight,
+                                 double x, double y, double width)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return y;
+
+        var clean = Normalize(text);
+        var tb = new TextBlock
+        {
+            MaxWidth = (float)width,
+            Alignment = TextAlignment.Center,
+            BaseDirection = IsRtl(clean) ? TextDirection.RTL : TextDirection.LTR,
+        };
+        tb.AddText(clean, new Style
+        {
+            FontFamily = font,
+            FontSize = (float)size,
+            FontWeight = weight,
+            LineHeight = 1.2f,
+            TextColor = SKColors.Black,
+        });
+        tb.Paint(canvas, new SKPoint((float)x, (float)y));
+        return y + tb.MeasuredHeight;
     }
 
     private void DrawPage(SKDocument doc, List<PlacedPiece> pieces, bool isLeftPage, int pageNumber)
@@ -211,4 +312,6 @@ public sealed class FacingPagesRenderer
 
         doc.EndPage();
     }
+
+
 }

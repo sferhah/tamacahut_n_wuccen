@@ -52,6 +52,21 @@ public class LayoutOptions
     public bool SourceOnLeft { get; set; } = true;
 
     public bool PageNumbers { get; set; } = true;
+
+    // ----- cover (page 1). Used when CoverTitle or CoverSvgPath is set; replaces the blank page. -----
+    public string? CoverTitle { get; set; }
+    /// <summary>Optional second line, e.g. the title in the translation language.</summary>
+    public string? CoverSubtitle { get; set; }
+    public string? CoverSvgPath { get; set; }
+    public double CoverTitleSize { get; set; } = 26;
+    public double CoverSubtitleSize { get; set; } = 18;
+    /// <summary>Where the title starts, as a fraction of the page height from the top.</summary>
+    public double CoverTitleTop { get; set; } = 0.16;
+    /// <summary>Maximum image width, as a fraction of the width between the margins.</summary>
+    public double CoverImageMaxWidth { get; set; } = 0.85;
+
+    public bool HasCover => !string.IsNullOrWhiteSpace(CoverTitle) || !string.IsNullOrWhiteSpace(CoverSvgPath);
+
 }
 
 // ---------- layout primitives ----------
