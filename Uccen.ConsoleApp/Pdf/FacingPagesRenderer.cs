@@ -40,7 +40,7 @@ public sealed class FacingPagesRenderer
         text.Normalize(NormalizationForm.FormC).Replace("­", "");
 
     // 1) Lay out each paragraph with the real fonts.
-    private Block MakeBlock(string? text, string fontFamily, bool isTitle)
+    private Block MakeBlock(string? text, string fontFamily, bool isTitle, bool centerContent = false)
     {
         double gap = isTitle ? _o.TitleGap : _o.ParagraphGap;
         if (string.IsNullOrWhiteSpace(text)) return new Block { Text = null, GapAfter = gap };
@@ -52,7 +52,7 @@ public sealed class FacingPagesRenderer
         {
             MaxWidth = (float)_textW,
             BaseDirection = rtl ? TextDirection.RTL : TextDirection.LTR,
-            Alignment = isTitle ? TextAlignment.Center : rtl ? TextAlignment.Right : TextAlignment.Left,
+            Alignment = isTitle || centerContent ? TextAlignment.Center : rtl ? TextAlignment.Right : TextAlignment.Left,
         };
         AddStyledText(tb, clean, new Style
         {
@@ -134,9 +134,11 @@ public sealed class FacingPagesRenderer
                 (MakeBlock(tale.Source.Title, _o.SourceFont, true),
                  MakeBlock(tale.Translation.Title, _o.TranslationFont, true))
             };
+            bool centerContent = tale.Source.Title?.StartsWith("#", StringComparison.Ordinal) == true
+                              || tale.Translation.Title?.StartsWith("#", StringComparison.Ordinal) == true;
             for (int i = 0; i < tale.Source.Paragraphs.Count; i++)
-                pairs.Add((MakeBlock(tale.Source.Paragraphs[i], _o.SourceFont, false),
-                           MakeBlock(tale.Translation.Paragraphs[i], _o.TranslationFont, false)));
+                pairs.Add((MakeBlock(tale.Source.Paragraphs[i], _o.SourceFont, false, centerContent),
+                           MakeBlock(tale.Translation.Paragraphs[i], _o.TranslationFont, false, centerContent)));
 
             foreach (var (S, T) in pairs)
             {

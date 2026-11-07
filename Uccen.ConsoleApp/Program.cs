@@ -179,6 +179,11 @@ public static class PathHelper
         return Path.Combine(GetSveltePath(), $@"public\data\tamacahut_n_wuccen{languageCode}.json");
     }
 
+    public static string GetSvelteImagePath(string fileName)
+    {
+        return Path.Combine(GetSveltePath(), $@"public\images\{fileName}.svg");
+    }
+
     public static string GetSveltePath()
     {
         string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;

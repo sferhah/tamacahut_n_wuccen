@@ -91,6 +91,7 @@
 
   let tales: Story[] = [];
   let tale: DisplayStory | null = null;
+  let taleIllustration: string | null = null;
   let loading = true;
   let loadingError = "";
   let translationError = "";
@@ -112,6 +113,7 @@
   let uiLocaleKey: LocaleKey = "fra";
   let uiLocale = locales.fra;
   $: pageCount = tales.length;
+  $: taleIllustration = tales[page]?.Source.Title.match(/^#(\d+)/)?.[1] ?? null;
   $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
   $: currentTranslation =
     translations.find((translation) => translation.key === selectedTranslation) || translations[0];
@@ -658,7 +660,7 @@
         </tr>
       </thead>
 
-      <tbody>
+      <tbody class:centered={tale.Source.Title.startsWith("#")}>
         {#if tale.Source.Paragraphs.length === tale.Translation.Paragraphs.length}
           {#each tale.Source.Paragraphs as sourcePara, i}
             <tr>
@@ -709,6 +711,13 @@
                   </p>
                 {/each}
               </div>
+            </td>
+          </tr>
+        {/if}
+        {#if taleIllustration !== null}
+          <tr>
+            <td colspan="2" class="illustration-cell">
+              <img src={`/images/${taleIllustration}.svg`} alt={`Illustration for tale ${taleIllustration}`} />
             </td>
           </tr>
         {/if}
@@ -1007,6 +1016,19 @@
   }
   .text-content {
     line-height: 1.6;
+  }
+  .centered .text-content {
+    text-align: center;
+  }
+  .illustration-cell {
+    text-align: center;
+  }
+  .illustration-cell img {
+    display: block;
+    width: min(100%, 600px);
+    max-height: 32rem;
+    margin: 1.5rem auto;
+    object-fit: contain;
   }
   select, button {
     padding: 6px 12px;

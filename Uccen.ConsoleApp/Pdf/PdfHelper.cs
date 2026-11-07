@@ -35,7 +35,7 @@ public static class PdfHelper
             options.CoverTitle = cover.Source.Paragraphs.FirstOrDefault();
             options.CoverSubtitle = cover.Translation.Paragraphs.FirstOrDefault();
             //options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
-            options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\images\cover.svg");
+            options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");
 
             book.Tales.RemoveAt(0);
         }
