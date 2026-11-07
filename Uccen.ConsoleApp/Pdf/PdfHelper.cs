@@ -31,7 +31,7 @@ public static class PdfHelper
         options.CoverTitle = book.CoverTitle ?? "ⵜⴰⵎⴰⵛⴰⵀⵓⵜ ⵏ ⵡⵓⵛⵛⴻⵏ";
         options.CoverSubtitle = "ⵙⵖⵓⵔ ⴱⵔⴰⵀⵉⵎ ⵣⴻⵍⵍⴰⵍ";
         //options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
-        options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\cover-simple-cropped.svg");
+        options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\images\cover.svg");
 
         new FacingPagesRenderer(options).Render(book, args[1]);
     }
