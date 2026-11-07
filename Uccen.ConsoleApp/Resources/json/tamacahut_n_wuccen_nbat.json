@@ -2,15 +2,15 @@
   "Tales": [
     {
       "Source": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "𐢞𐢁𐢓𐢁𐢝𐢁𐢇𐢈𐢞 𐢕 𐢈𐢈𐢝َّ𐢕 𐢅 𐢍𐢍𐢉َ𐢓"
+          "𐢞𐢁𐢓𐢁𐢝𐢁𐢇𐢈𐢞 𐢕 𐢈𐢈𐢝َّ𐢕"
         ]
       },
       "Translation": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "Le chacal et lion"
+          "Le Roman de Chacal"
         ]
       }
     },
@@ -29,6 +29,20 @@
           "Ce sont les contes de la montagne du Djurdjura, la montagne noire, la montagne de l'honneur, la montagne de la misère : comme disait l'ancien :",
           "''Que celui qui désir vivre dans l'honneur''\n''Monte dans la Montagne''\n''Et se nourrisse d'(amers) glands à cupule.''\n''Que celui qui désire le pur froment''\n''Descende dans la plaine :''\n''Il y sera plus maltraité qu'un chien…''",
           "Vers attribués au Cheikh Ibrahim des Beni‑Sedka vers le milieu du XIVᵉ siècle (de l'Hégire), que Dieu allège sa peine en ce monde et lui accorde le pardon en l'autre."
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "#1",
+        "Paragraphs": [
+          "𐢞𐢁𐢓𐢁𐢝𐢁𐢇𐢈𐢞 𐢕 𐢈𐢈𐢝َّ𐢕 𐢅 𐢍𐢍𐢉َ𐢓"
+        ]
+      },
+      "Translation": {
+        "Title": "#1",
+        "Paragraphs": [
+          "Le chacal et lion"
         ]
       }
     },

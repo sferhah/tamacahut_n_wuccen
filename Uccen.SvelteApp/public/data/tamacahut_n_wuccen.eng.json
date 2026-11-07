@@ -2,15 +2,15 @@
   "Tales": [
     {
       "Source": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "Tamacahut n wuccen d yizem"
+          "Tamacahut n wuccen"
         ]
       },
       "Translation": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "The Tale of the Wolf and the Lion"
+          "The Tale of the Wolf"
         ]
       }
     },
@@ -29,6 +29,20 @@
           "These are the tales of the mountain of Djurdjura, the black mountain, the mountain of honor, the mountain of hardship; as the ancient one used to say:",
           "\u0027\u0027Whosoever desires that honor should prevail\u0027\u0027\n\u0027\u0027Let him ascend the mountain,\u0027\u0027\n\u0027\u0027And feed upon the capped acorn;\u0027\u0027\n\u0027\u0027Whosoever desires the pure wheat\u0027\u0027\n\u0027\u0027Let him descend into the plain:\u0027\u0027\n\u0027\u0027He shall be more abused than a hound!\u0027\u0027",
           "Written by Sheikh Ibrahim of the Ait Sedqa towards the middle of the fourteenth century, may God lighten his burdens in this world, and grant him forgiveness in the afterlife! Amen!"
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "#1",
+        "Paragraphs": [
+          "Tamacahut n wuccen d yizem"
+        ]
+      },
+      "Translation": {
+        "Title": "#1",
+        "Paragraphs": [
+          "The Tale of the Wolf and the Lion"
         ]
       }
     },

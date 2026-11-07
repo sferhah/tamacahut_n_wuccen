@@ -1,6 +1,7 @@
 ﻿using SkiaSharp;
 using Svg.Skia;
 using System.Text;
+using System.Text.RegularExpressions;
 using Topten.RichTextKit;
 // ---------- engine ----------
 public sealed class FacingPagesRenderer
@@ -53,7 +54,7 @@ public sealed class FacingPagesRenderer
             BaseDirection = rtl ? TextDirection.RTL : TextDirection.LTR,
             Alignment = isTitle ? TextAlignment.Center : rtl ? TextAlignment.Right : TextAlignment.Left,
         };
-        tb.AddText(clean, new Style
+        AddStyledText(tb, clean, new Style
         {
             FontFamily = fontFamily,
             FontSize = (float)(isTitle ? _o.TitleSize : _o.BodySize),
@@ -63,6 +64,33 @@ public sealed class FacingPagesRenderer
         });
 
         return new Block { Text = tb, GapAfter = gap };
+    }
+
+    // ----- ''text'' -> italic (two apostrophes on each side, as in wiki markup) -----
+    // Single apostrophes (l'homme, don't) are ordinary text, also inside an italic span.
+    private static readonly Regex ItalicSpan = new(@"''(.+?)''", RegexOptions.Compiled);
+
+    /// <summary>Adds text to the block; spans written as ''like this'' become italic (markers removed).</summary>
+    private static void AddStyledText(TextBlock tb, string text, Style style)
+    {
+        var italic = new Style
+        {
+            FontFamily = style.FontFamily,
+            FontSize = style.FontSize,
+            FontWeight = style.FontWeight,
+            LineHeight = style.LineHeight,
+            TextColor = style.TextColor,
+            FontItalic = true,
+        };
+
+        int pos = 0;
+        foreach (Match m in ItalicSpan.Matches(text))
+        {
+            if (m.Index > pos) tb.AddText(text[pos..m.Index], style);
+            tb.AddText(m.Groups[1].Value, italic);
+            pos = m.Index + m.Length;
+        }
+        if (pos < text.Length) tb.AddText(text[pos..], style);
     }
 
     // 2) Paginate pairs of blocks into spreads, keeping them in lock-step.
@@ -245,7 +273,6 @@ public sealed class FacingPagesRenderer
         doc.EndPage();
     }
 
-
     /// <summary>Draws centred text (RTL-aware) and returns the y just below it.</summary>
     private double DrawCoverText(SKCanvas canvas, string? text, string font, double size, int weight,
                                  double x, double y, double width)
@@ -259,7 +286,7 @@ public sealed class FacingPagesRenderer
             Alignment = TextAlignment.Center,
             BaseDirection = IsRtl(clean) ? TextDirection.RTL : TextDirection.LTR,
         };
-        tb.AddText(clean, new Style
+        AddStyledText(tb, clean, new Style
         {
             FontFamily = font,
             FontSize = (float)size,

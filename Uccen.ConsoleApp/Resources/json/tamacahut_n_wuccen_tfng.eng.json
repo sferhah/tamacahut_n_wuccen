@@ -2,15 +2,15 @@
   "Tales": [
     {
       "Source": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "ⵜⴰⵎⴰⵛⴰⵀⵓⵜ ⵏ ⵡⵓⵛⵛⴻⵏ ⴷ ⵢⵉⵣⴻⵎ"
+          "ⵜⴰⵎⴰⵛⴰⵀⵓⵜ ⵏ ⵡⵓⵛⵛⴻⵏ"
         ]
       },
       "Translation": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "The Tale of the Wolf and the Lion"
+          "The Tale of the Wolf"
         ]
       }
     },
@@ -29,6 +29,20 @@
           "These are the tales of the mountain of Djurdjura, the black mountain, the mountain of honor, the mountain of hardship; as the ancient one used to say:",
           "''Whosoever desires that honor should prevail''\n''Let him ascend the mountain,''\n''And feed upon the capped acorn;''\n''Whosoever desires the pure wheat''\n''Let him descend into the plain:''\n''He shall be more abused than a hound!''",
           "Written by Sheikh Ibrahim of the Ait Sedqa towards the middle of the fourteenth century, may God lighten his burdens in this world, and grant him forgiveness in the afterlife! Amen!"
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "#1",
+        "Paragraphs": [
+          "ⵜⴰⵎⴰⵛⴰⵀⵓⵜ ⵏ ⵡⵓⵛⵛⴻⵏ ⴷ ⵢⵉⵣⴻⵎ"
+        ]
+      },
+      "Translation": {
+        "Title": "#1",
+        "Paragraphs": [
+          "The Tale of the Wolf and the Lion"
         ]
       }
     },

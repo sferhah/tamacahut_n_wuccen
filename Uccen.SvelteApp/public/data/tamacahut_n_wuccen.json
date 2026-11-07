@@ -2,15 +2,15 @@
   "Tales": [
     {
       "Source": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "Tamacahut n wuccen d yizem"
+          "Tamacahut n wuccen"
         ]
       },
       "Translation": {
-        "Title": "#1",
+        "Title": "#0",
         "Paragraphs": [
-          "Le chacal et lion"
+          "Le Roman de Chacal"
         ]
       }
     },
@@ -29,6 +29,20 @@
           "Ce sont les contes de la montagne du Djurdjura, la montagne noire, la montagne de l\u0027honneur, la montagne de la misère\u00A0: comme disait l\u0027ancien\u00A0:",
           "\u0027\u0027Que celui qui désir vivre dans l\u0027honneur\u0027\u0027\n\u0027\u0027Monte dans la Montagne\u0027\u0027\n\u0027\u0027Et se nourrisse d\u0027(amers) glands à cupule.\u0027\u0027\n\u0027\u0027Que celui qui désire le pur froment\u0027\u0027\n\u0027\u0027Descende dans la plaine\u00A0:\u0027\u0027\n\u0027\u0027Il y sera plus maltraité qu\u0027un chien…\u0027\u0027",
           "Vers attribués au Cheikh Ibrahim des Beni‑Sedka vers le milieu du XIVᵉ siècle (de l\u0027Hégire), que Dieu allège sa peine en ce monde et lui accorde le pardon en l\u0027autre."
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "#1",
+        "Paragraphs": [
+          "Tamacahut n wuccen d yizem"
+        ]
+      },
+      "Translation": {
+        "Title": "#1",
+        "Paragraphs": [
+          "Le chacal et lion"
         ]
       }
     },
