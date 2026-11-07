@@ -86,9 +86,13 @@ public sealed class Block
 /// <summary>A run of lines from one block, placed at height Y on a page.</summary>
 public sealed record PlacedPiece(Block Block, int FirstLine, int LineCount, double Y);
 
+/// <summary>An SVG illustration placed across a facing-page spread.</summary>
+public sealed record PlacedIllustration(string Path, double X, double Y, double Width, double Height);
+
 public sealed class Spread
 {
     public List<PlacedPiece> Source { get; } = new();
     public List<PlacedPiece> Translation { get; } = new();
-    public bool IsEmpty => Source.Count == 0 && Translation.Count == 0;
+    public List<PlacedIllustration> Illustrations { get; } = new();
+    public bool IsEmpty => Source.Count == 0 && Translation.Count == 0 && Illustrations.Count == 0;
 }

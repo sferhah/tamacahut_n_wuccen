@@ -40,6 +40,12 @@ public static class PdfHelper
             book.Tales.RemoveAt(0);
         }
 
+        foreach (var tale in book.Tales.Where(t => t.Source.Title?.StartsWith("#") ?? false))
+        {
+            var fileName = tale.Source.Title!.Skip(1).FirstOrDefault().ToString();
+            tale.IllustrationSvgPath = PathHelper.GetSvelteImagePath(fileName);
+        }
+
         new FacingPagesRenderer(options).Render(book, args[1]);
     }
 }

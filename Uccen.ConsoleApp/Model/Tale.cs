@@ -1,9 +1,13 @@
 ﻿
 
+using System.Text.Json.Serialization;
+
 public class Tale
 {
     public TaleContent Source { get; set; } = new TaleContent();
     public TaleContent Translation { get; set; } = new TaleContent();
+    [JsonIgnore]
+    public string? IllustrationSvgPath { get; set; }
 }
 
 public static class TaleXt

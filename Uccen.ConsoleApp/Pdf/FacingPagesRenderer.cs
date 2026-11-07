@@ -169,6 +169,38 @@ public sealed class FacingPagesRenderer
                 if (S.LineCount > 0) yS += S.GapAfter;
                 if (T.LineCount > 0) yT += T.GapAfter;
             }
+
+            if (!string.IsNullOrWhiteSpace(tale.IllustrationSvgPath))
+            {
+                using var svg = new SKSvg();
+                var picture = svg.Load(tale.IllustrationSvgPath)
+                              ?? throw new InvalidDataException($"Cannot load SVG: {tale.IllustrationSvgPath}");
+                var bounds = picture.CullRect;
+
+                if (bounds.Width > 0 && bounds.Height > 0)
+                {
+                    // Center the illustration across the full spread while keeping it
+                    // within the text area and available vertical space of one page.
+                    double scale = Math.Min(2 * _textW / bounds.Width, _textH / bounds.Height);
+                    double width = bounds.Width * scale;
+                    double height = bounds.Height * scale;
+                    double y = Math.Max(yS, yT);
+
+                    if (y + height > _textH + 0.01 && !cur.IsEmpty)
+                    {
+                        NewSpread();
+                        y = 0;
+                    }
+
+                    cur.Illustrations.Add(new PlacedIllustration(
+                        tale.IllustrationSvgPath,
+                        (_pageW * 2 - width) / 2,
+                        y,
+                        width,
+                        height));
+                    yS = yT = y + height;
+                }
+            }
         }
 
         if (!cur.IsEmpty) spreads.Add(cur);
@@ -201,8 +233,8 @@ public sealed class FacingPagesRenderer
         foreach (var s in spreads)
         {
             var (left, right) = _o.SourceOnLeft ? (s.Source, s.Translation) : (s.Translation, s.Source);
-            DrawPage(doc, left, isLeftPage: true, ++pageNumber);
-            DrawPage(doc, right, isLeftPage: false, ++pageNumber);
+            DrawPage(doc, left, s.Illustrations, isLeftPage: true, ++pageNumber);
+            DrawPage(doc, right, s.Illustrations, isLeftPage: false, ++pageNumber);
         }
 
         doc.Close();
@@ -300,7 +332,8 @@ public sealed class FacingPagesRenderer
         return y + tb.MeasuredHeight;
     }
 
-    private void DrawPage(SKDocument doc, List<PlacedPiece> pieces, bool isLeftPage, int pageNumber)
+    private void DrawPage(SKDocument doc, List<PlacedPiece> pieces, List<PlacedIllustration> illustrations,
+                          bool isLeftPage, int pageNumber)
     {
         var canvas = doc.BeginPage((float)_pageW, (float)_pageH);
 
@@ -322,6 +355,9 @@ public sealed class FacingPagesRenderer
             canvas.Restore();
         }
 
+        foreach (var illustration in illustrations)
+            DrawIllustration(canvas, illustration, y0, isLeftPage ? 0 : _pageW);
+
         if (_o.PageNumbers)
         {
             var num = new TextBlock
@@ -339,6 +375,22 @@ public sealed class FacingPagesRenderer
         }
 
         doc.EndPage();
+    }
+
+    private void DrawIllustration(SKCanvas canvas, PlacedIllustration illustration, double y0, double pageOffset)
+    {
+        using var svg = new SKSvg();
+        var picture = svg.Load(illustration.Path)
+                      ?? throw new InvalidDataException($"Cannot load SVG: {illustration.Path}");
+        var bounds = picture.CullRect;
+        if (bounds.Width <= 0 || bounds.Height <= 0) return;
+
+        canvas.Save();
+        canvas.Translate((float)(illustration.X - pageOffset), (float)(y0 + illustration.Y));
+        canvas.Scale((float)(illustration.Width / bounds.Width), (float)(illustration.Height / bounds.Height));
+        canvas.Translate(-bounds.Left, -bounds.Top);
+        canvas.DrawPicture(picture);
+        canvas.Restore();
     }
 
 
