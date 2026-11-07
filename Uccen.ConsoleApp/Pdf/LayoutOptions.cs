@@ -64,7 +64,8 @@ public class LayoutOptions
     public double CoverTitleTop { get; set; } = 0.16;
     /// <summary>Maximum image width, as a fraction of the width between the margins.</summary>
     public double CoverImageMaxWidth { get; set; } = 0.85;
-
+    /// <summary>Space between the title block and the image.</summary>
+    public double CoverImageGapMm { get; set; } = 8;
     public bool HasCover => !string.IsNullOrWhiteSpace(CoverTitle) || !string.IsNullOrWhiteSpace(CoverSvgPath);
 
 }

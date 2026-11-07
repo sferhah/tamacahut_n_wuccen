@@ -197,9 +197,9 @@ public sealed class FacingPagesRenderer
         if (!string.IsNullOrWhiteSpace(_o.CoverSvgPath))
         {
             // Box for the image: below the title, above the bottom margin.
-            double boxTop = y + Mm(14);
+            double boxTop = y + Mm(_o.CoverImageGapMm);
             double boxBottom = _pageH - Mm(_o.BottomMm);
-            double boxW = width * _o.CoverImageMaxWidth;
+            double boxW = _pageW * _o.CoverImageMaxWidth;   // full page width, no margins
             double boxH = boxBottom - boxTop;
 
             // Fits a w x h image into the box, centred; returns its rectangle on the page.

@@ -28,10 +28,10 @@ public static class PdfHelper
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new Book();
 
-        //options.CoverTitle = book.CoverTitle ?? "Tamacahut n wuccen";
-        //options.CoverSubtitle = "Subtitle";
-        ////options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
-        //options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\cover.svg");
+        options.CoverTitle = book.CoverTitle ?? "ⵜⴰⵎⴰⵛⴰⵀⵓⵜ ⵏ ⵡⵓⵛⵛⴻⵏ";
+        options.CoverSubtitle = "ⵙⵖⵓⵔ ⴱⵔⴰⵀⵉⵎ ⵣⴻⵍⵍⴰⵍ";
+        //options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
+        options.CoverSvgPath = PathHelper.GetFullPathWithinProject(@"Resources\cover-simple-cropped.svg");
 
         new FacingPagesRenderer(options).Render(book, args[1]);
     }
