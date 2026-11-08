@@ -57,6 +57,9 @@ public class LayoutOptions
     public bool SourceOnLeft { get; set; } = true;
 
     public bool PageNumbers { get; set; } = true;
+    // LayoutOptions
+    /// <summary>Arabic-style book: bound on the right, so the first page of each spread is the RIGHT page.</summary>
+    public bool RightToLeftBook { get; set; } = false;
 
     // ----- cover (page 1). Cover content replaces the leading blank page. -----
     public string? CoverAuthor { get; set; }
@@ -76,9 +79,24 @@ public class LayoutOptions
                          || !string.IsNullOrWhiteSpace(CoverTitle)
                          || !string.IsNullOrWhiteSpace(CoverSvgPath);
 
-    // LayoutOptions
-    /// <summary>Arabic-style book: bound on the right, so the first page of each spread is the RIGHT page.</summary>
-    public bool RightToLeftBook { get; set; } = false;
+    // ----- back cover (last page) -----
+    public string? BackCoverText { get; set; }          // e.g. a short summary (source language)
+    public string? BackCoverTranslation { get; set; }   // optional, drawn below
+    public string? BackCoverSvgPath { get; set; }
+    public double BackCoverImageWidth { get; set; } = 0.6;  // fraction of the width between cover margins
+    public double BackCoverTop { get; set; } = 0.14;        // where the content starts (fraction of page height)
+
+    /// <summary>For print: pad with blank pages so the total is a multiple of this (4 for a folded booklet). 0 = off.</summary>
+    public int PageMultiple { get; set; } = 0;
+
+    /// <summary>Font size of the back cover text, in points.</summary>
+    public double BackCoverTextSize { get; set; } = 11.5;
+
+    public bool HasBackCover => !string.IsNullOrWhiteSpace(BackCoverText) ||
+                                !string.IsNullOrWhiteSpace(BackCoverTranslation) ||
+                                !string.IsNullOrWhiteSpace(BackCoverSvgPath);
+
+    
 
 }
 

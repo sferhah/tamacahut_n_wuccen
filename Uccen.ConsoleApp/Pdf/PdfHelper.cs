@@ -60,6 +60,9 @@ public static class PdfHelper
             book.Tales.RemoveAt(0);
         }
 
+        //options.BackCoverText = "Test";
+        //options.PageMultiple = 4;
+
 
         foreach (var tale in book.Tales.Where(t => t.Source.Title?.StartsWith("#") ?? false))
         {

@@ -245,10 +245,68 @@ public sealed class FacingPagesRenderer
             DrawPage(doc, right, s.Illustrations, isLeftPage: _o.RightToLeftBook, ++pageNumber);
         }
 
+        if (_o.HasBackCover)
+        {
+            // Cover + spreads always give an odd page count, so one more page is the back of the book.
+            // For print, pad with blank pages first so the total is a multiple of PageMultiple.
+            int total = pageNumber + 1;
+            int blanks = _o.PageMultiple > 1 ? (_o.PageMultiple - total % _o.PageMultiple) % _o.PageMultiple : 0;
+            for (int i = 0; i < blanks; i++)
+            {
+                doc.BeginPage((float)_pageW, (float)_pageH);
+                doc.EndPage();
+                pageNumber++;
+            }
+
+            DrawBackCover(doc);
+            pageNumber++;
+        }
+
         doc.Close();
         Console.WriteLine($"{spreads.Count} spreads, {pageNumber} pages -> {outputPath}");
 
         return this;
+    }
+
+    private void DrawBackCover(SKDocument doc)
+    {
+        var canvas = doc.BeginPage((float)_pageW, (float)_pageH);
+
+        double margin = Mm(_o.OuterMm);
+        double width = _pageW - 2 * margin;
+        double y = _pageH * _o.BackCoverTop;
+
+        if (!string.IsNullOrWhiteSpace(_o.BackCoverSvgPath))
+        {
+            using var svg = new SKSvg();
+            var picture = svg.Load(_o.BackCoverSvgPath)
+                          ?? throw new InvalidDataException($"Cannot load SVG: {_o.BackCoverSvgPath}");
+            var r = picture.CullRect;
+            if (r.Width > 0 && r.Height > 0)
+            {
+                double scale = Math.Min(width * _o.BackCoverImageWidth / r.Width, _pageH * 0.4 / r.Height);
+                double x = (_pageW - r.Width * scale) / 2;
+
+                canvas.Save();
+                canvas.Translate((float)x, (float)y);
+                canvas.Scale((float)scale);
+                canvas.Translate(-r.Left, -r.Top);
+                canvas.DrawPicture(picture);
+                canvas.Restore();
+
+                y += r.Height * scale + Mm(10);
+            }
+        }
+
+        // Text a little narrower than the cover margins, for comfortable lines.
+        double textX = margin + Mm(6), textW = width - Mm(12);
+
+        y = DrawCoverText(canvas, _o.BackCoverText, _o.SourceFont, _o.BackCoverTextSize, 400, textX, y, textW);
+        if (!string.IsNullOrWhiteSpace(_o.BackCoverTranslation))
+            DrawCoverText(canvas, _o.BackCoverTranslation, _o.TranslationFont, _o.BackCoverTextSize, 400,
+                          textX, y + Mm(6), textW);
+
+        doc.EndPage();
     }
 
 
