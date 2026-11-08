@@ -53,7 +53,8 @@ public class LayoutOptions
 
     public bool PageNumbers { get; set; } = true;
 
-    // ----- cover (page 1). Used when CoverTitle or CoverSvgPath is set; replaces the blank page. -----
+    // ----- cover (page 1). Cover content replaces the leading blank page. -----
+    public string? CoverAuthor { get; set; }
     public string? CoverTitle { get; set; }
     /// <summary>Optional second line, e.g. the title in the translation language.</summary>
     public string? CoverSubtitle { get; set; }
@@ -66,7 +67,13 @@ public class LayoutOptions
     public double CoverImageMaxWidth { get; set; } = 0.85;
     /// <summary>Space between the title block and the image.</summary>
     public double CoverImageGapMm { get; set; } = 8;
-    public bool HasCover => !string.IsNullOrWhiteSpace(CoverTitle) || !string.IsNullOrWhiteSpace(CoverSvgPath);
+    public bool HasCover => !string.IsNullOrWhiteSpace(CoverAuthor)
+                         || !string.IsNullOrWhiteSpace(CoverTitle)
+                         || !string.IsNullOrWhiteSpace(CoverSvgPath);
+
+    // LayoutOptions
+    /// <summary>Arabic-style book: bound on the right, so the first page of each spread is the RIGHT page.</summary>
+    public bool RightToLeftBook { get; set; } = false;
 
 }
 

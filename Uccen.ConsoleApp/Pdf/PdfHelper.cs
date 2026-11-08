@@ -1,29 +1,36 @@
 ﻿using System.Text.Json;
 using Topten.RichTextKit;
 
+
+// Each font argument is an installed family name ("Calibri") or a path
+// ("C:\Fonts\MyFont.ttf" or "C:\Fonts\MyFont.ttf|C:\Fonts\MyFont-Bold.ttf").
+public class PdfHelperArgs
+{
+    required public string JsonFilePath { get; set; }
+    required public string PdfFilePath { get; set; }
+    required public string SourceFont { get; set; }
+    required public string LanguageFont { get; set; }    
+    public bool RightToLeftBook { get; set; }
+}
+
 public static class PdfHelper
 {
-    public static void GenerateBilingualPdf(string[] args)
+    public static void GenerateBilingualPdf(PdfHelperArgs args)
     {
-        if (args.Length < 2)
-        {
-            Console.Error.WriteLine(
-                "Usage: FacingPagesSkia <tales.json> <output.pdf> [\"Source font\"] [\"Translation font\"]");
-            return;
-        }
 
-        // Each font argument is an installed family name ("Calibri") or a path
-        // ("C:\Fonts\MyFont.ttf" or "C:\Fonts\MyFont.ttf|C:\Fonts\MyFont-Bold.ttf").
         var mapper = new FileFontMapper();
         FontMapper.Default = mapper;
 
         string Font(string arg) => FileFontMapper.IsPath(arg) ? mapper.Register(arg) : arg;
 
-        var options = new LayoutOptions();
-        if (args.Length > 2) options.SourceFont = Font(args[2]);
-        if (args.Length > 3) options.TranslationFont = Font(args[3]);
+        var options = new LayoutOptions
+        {
+            SourceFont = Font(args.SourceFont),
+            TranslationFont = Font(args.LanguageFont),
+            RightToLeftBook = args.RightToLeftBook,
+        };
 
-        var json = File.ReadAllText(args[0]);
+        var json = File.ReadAllText(args.JsonFilePath);
         var book = JsonSerializer.Deserialize<Book>(json,
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new Book();
@@ -32,13 +39,19 @@ public static class PdfHelper
 
         if (cover?.Source.Title == "#0")
         {
-            options.CoverTitle = cover.Source.Paragraphs.FirstOrDefault();
-            options.CoverSubtitle = cover.Translation.Paragraphs.FirstOrDefault();
-            //options.CoverSvgPath = book.CoverSvgImage ?? File.ReadAllText(PathHelper.GetFullPathWithinProject(@"Resources\cover.svg"));
+            (string? sourceAuthor, string? sourceTitle) = GetAuthorAndTitle(cover.Source.Paragraphs);
+            (string? translationAuthor, string? translationTitle) = GetAuthorAndTitle(cover.Translation.Paragraphs);
+
+            options.CoverAuthor = translationAuthor;
+
+            options.CoverTitle = sourceTitle;
+            options.CoverSubtitle = translationTitle;
+
             options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");
 
             book.Tales.RemoveAt(0);
         }
+
 
         foreach (var tale in book.Tales.Where(t => t.Source.Title?.StartsWith("#") ?? false))
         {
@@ -46,6 +59,11 @@ public static class PdfHelper
             tale.IllustrationSvgPath = PathHelper.GetSvelteImagePath(fileName);
         }
 
-        new FacingPagesRenderer(options).Render(book, args[1]);
+        new FacingPagesRenderer(options).Render(book, args.PdfFilePath);
+    }
+
+    public static (string? author, string? title) GetAuthorAndTitle(List<string> paragraphs)
+    {
+        return (author: paragraphs.FirstOrDefault(), title: paragraphs.Skip(1).FirstOrDefault());
     }
 }

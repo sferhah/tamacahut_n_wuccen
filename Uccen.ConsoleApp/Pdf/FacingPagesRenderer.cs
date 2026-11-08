@@ -233,8 +233,8 @@ public sealed class FacingPagesRenderer
         foreach (var s in spreads)
         {
             var (left, right) = _o.SourceOnLeft ? (s.Source, s.Translation) : (s.Translation, s.Source);
-            DrawPage(doc, left, s.Illustrations, isLeftPage: true, ++pageNumber);
-            DrawPage(doc, right, s.Illustrations, isLeftPage: false, ++pageNumber);
+            DrawPage(doc, left, s.Illustrations, isLeftPage: !_o.RightToLeftBook, ++pageNumber);
+            DrawPage(doc, right, s.Illustrations, isLeftPage: _o.RightToLeftBook, ++pageNumber);
         }
 
         doc.Close();
@@ -250,6 +250,9 @@ public sealed class FacingPagesRenderer
         double margin = Mm(_o.OuterMm);       // symmetric margins: the cover isn't bound like a spread
         double width = _pageW - 2 * margin;
         double y = _pageH * _o.CoverTitleTop;
+
+        // Draw the author independently so the existing title/subtitle/image positions stay unchanged.
+        DrawCoverText(canvas, _o.CoverAuthor, _o.TranslationFont, 12, 400, margin, _pageH * 0.04, width);
 
         y = DrawCoverText(canvas, _o.CoverTitle, _o.SourceFont, _o.CoverTitleSize, 700, margin, y, width);
         if (!string.IsNullOrWhiteSpace(_o.CoverSubtitle))

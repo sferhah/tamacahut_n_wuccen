@@ -46,10 +46,10 @@ static async Task GenerateBilingualPdf()
 
     var languages = new[]
     {
-        new { Name = "", Font = "Consolas" }, // .fra
-        new { Name = ".eng", Font = "Consolas" },
-        new { Name = ".arb", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = ".arq", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") }
+        new { Name = "", IsRtl = false, Font = "Consolas" }, // .fra
+        new { Name = ".eng", IsRtl = false, Font = "Consolas" },
+        new { Name = ".arb", IsRtl = true, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = ".arq", IsRtl = true, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") }
     }.ToList();
 
     var scripts = new[]
@@ -71,15 +71,16 @@ static async Task GenerateBilingualPdf()
     {
         foreach (var script in scripts)
         {   
-            var jsonFile = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{language.Name}.json");
-            var pdfFile = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{language.Name}.pdf");
+            var jsonFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{language.Name}.json");
+            var pdfFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{language.Name}.pdf");
 
-            var args = new string[]
+            var args = new PdfHelperArgs
             {
-                 jsonFile,
-                 pdfFile,
-                 script.Font,
-                 language.Font,
+                JsonFilePath = jsonFilePath,
+                PdfFilePath = pdfFilePath,
+                SourceFont = script.Font,
+                LanguageFont = language.Font,
+                RightToLeftBook = language.IsRtl,
             };
 
             PdfHelper.GenerateBilingualPdf(args);
