@@ -67,7 +67,7 @@ public static class PdfHelper
             tale.IllustrationSvgPath = PathHelper.GetSvelteImagePath(fileName);
         }
 
-        new FacingPagesRenderer(options).Render(book, args.PdfFilePath);
+        new FacingPagesRenderer(options).Render(book, args.PdfFilePath).PatchWithPdfSharp(args.PdfFilePath);        
     }
 
     public static (string? author, string? title) GetAuthorAndTitle(List<string> paragraphs)

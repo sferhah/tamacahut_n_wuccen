@@ -1,4 +1,7 @@
-﻿using SkiaSharp;
+﻿using PdfSharp;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using SkiaSharp;
 using Svg.Skia;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -209,10 +212,11 @@ public sealed class FacingPagesRenderer
 
         if (!cur.IsEmpty) spreads.Add(cur);
         return spreads;
-    }
+    }    
+
 
     // 3) Draw to PDF.
-    public void Render(Book book, string outputPath)
+    public FacingPagesRenderer Render(Book book, string outputPath)
     {
         var spreads = Paginate(book.Tales);
 
@@ -243,6 +247,23 @@ public sealed class FacingPagesRenderer
 
         doc.Close();
         Console.WriteLine($"{spreads.Count} spreads, {pageNumber} pages -> {outputPath}");
+
+        return this;
+    }
+
+
+    public void PatchWithPdfSharp(string outputPath)
+    {
+        PdfSharpLicense.SetAgplLicense();
+        using var pdf = PdfReader.Open(outputPath, PdfDocumentOpenMode.Modify);
+        if (_o.RightToLeftBook)
+        {
+            pdf.ViewerPreferences.Direction = PdfReadingDirection.RightToLeft;  // << /ViewerPreferences << /Direction /R2L >> >> 
+        }
+
+        pdf.PageLayout = PdfPageLayout.TwoPageRight;                        // cover alone, then spreads 2|3, 4|5…
+
+        pdf.Save(outputPath);
     }
 
 

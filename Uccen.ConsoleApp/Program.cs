@@ -1,11 +1,8 @@
-﻿using DocumentFormat.OpenXml.Drawing;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
-
-
 
 //PptxHelper.ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
