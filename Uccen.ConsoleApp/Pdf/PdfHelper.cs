@@ -9,8 +9,12 @@ public class PdfHelperArgs
     required public string JsonFilePath { get; set; }
     required public string PdfFilePath { get; set; }
     required public string SourceFont { get; set; }
-    required public string LanguageFont { get; set; }    
+    required public string LanguageFont { get; set; }
+    public double SourceBodySize { get; set; } = 10.5;
+    public double TranslationBodySize { get; set; } = 10.5;
     public bool RightToLeftBook { get; set; }
+    public double SourceLineSpacing { get; set; } = 1.35;
+    public double TranslationLineSpacing { get; set; } = 1.35;
 }
 
 public static class PdfHelper
@@ -28,6 +32,10 @@ public static class PdfHelper
             SourceFont = Font(args.SourceFont),
             TranslationFont = Font(args.LanguageFont),
             RightToLeftBook = args.RightToLeftBook,
+            SourceBodySize = args.SourceBodySize,
+            TranslationBodySize = args.TranslationBodySize,
+            SourceLineSpacing = args.SourceLineSpacing,
+            TranslationLineSpacing = args.TranslationLineSpacing,
         };
 
         var json = File.ReadAllText(args.JsonFilePath);
@@ -47,7 +55,7 @@ public static class PdfHelper
             options.CoverTitle = sourceTitle;
             options.CoverSubtitle = translationTitle;
 
-            options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");
+            options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");            
 
             book.Tales.RemoveAt(0);
         }

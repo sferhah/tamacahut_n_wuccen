@@ -40,9 +40,11 @@ public sealed class FacingPagesRenderer
         text.Normalize(NormalizationForm.FormC).Replace("­", "");
 
     // 1) Lay out each paragraph with the real fonts.
-    private Block MakeBlock(string? text, string fontFamily, bool isTitle, bool centerContent = false)
+    private Block MakeBlock(string? text, string fontFamily, bool isSource, bool isTitle, bool centerContent = false)
     {
-        double gap = isTitle ? _o.TitleGap : _o.ParagraphGap;
+        double gap = isSource
+            ? isTitle ? _o.SourceTitleGap : _o.SourceParagraphGap
+            : isTitle ? _o.TranslationTitleGap : _o.TranslationParagraphGap;
         if (string.IsNullOrWhiteSpace(text)) return new Block { Text = null, GapAfter = gap };
 
         var clean = Normalize(text);
@@ -57,9 +59,11 @@ public sealed class FacingPagesRenderer
         AddStyledText(tb, clean, new Style
         {
             FontFamily = fontFamily,
-            FontSize = (float)(isTitle ? _o.TitleSize : _o.BodySize),
+            FontSize = (float)(isTitle
+                ? isSource ? _o.SourceTitleSize : _o.TranslationTitleSize
+                : isSource ? _o.SourceBodySize : _o.TranslationBodySize),
             FontWeight = isTitle ? 700 : 400,
-            LineHeight = (float)_o.LineSpacing,
+            LineHeight = (float)(isSource ? _o.SourceLineSpacing : _o.TranslationLineSpacing),
             TextColor = SKColors.Black,
         });
 
@@ -131,14 +135,14 @@ public sealed class FacingPagesRenderer
 
             var pairs = new List<(Block S, Block T)>
             {
-                (MakeBlock(tale.Source.Title, _o.SourceFont, true),
-                 MakeBlock(tale.Translation.Title, _o.TranslationFont, true))
+                (MakeBlock(tale.Source.Title, _o.SourceFont, true, true),
+                 MakeBlock(tale.Translation.Title, _o.TranslationFont, false, true))
             };
             bool centerContent = tale.Source.Title?.StartsWith("#", StringComparison.Ordinal) == true
                               || tale.Translation.Title?.StartsWith("#", StringComparison.Ordinal) == true;
             for (int i = 0; i < tale.Source.Paragraphs.Count; i++)
-                pairs.Add((MakeBlock(tale.Source.Paragraphs[i], _o.SourceFont, false, centerContent),
-                           MakeBlock(tale.Translation.Paragraphs[i], _o.TranslationFont, false, centerContent)));
+                pairs.Add((MakeBlock(tale.Source.Paragraphs[i], _o.SourceFont, true, false, centerContent),
+                           MakeBlock(tale.Translation.Paragraphs[i], _o.TranslationFont, false, false, centerContent)));
 
             foreach (var (S, T) in pairs)
             {

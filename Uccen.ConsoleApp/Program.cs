@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DocumentFormat.OpenXml.Drawing;
+using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -42,45 +43,61 @@ static async Task GenerateBilingualPdf()
     {
         Console.WriteLine("Failed to execute npm test.");
         return;
-    }    
+    }
 
-    var languages = new[]
+    var pdfFolder = PathHelper.GetFullPathWithinProject(@$"Resources\pdf");
+    var di = new DirectoryInfo(pdfFolder);
+
+    foreach (FileInfo file in di.GetFiles())
     {
-        new { Name = "", IsRtl = false, Font = "Consolas" }, // .fra
-        new { Name = ".eng", IsRtl = false, Font = "Consolas" },
-        new { Name = ".arb", IsRtl = true, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = ".arq", IsRtl = true, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") }
-    }.ToList();
+        file.Delete();
+    }
+
+    var arSize = 14.0;
+    var arLineSpacing = 1.0;
+    var arFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf");
 
     var scripts = new[]
     {
-        new { Name = "", Font = "Consolas" },
-        new { Name = "_tfng", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_arab", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        /*new { Name = "_hebr", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
-        new { Name = "_syrc", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_armi", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_phnx", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_nbat", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_sarb", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_cyrl", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_grek", Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
+        new { Name = "", BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
+        new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = arFont },
+        new { Name = "_arab", BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
+        /*new { Name = "_hebr", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
+        new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_armi", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_phnx", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_nbat", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_sarb", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_cyrl", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        new { Name = "_grek", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
     }.ToList();
 
-    foreach(var language in languages)
+    var translations = new[]
+    {
+        new { Name = "", IsRtl = false, BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" }, // .fra
+        new { Name = ".eng", IsRtl = false, BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
+        new { Name = ".arb", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
+        new { Name = ".arq", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont }
+    }.ToList();
+
+    foreach (var translation in translations)
     {
         foreach (var script in scripts)
         {   
-            var jsonFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{language.Name}.json");
-            var pdfFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{language.Name}.pdf");
+            var jsonFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{translation.Name}.json");
+            var pdfFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{translation.Name}.pdf");
 
             var args = new PdfHelperArgs
             {
                 JsonFilePath = jsonFilePath,
                 PdfFilePath = pdfFilePath,
                 SourceFont = script.Font,
-                LanguageFont = language.Font,
-                RightToLeftBook = language.IsRtl,
+                LanguageFont = translation.Font,
+                RightToLeftBook = translation.IsRtl,
+                SourceBodySize = script.BodySize,
+                TranslationBodySize = translation.BodySize,
+                SourceLineSpacing = script.LineSpacing,
+                TranslationLineSpacing = translation.LineSpacing,
             };
 
             PdfHelper.GenerateBilingualPdf(args);
@@ -169,43 +186,4 @@ static string GetLanguageCode(string fileName)
 {
     var parts = fileName.Split('.');
     return parts.Length > 2 ? "." + parts[1] : string.Empty;
-}
-
-
-
-public static class PathHelper
-{
-    public static string GetSvelteDataPath(string languageCode)
-    {
-        return Path.Combine(GetSveltePath(), $@"public\data\tamacahut_n_wuccen{languageCode}.json");
-    }
-
-    public static string GetSvelteImagePath(string fileName)
-    {
-        return Path.Combine(GetSveltePath(), $@"public\images\{fileName}.svg");
-    }
-
-    public static string GetSveltePath()
-    {
-        string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
-
-        while (!Directory.GetFiles(path).Any(x => x.EndsWith(".sln")))
-        {
-            path = Directory.GetParent(path).FullName;
-        }
-
-        return Path.Combine(path, $@"Uccen.SvelteApp");
-    }
-
-    public static string GetFullPathWithinProject(string filename)
-    {
-        string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
-
-        while (!Directory.GetFiles(path).Any(x => x.EndsWith(".csproj")))
-        {
-            path = Directory.GetParent(path).FullName;
-        }
-
-        return Path.Combine(path, filename);
-    }
 }

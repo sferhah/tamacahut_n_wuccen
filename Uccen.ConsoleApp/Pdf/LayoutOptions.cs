@@ -32,11 +32,16 @@ public class LayoutOptions
     public string SourceFont { get; set; } = "Calibri";
     public string TranslationFont { get; set; } = "Calibri";
 
-    public double BodySize { get; set; } = 10.5;
-    public double TitleSize { get; set; } = 15;
-    public double LineSpacing { get; set; } = 1.35;   // multiple of font size
-    public double ParagraphGap { get; set; } = 6;     // points after each paragraph
-    public double TitleGap { get; set; } = 14;        // points after the title
+    public double SourceBodySize { get; set; } = 10.5;
+    public double TranslationBodySize { get; set; } = 10.5;
+    public double SourceTitleSize { get; set; } = 15;
+    public double TranslationTitleSize { get; set; } = 15;
+    public double SourceLineSpacing { get; set; } = 1.35;   // multiple of font size
+    public double TranslationLineSpacing { get; set; } = 1.35;
+    public double SourceParagraphGap { get; set; } = 6;     // points after each paragraph
+    public double TranslationParagraphGap { get; set; } = 6;
+    public double SourceTitleGap { get; set; } = 14;        // points after the title
+    public double TranslationTitleGap { get; set; } = 14;
 
     /// <summary>Re-align both sides so paragraph i starts at the same height on both pages.</summary>
     public bool AlignParagraphTops { get; set; } = true;
