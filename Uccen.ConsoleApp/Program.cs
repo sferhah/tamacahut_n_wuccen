@@ -56,10 +56,13 @@ static async Task GenerateBilingualPdf()
         + "|"
         + PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Bold.ttf");
 
+    var latnSize = 11.5; // "Noto Sans"
+    var latnFont = "Cambria"; // "Noto Sans"
+
     var scripts = new[]
     {
-        new { Name = "", BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
-        new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
+        new { Name = "", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
+        new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = "Aptos" },
         new { Name = "_arab", BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
         /*new { Name = "_hebr", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
         new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
@@ -73,8 +76,8 @@ static async Task GenerateBilingualPdf()
 
     var translations = new[]
     {
-        new { Name = "", IsRtl = false, BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" }, // .fra
-        new { Name = ".eng", IsRtl = false, BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
+        new { Name = "", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont }, // .fra
+        new { Name = ".eng", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
         new { Name = ".arb", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
         new { Name = ".arq", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont }
     }.ToList();
