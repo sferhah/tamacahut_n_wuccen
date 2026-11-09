@@ -15,6 +15,7 @@ public class PdfHelperArgs
     public bool RightToLeftBook { get; set; }
     public double SourceLineSpacing { get; set; } = 1.35;
     public double TranslationLineSpacing { get; set; } = 1.35;
+    public int PageMultiple { get; set; } = 0;
 }
 
 public static class PdfHelper
@@ -36,6 +37,7 @@ public static class PdfHelper
             TranslationBodySize = args.TranslationBodySize,
             SourceLineSpacing = args.SourceLineSpacing,
             TranslationLineSpacing = args.TranslationLineSpacing,
+            PageMultiple = args.PageMultiple,
         };
 
         var json = File.ReadAllText(args.JsonFilePath);
@@ -57,12 +59,19 @@ public static class PdfHelper
 
             options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");            
 
-            book.Tales.RemoveAt(0);
+            book.Tales.Remove(cover);
         }
 
-        //options.BackCoverText = "Test";
-        //options.PageMultiple = 4;
+        var backCover = book.Tales.LastOrDefault();
 
+        if (backCover?.Source.Title?.Trim() == "#Ω")
+        {
+            options.BackCoverText = string.Join("\n", backCover.Source.Paragraphs);
+            options.BackCoverTranslation = string.Join("\n", backCover.Translation.Paragraphs);
+            options.BackCoverSvgPath = PathHelper.GetSvelteImagePath(@"Ω");
+
+            book.Tales.Remove(backCover);
+        }
 
         foreach (var tale in book.Tales.Where(t => t.Source.Title?.StartsWith("#") ?? false))
         {

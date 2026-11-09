@@ -95,6 +95,7 @@ static async Task GenerateBilingualPdf()
                 TranslationBodySize = translation.BodySize,
                 SourceLineSpacing = script.LineSpacing,
                 TranslationLineSpacing = translation.LineSpacing,
+                PageMultiple = 4, // booklet
             };
 
             PdfHelper.GenerateBilingualPdf(args);
