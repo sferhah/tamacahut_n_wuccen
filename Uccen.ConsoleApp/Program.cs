@@ -52,7 +52,9 @@ static async Task GenerateBilingualPdf()
 
     var arSize = 14.0;
     var arLineSpacing = 1.0;
-    var arFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf");
+    var arFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Regular.ttf")
+        + "|"
+        + PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Bold.ttf");
 
     var scripts = new[]
     {
