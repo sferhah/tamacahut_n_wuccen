@@ -59,7 +59,7 @@ static async Task GenerateBilingualPdf()
     var scripts = new[]
     {
         new { Name = "", BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
-        new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = arFont },
+        new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = "Consolas" },
         new { Name = "_arab", BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
         /*new { Name = "_hebr", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
         new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
