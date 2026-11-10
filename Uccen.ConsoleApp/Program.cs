@@ -16,6 +16,8 @@ static async Task GenerateJsonFiles()
     foreach (var fileName in fileNames)
     {
         var book = PptxHelper.ExtractJson(PathHelper.GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
+        book.Tales = book.Tales.Where(t => t.Source.Title != "#ignore").ToList();
+
         var languageCode = GetLanguageCode(fileName);
         var svelteDataPath = PathHelper.GetSvelteDataPath(languageCode);
 
@@ -36,6 +38,8 @@ static async Task GenerateJsonFiles()
 static async Task GenerateBilingualPdf()
 {
     await GenerateJsonFiles();
+    //return;
+
     if (!ExecuteNpmTest())
     {
         Console.WriteLine("Failed to execute npm test.");
