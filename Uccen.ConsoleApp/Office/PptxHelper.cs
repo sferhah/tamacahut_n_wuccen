@@ -187,8 +187,9 @@ public static class PptxHelper
             .GetFirstChild<CharacterBullet>();
 
         if (bulletChar != null && !string.IsNullOrEmpty(bulletChar.Char))
-        {   
-            builder.Append(bulletChar.Char + " "); 
+        {
+            string bulletCharText = bulletChar.Char == "-" ? "— " : bulletChar.Char + " ";
+            builder.Append(bulletCharText);
         }
 
         List<bool> italics = new List<bool>();        
