@@ -122,6 +122,7 @@ public static class PptxHelper
         }
 
         book.Tales.Validate();
+        book.Tales.ApplyTemplates();
 
         return book;
     }

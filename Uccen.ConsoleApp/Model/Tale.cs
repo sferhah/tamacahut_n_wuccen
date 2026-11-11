@@ -1,5 +1,4 @@
 ﻿
-
 using System.Text.Json.Serialization;
 
 public class Tale
@@ -26,5 +25,19 @@ public static class TaleXt
             throw new InvalidDataException(
                 $"Tale '{tale.Source.Title}': {tale.Source.Paragraphs.Count} source vs " +
                 $"{tale.Translation.Paragraphs.Count} translation paragraphs.");
+    }
+
+    public static void ApplyTemplates(this IEnumerable<Tale> tales)
+    {
+        foreach (var tale in tales)
+        {
+            tale.ApplyTemplates();
+        }
+    }
+
+    public static void ApplyTemplates(this Tale tale)
+    {
+        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
+        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
     }
 }

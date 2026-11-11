@@ -14,7 +14,7 @@
     translationSize: "TranslationTextSizeIncrement",
     initialSizeEvaluated: "InitialTextSizeEvaluated"
   };
-  const faceDefault = "Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
+  const faceDefault = "Cambria,Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const translations = [
     { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
    // { key: "fra", displayName: "Français2" },
@@ -664,16 +664,18 @@
         {#if tale.Source.Paragraphs.length === tale.Translation.Paragraphs.length}
           {#each tale.Source.Paragraphs as sourcePara, i}
             <tr>
-              <td>
-                <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-                  {#each sourcePara.split('\n') as line}
-                    {#each splitWikiText(line) as segment}
-                      {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
-                    {/each}<br />
-                  {/each}
-                </div>
-              </td>
-              <td>
+              {#if sourcePara !== ""}
+                <td>
+                  <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
+                    {#each sourcePara.split('\n') as line}
+                      {#each splitWikiText(line) as segment}
+                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
+                      {/each}<br />
+                    {/each}
+                  </div>
+                </td>
+              {/if}
+              <td colspan={sourcePara === "" ? 2 : 1}>
                 <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                   {#each tale.Translation.Paragraphs[i].split('\n') as line}
                     {#each splitWikiText(line) as segment}
