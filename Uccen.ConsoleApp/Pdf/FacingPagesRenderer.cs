@@ -73,28 +73,34 @@ public sealed class FacingPagesRenderer
         return new Block { Text = tb, GapAfter = gap };
     }
 
-    // ----- ''text'' -> italic (two apostrophes on each side, as in wiki markup) -----
-    // Single apostrophes (l'homme, don't) are ordinary text, also inside an italic span.
-    private static readonly Regex ItalicSpan = new(@"''(.+?)''", RegexOptions.Compiled);
+    // ----- Wiki-style emphasis: ''italic'', '''bold''', and '''''bold italic''''' -----
+    // Single apostrophes (l'homme, don't) are ordinary text.
+    private static readonly Regex EmphasisSpan = new(@"'''''(.+?)'''''|'''(.+?)'''|''(.+?)''", RegexOptions.Compiled);
 
-    /// <summary>Adds text to the block; spans written as ''like this'' become italic (markers removed).</summary>
+    /// <summary>Adds text with wiki-style emphasis markers removed.</summary>
     private static void AddStyledText(TextBlock tb, string text, Style style)
     {
-        var italic = new Style
-        {
-            FontFamily = style.FontFamily,
-            FontSize = style.FontSize,
-            FontWeight = style.FontWeight,
-            LineHeight = style.LineHeight,
-            TextColor = style.TextColor,
-            FontItalic = true,
-        };
-
         int pos = 0;
-        foreach (Match m in ItalicSpan.Matches(text))
+        foreach (Match m in EmphasisSpan.Matches(text))
         {
             if (m.Index > pos) tb.AddText(text[pos..m.Index], style);
-            tb.AddText(m.Groups[1].Value, italic);
+
+            bool bold = m.Groups[1].Success || m.Groups[2].Success;
+            bool italic = m.Groups[1].Success || m.Groups[3].Success;
+            string content = m.Groups[1].Success ? m.Groups[1].Value
+                : m.Groups[2].Success ? m.Groups[2].Value
+                : m.Groups[3].Value;
+
+            var emphasisStyle = new Style
+            {
+                FontFamily = style.FontFamily,
+                FontSize = style.FontSize,
+                FontWeight = bold ? 700 : style.FontWeight,
+                LineHeight = style.LineHeight,
+                TextColor = style.TextColor,
+                FontItalic = italic,
+            };
+            tb.AddText(content, emphasisStyle);
             pos = m.Index + m.Length;
         }
         if (pos < text.Length) tb.AddText(text[pos..], style);
