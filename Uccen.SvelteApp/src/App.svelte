@@ -67,23 +67,23 @@
     return Number.isInteger(value) ? Math.max(min, Math.min(max, value)) : fallback;
   }
 
-  function splitQuotedText(line: string): { text: string; quoted: boolean }[] {
-    const segments: { text: string; quoted: boolean }[] = [];
-    const quotedTextPattern = /''([\s\S]*?)''/g;
+  function splitWikiText(line: string): { text: string; formatting: "bold" | "italic" | null }[] {
+    const segments: { text: string; formatting: "bold" | "italic" | null }[] = [];
+    const wikiTextPattern = /'''([\s\S]*?)'''|''([\s\S]*?)''/g;
     let previousIndex = 0;
     let match;
 
-    while ((match = quotedTextPattern.exec(line)) !== null) {
+    while ((match = wikiTextPattern.exec(line)) !== null) {
       if (match.index > previousIndex) {
-        segments.push({ text: line.slice(previousIndex, match.index), quoted: false });
+        segments.push({ text: line.slice(previousIndex, match.index), formatting: null });
       }
 
-      segments.push({ text: match[1], quoted: true });
-      previousIndex = quotedTextPattern.lastIndex;
+      segments.push({ text: match[1] ?? match[2], formatting: match[1] !== undefined ? "bold" : "italic" });
+      previousIndex = wikiTextPattern.lastIndex;
     }
 
     if (previousIndex < line.length || segments.length === 0) {
-      segments.push({ text: line.slice(previousIndex), quoted: false });
+      segments.push({ text: line.slice(previousIndex), formatting: null });
     }
 
     return segments;
@@ -667,8 +667,8 @@
               <td>
                 <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
                   {#each sourcePara.split('\n') as line}
-                    {#each splitQuotedText(line) as segment}
-                      {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                    {#each splitWikiText(line) as segment}
+                      {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                     {/each}<br />
                   {/each}
                 </div>
@@ -676,8 +676,8 @@
               <td>
                 <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                   {#each tale.Translation.Paragraphs[i].split('\n') as line}
-                    {#each splitQuotedText(line) as segment}
-                      {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                    {#each splitWikiText(line) as segment}
+                      {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                     {/each}<br />
                   {/each}
                 </div>
@@ -691,8 +691,8 @@
                 {#each tale.Source.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
-                      {#each splitQuotedText(line) as segment}
-                        {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                      {#each splitWikiText(line) as segment}
+                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                       {/each}<br />
                     {/each}
                   </p>
@@ -704,8 +704,8 @@
                 {#each tale.Translation.Paragraphs as paragraph}
                   <p>
                     {#each paragraph.split('\n') as line}
-                      {#each splitQuotedText(line) as segment}
-                        {#if segment.quoted}<em>&emsp;{segment.text}</em>{:else}{segment.text}{/if}
+                      {#each splitWikiText(line) as segment}
+                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                       {/each}<br />
                     {/each}
                   </p>

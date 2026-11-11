@@ -62,17 +62,17 @@ public static class PptxHelper
                 switch (j)
                 {
                     case 3:
-                        tale.Source.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                        tale.Source.Title = string.Join(string.Empty, cell.ParseParagraphs(true));
                         break;
                     case 6:
-                        tale.Source.Paragraphs = cell.ParseParagraphs();
+                        tale.Source.Paragraphs = cell.ParseParagraphs(false);
                         sourceStartsWithPilcrow = cell.StartsWithPilcrow();
                         break;
                     case 5:
-                        tale.Translation.Title = string.Join(string.Empty, cell.ParseParagraphs());
+                        tale.Translation.Title = string.Join(string.Empty, cell.ParseParagraphs(true));
                         break;
                     case 8:
-                        tale.Translation.Paragraphs = cell.ParseParagraphs();
+                        tale.Translation.Paragraphs = cell.ParseParagraphs(false);
                         translationStartsWithPilcrow = cell.StartsWithPilcrow();
                         break;
                 }
@@ -131,10 +131,10 @@ public static class PptxHelper
         => pptxCell.Descendants<Paragraph>().FirstOrDefault()?
         .Descendants<Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
 
-    public static List<string> ParseParagraphs(this TableCell pptxCell)
-        => pptxCell.Descendants<Paragraph>().ParseParagraphs();
+    public static List<string> ParseParagraphs(this TableCell pptxCell, bool disableMarkup)
+        => pptxCell.Descendants<Paragraph>().ParseParagraphs(disableMarkup);
 
-    public static List<string> ParseParagraphs(this IEnumerable<Paragraph> pptxParagraphs)
+    public static List<string> ParseParagraphs(this IEnumerable<Paragraph> pptxParagraphs, bool disableMarkup)
     {
         var paragraphs = new List<List<string>>();
         List<string>? currentParagraph = null;
@@ -142,7 +142,7 @@ public static class PptxHelper
         foreach (var pptxParagraph in pptxParagraphs)
         {
             // Retrieve the text and immediately split it at the ¶ character.
-            var rawLine = pptxParagraph.ParseLine();
+            var rawLine = pptxParagraph.ParseLine(disableMarkup);
             var subLines = rawLine.Split('¶');
 
             for (int i = 0; i < subLines.Length; i++)
@@ -178,9 +178,12 @@ public static class PptxHelper
             .ToList();
     }
 
-    public static string ParseLine(this Paragraph paragraph)
+    public static string ParseLine(this Paragraph paragraph, bool disableMarkup)
     {
-        var bulletChar = paragraph.ParagraphProperties?.GetFirstChild<CharacterBullet>()?.Char?.Value;
+        var bulletChar = paragraph.ParagraphProperties?
+            .GetFirstChild<CharacterBullet>()?
+            .Char?
+            .Value;
 
         string bullet =
             bulletChar == "-"
@@ -192,6 +195,7 @@ public static class PptxHelper
         var runs = paragraph.Descendants<Text>()
             .Select(t => (
                 IsItalic: !string.IsNullOrWhiteSpace(t.Text) && t.IsItalic(),
+                IsBold: !string.IsNullOrWhiteSpace(t.Text) && t.IsBold(),
                 Text: t.Text ?? string.Empty
             ))
             .ToList();
@@ -200,14 +204,25 @@ public static class PptxHelper
 
         if (!string.IsNullOrWhiteSpace(content))
         {
-            var italicRuns = runs.Where(r => !string.IsNullOrWhiteSpace(r.Text)).ToList();
+            var nonEmptyRuns = runs
+                .Where(r => !string.IsNullOrWhiteSpace(r.Text))
+                .ToList();
 
-            if (italicRuns.Count > 0)
+            if (nonEmptyRuns.Count > 0)
             {
-                content = italicRuns.All(r => r.IsItalic)
-                    ? $"''{content}''"
-                    : string.Concat(runs.Select(r =>
-                        r.IsItalic ? $"''{r.Text}''" : r.Text));
+                bool allItalic = nonEmptyRuns.All(r => r.IsItalic);
+                bool allBold = nonEmptyRuns.All(r => r.IsBold);
+
+                if (allItalic || allBold)
+                {
+                    content = ApplyWikiMarkup(content, allBold, allItalic, disableMarkup);
+                }
+                else
+                {
+                    content = string.Concat(
+                        runs.Select(r => ApplyWikiMarkup(r.Text, r.IsBold, r.IsItalic, disableMarkup))
+                    );
+                }
             }
         }
 
@@ -221,6 +236,36 @@ public static class PptxHelper
             .Replace(" ;", "\u00A0;");
     }
 
+    private static string ApplyWikiMarkup(string text, bool bold, bool italic, bool disableMarkup)
+    {
+        if (disableMarkup)
+        {
+            return text;
+        }
+
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        if (bold && italic)
+        {
+            return $"'''''{text}'''''";
+        }
+
+        if (bold)
+        {
+            return $"'''{text}'''";
+        }
+
+        if (italic)
+        {
+            return $"''{text}''";
+        }
+
+        return text;
+    }
+
 
     public static bool IsItalic(this Text text)
     {   
@@ -230,6 +275,21 @@ public static class PptxHelper
         }
 
         if (text.Parent is EndParagraphRunProperties endPr && endPr.Italic?.Value == true)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsBold(this Text text)
+    {
+        if (text.Parent is Run run && run.RunProperties?.Bold?.Value == true)
+        {
+            return true;
+        }
+
+        if (text.Parent is EndParagraphRunProperties endPr && endPr.Bold?.Value == true)
         {
             return true;
         }
