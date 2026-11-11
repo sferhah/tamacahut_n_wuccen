@@ -1,12 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
-using System.Text;
 
 public static class PptxHelper
 {
     public static Book ExtractJson(string presentationFile)
     {
-        Book book = new Book();        
+        Book book = new Book();
 
         // Open the presentation as read-only.
         using PresentationDocument presentationDocument = PresentationDocument.Open(presentationFile, false);
@@ -133,7 +132,7 @@ public static class PptxHelper
         .Descendants<Text>().FirstOrDefault()?.Text.TrimStart().StartsWith('¶') ?? false;
 
     public static List<string> ParseParagraphs(this TableCell pptxCell)
-        => pptxCell.Descendants<Paragraph>().ParseParagraphs();   
+        => pptxCell.Descendants<Paragraph>().ParseParagraphs();
 
     public static List<string> ParseParagraphs(this IEnumerable<Paragraph> pptxParagraphs)
     {
@@ -179,42 +178,49 @@ public static class PptxHelper
             .ToList();
     }
 
-    public static string ParseLine(this Paragraph pptxParagraph)
+    public static string ParseLine(this Paragraph paragraph)
     {
-        var builder = new StringBuilder();
+        var bulletChar = paragraph.ParagraphProperties?.GetFirstChild<CharacterBullet>()?.Char?.Value;
 
-        var bulletChar = pptxParagraph.ParagraphProperties?
-            .GetFirstChild<CharacterBullet>();
+        string bullet =
+            bulletChar == "-"
+                ? "— "
+                : string.IsNullOrEmpty(bulletChar)
+                    ? string.Empty
+                    : $"{bulletChar} ";
 
-        if (bulletChar != null && !string.IsNullOrEmpty(bulletChar.Char))
+        var runs = paragraph.Descendants<Text>()
+            .Select(t => (
+                IsItalic: !string.IsNullOrWhiteSpace(t.Text) && t.IsItalic(),
+                Text: t.Text ?? string.Empty
+            ))
+            .ToList();
+
+        var content = string.Concat(runs.Select(r => r.Text));
+
+        if (!string.IsNullOrWhiteSpace(content))
         {
-            string bulletCharText = bulletChar.Char == "-" ? "— " : bulletChar.Char + " ";
-            builder.Append(bulletCharText);
-        }
+            var italicRuns = runs.Where(r => !string.IsNullOrWhiteSpace(r.Text)).ToList();
 
-        List<bool> italics = new List<bool>();        
-
-        foreach (var text in pptxParagraph.Descendants<Text>())
-        {   
-            if (!string.IsNullOrWhiteSpace(text.Text))
+            if (italicRuns.Count > 0)
             {
-                italics.Add(text.IsItalic());
+                content = italicRuns.All(r => r.IsItalic)
+                    ? $"''{content}''"
+                    : string.Concat(runs.Select(r =>
+                        r.IsItalic ? $"''{r.Text}''" : r.Text));
             }
-
-            builder.Append(text.Text);
         }
 
-        var res = builder.ToString();
-
-        res = res.Replace("\u00A0", " ").Replace("’", "'")
-                .Replace("-", "\u2011")
-                .Replace(" ?", "\u00A0?")
-                .Replace(" !", "\u00A0!")
-                .Replace(" :", "\u00A0:")
-                .Replace(" ;", "\u00A0;");
-
-        return italics.All(x => x) && !string.IsNullOrWhiteSpace(res) ? $"''{res}''" : res;
+        return (bullet + content)
+            .Replace("\u00A0", " ")
+            .Replace("’", "'")
+            .Replace("-", "\u2011")
+            .Replace(" ?", "\u00A0?")
+            .Replace(" !", "\u00A0!")
+            .Replace(" :", "\u00A0:")
+            .Replace(" ;", "\u00A0;");
     }
+
 
     public static bool IsItalic(this Text text)
     {   
