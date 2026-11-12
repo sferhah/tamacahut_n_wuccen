@@ -16,7 +16,7 @@ static async Task GenerateJsonFiles()
     foreach (var fileName in fileNames)
     {
         var book = PptxHelper.ExtractJson(PathHelper.GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
-        book.Tales = book.Tales.Where(t => t.Source.Title != "#ignore").ToList();
+        book.Tales = book.Tales.Where(t => !t.Source.Title?.StartsWith("#ignore", StringComparison.OrdinalIgnoreCase) ?? false).ToList();
 
         var languageCode = GetLanguageCode(fileName);
         var svelteDataPath = PathHelper.GetSvelteDataPath(languageCode);

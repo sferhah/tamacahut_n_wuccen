@@ -669,7 +669,7 @@
                   <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
                     {#each sourcePara.split('\n') as line}
                       {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
+                        {#if segment.formatting === "italic"}<em>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                       {/each}<br />
                     {/each}
                   </div>
@@ -679,7 +679,7 @@
                 <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
                   {#each tale.Translation.Paragraphs[i].split('\n') as line}
                     {#each splitWikiText(line) as segment}
-                      {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
+                      {#if segment.formatting === "italic"}<em>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                     {/each}<br />
                   {/each}
                 </div>
@@ -694,7 +694,7 @@
                   <p>
                     {#each paragraph.split('\n') as line}
                       {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
+                        {#if segment.formatting === "italic"}<em>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                       {/each}<br />
                     {/each}
                   </p>
@@ -707,7 +707,7 @@
                   <p>
                     {#each paragraph.split('\n') as line}
                       {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em>&emsp;{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
+                        {#if segment.formatting === "italic"}<em>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
                       {/each}<br />
                     {/each}
                   </p>

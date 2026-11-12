@@ -39,5 +39,12 @@ public static class TaleXt
     {
         tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
         tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
+
+        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => s.Replace("{{Indent}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
+        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => s.Replace("{{Indent}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
+
+
+        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
+        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }
