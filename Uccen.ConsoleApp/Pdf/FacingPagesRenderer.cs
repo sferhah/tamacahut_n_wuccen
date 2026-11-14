@@ -43,7 +43,7 @@ public sealed class FacingPagesRenderer
         text.Normalize(NormalizationForm.FormC).Replace("­", "");
 
     // 1) Lay out each paragraph with the real fonts.
-    private Block MakeBlock(string? text, string fontFamily, bool isSource, bool isTitle, bool centerContent = false, double? maxWidth = null)
+    private Block MakeBlock(string? text, string fontFamily, bool isSource, bool isTitle, bool centerContent = false, double? maxWidth = null, double? bodySize = null, double? lineSpacing = null)
     {
         double gap = isSource
             ? isTitle ? _o.SourceTitleGap : _o.SourceParagraphGap
@@ -64,9 +64,9 @@ public sealed class FacingPagesRenderer
             FontFamily = fontFamily,
             FontSize = (float)(isTitle
                 ? isSource ? _o.SourceTitleSize : _o.TranslationTitleSize
-                : isSource ? _o.SourceBodySize : _o.TranslationBodySize),
+                : bodySize ?? (isSource ? _o.SourceBodySize : _o.TranslationBodySize)),
             FontWeight = isTitle ? 700 : 400,
-            LineHeight = (float)(isSource ? _o.SourceLineSpacing : _o.TranslationLineSpacing),
+            LineHeight = (float)(lineSpacing ?? (isSource ? _o.SourceLineSpacing : _o.TranslationLineSpacing)),
             TextColor = SKColors.Black,
         });
 
@@ -290,7 +290,9 @@ public sealed class FacingPagesRenderer
                                          double x, double width)
     {
         var blocks = paragraphs
-            .Select(paragraph => MakeBlock(paragraph, _o.TranslationFont, isSource: false, isTitle: false, maxWidth: width))
+            .Select(paragraph => MakeBlock(paragraph, _o.TranslationFont, isSource: false, isTitle: false,
+                                           maxWidth: width, bodySize: _o.BackCoverTranslationSize,
+                                           lineSpacing: _o.BackCoverTranslationLineSpacing))
             .Where(block => block.LineCount > 0)
             .ToList();
 

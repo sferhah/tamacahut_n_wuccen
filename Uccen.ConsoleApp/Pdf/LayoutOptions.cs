@@ -81,6 +81,8 @@ public class LayoutOptions
 
     // ----- back cover (last page) -----
     public List<string> BackCoverTranslationParagraphs { get; set; } = new();
+    public double BackCoverTranslationSize { get; set; } = 11.5;
+    public double BackCoverTranslationLineSpacing { get; set; } = 1.35;
     public double BackCoverTop { get; set; } = 0.14; // where the content starts (fraction of page height)
 
     /// <summary>For print: pad with blank pages so the total is a multiple of this (4 for a folded booklet). 0 = off.</summary>

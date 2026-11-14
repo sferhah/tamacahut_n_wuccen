@@ -12,6 +12,8 @@ public class PdfHelperArgs
     required public string LanguageFont { get; set; }
     public double SourceBodySize { get; set; } = 10.5;
     public double TranslationBodySize { get; set; } = 10.5;
+    public double BackCoverTranslationSize { get; set; } = 11.5;
+    public double BackCoverTranslationLineSpacing { get; set; } = 1.35;
     public bool RightToLeftBook { get; set; }
     public double SourceLineSpacing { get; set; } = 1.35;
     public double TranslationLineSpacing { get; set; } = 1.35;
@@ -35,6 +37,8 @@ public static class PdfHelper
             RightToLeftBook = args.RightToLeftBook,
             SourceBodySize = args.SourceBodySize,
             TranslationBodySize = args.TranslationBodySize,
+            BackCoverTranslationSize = args.BackCoverTranslationSize,
+            BackCoverTranslationLineSpacing = args.BackCoverTranslationLineSpacing,
             SourceLineSpacing = args.SourceLineSpacing,
             TranslationLineSpacing = args.TranslationLineSpacing,
             PageMultiple = args.PageMultiple,

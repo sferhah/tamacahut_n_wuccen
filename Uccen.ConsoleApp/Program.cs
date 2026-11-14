@@ -59,6 +59,8 @@ static async Task GenerateBilingualPdf()
     var arFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Regular.ttf")
         + "|"
         + PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Bold.ttf");
+    var arBackCoverSize = 13.0;
+    var arBackCoverLineSpacing = 0.9;
 
     var latnSize = 11.5; // "Noto Sans"
     var latnFont = "Cambria"; // "Noto Sans"
@@ -80,10 +82,10 @@ static async Task GenerateBilingualPdf()
 
     var translations = new[]
     {
-        new { Name = "", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont }, // .fra
-        new { Name = ".eng", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
-        new { Name = ".arb", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
-        new { Name = ".arq", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont }
+        new { Name = "", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont, BackCoverSize = 11.5, BackCoverLineSpacing = 1.35 }, // .fra
+        new { Name = ".eng", IsRtl = false, BodySize = latnSize, LineSpacing = 1.35, Font = latnFont, BackCoverSize = 11.5, BackCoverLineSpacing = 1.35 },
+        new { Name = ".arb", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont, BackCoverSize = arBackCoverSize, BackCoverLineSpacing = arBackCoverLineSpacing },
+        new { Name = ".arq", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont, BackCoverSize = arBackCoverSize, BackCoverLineSpacing = arBackCoverLineSpacing }
     }.ToList();
 
     foreach (var translation in translations)
@@ -104,6 +106,10 @@ static async Task GenerateBilingualPdf()
                 TranslationBodySize = translation.BodySize,
                 SourceLineSpacing = script.LineSpacing,
                 TranslationLineSpacing = translation.LineSpacing,
+
+                BackCoverTranslationSize = translation.BackCoverSize,
+                BackCoverTranslationLineSpacing = translation.BackCoverLineSpacing,
+
                 PageMultiple = 4, // booklet
             };
 
