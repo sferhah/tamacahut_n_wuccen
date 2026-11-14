@@ -64,7 +64,7 @@ public static class PdfHelper
 
         var backCover = book.Tales.LastOrDefault();
 
-        if (backCover?.Source.Title?.Trim() == "Ω")
+        if (backCover?.Translation.Title?.Trim() == "Ω")
         {
             options.BackCoverTranslationParagraphs = backCover.Translation.Paragraphs;
             book.Tales.Remove(backCover);

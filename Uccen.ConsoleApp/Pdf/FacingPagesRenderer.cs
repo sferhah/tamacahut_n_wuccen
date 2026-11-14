@@ -280,26 +280,29 @@ public sealed class FacingPagesRenderer
 
         double margin = Mm(_o.OuterMm) + Mm(6);
         double textWidth = _pageW - 2 * margin;
-        double y = _pageH * _o.BackCoverTop;
 
-        DrawBackCoverParagraphs(canvas, _o.BackCoverTranslationParagraphs, margin, textWidth, y);
+        DrawBackCoverParagraphs(canvas, _o.BackCoverTranslationParagraphs, margin, textWidth);
 
         doc.EndPage();
     }
 
-    private double DrawBackCoverParagraphs(SKCanvas canvas, IEnumerable<string> paragraphs,
-                                           double x, double width, double y)
+    private void DrawBackCoverParagraphs(SKCanvas canvas, IEnumerable<string> paragraphs,
+                                         double x, double width)
     {
-        foreach (var paragraph in paragraphs)
-        {
-            var block = MakeBlock(paragraph, _o.TranslationFont, isSource: false, isTitle: false, maxWidth: width);
-            if (block.LineCount == 0) continue;
+        var blocks = paragraphs
+            .Select(paragraph => MakeBlock(paragraph, _o.TranslationFont, isSource: false, isTitle: false, maxWidth: width))
+            .Where(block => block.LineCount > 0)
+            .ToList();
 
+        double contentHeight = blocks.Sum(block => block.Bottom(block.LineCount - 1) - block.Top(0))
+                             + blocks.Take(Math.Max(0, blocks.Count - 1)).Sum(block => block.GapAfter);
+        double y = (_pageH - contentHeight) / 2;
+
+        foreach (var block in blocks)
+        {
             block.Text!.Paint(canvas, new SKPoint((float)x, (float)(y - block.Top(0))));
             y += block.Bottom(block.LineCount - 1) - block.Top(0) + block.GapAfter;
         }
-
-        return y;
     }
 
 
