@@ -43,7 +43,7 @@ public sealed class FacingPagesRenderer
         text.Normalize(NormalizationForm.FormC).Replace("­", "");
 
     // 1) Lay out each paragraph with the real fonts.
-    private Block MakeBlock(string? text, string fontFamily, bool isSource, bool isTitle, bool centerContent = false)
+    private Block MakeBlock(string? text, string fontFamily, bool isSource, bool isTitle, bool centerContent = false, double? maxWidth = null)
     {
         double gap = isSource
             ? isTitle ? _o.SourceTitleGap : _o.SourceParagraphGap
@@ -55,7 +55,7 @@ public sealed class FacingPagesRenderer
 
         var tb = new TextBlock
         {
-            MaxWidth = (float)_textW,
+            MaxWidth = (float)(maxWidth ?? _textW),
             BaseDirection = rtl ? TextDirection.RTL : TextDirection.LTR,
             Alignment = isTitle || centerContent ? TextAlignment.Center : rtl ? TextAlignment.Right : TextAlignment.Left,
         };
@@ -278,41 +278,28 @@ public sealed class FacingPagesRenderer
     {
         var canvas = doc.BeginPage((float)_pageW, (float)_pageH);
 
-        double margin = Mm(_o.OuterMm);
-        double width = _pageW - 2 * margin;
+        double margin = Mm(_o.OuterMm) + Mm(6);
+        double textWidth = _pageW - 2 * margin;
         double y = _pageH * _o.BackCoverTop;
 
-        if (!string.IsNullOrWhiteSpace(_o.BackCoverSvgPath))
-        {
-            using var svg = new SKSvg();
-            var picture = svg.Load(_o.BackCoverSvgPath)
-                          ?? throw new InvalidDataException($"Cannot load SVG: {_o.BackCoverSvgPath}");
-            var r = picture.CullRect;
-            if (r.Width > 0 && r.Height > 0)
-            {
-                double scale = Math.Min(width * _o.BackCoverImageWidth / r.Width, _pageH * 0.4 / r.Height);
-                double x = (_pageW - r.Width * scale) / 2;
-
-                canvas.Save();
-                canvas.Translate((float)x, (float)y);
-                canvas.Scale((float)scale);
-                canvas.Translate(-r.Left, -r.Top);
-                canvas.DrawPicture(picture);
-                canvas.Restore();
-
-                y += r.Height * scale + Mm(10);
-            }
-        }
-
-        // Text a little narrower than the cover margins, for comfortable lines.
-        double textX = margin + Mm(6), textW = width - Mm(12);
-
-        y = DrawCoverText(canvas, _o.BackCoverText, _o.SourceFont, _o.BackCoverTextSize, 400, textX, y, textW);
-        if (!string.IsNullOrWhiteSpace(_o.BackCoverTranslation))
-            DrawCoverText(canvas, _o.BackCoverTranslation, _o.TranslationFont, _o.BackCoverTextSize, 400,
-                          textX, y + Mm(6), textW);
+        DrawBackCoverParagraphs(canvas, _o.BackCoverTranslationParagraphs, margin, textWidth, y);
 
         doc.EndPage();
+    }
+
+    private double DrawBackCoverParagraphs(SKCanvas canvas, IEnumerable<string> paragraphs,
+                                           double x, double width, double y)
+    {
+        foreach (var paragraph in paragraphs)
+        {
+            var block = MakeBlock(paragraph, _o.TranslationFont, isSource: false, isTitle: false, maxWidth: width);
+            if (block.LineCount == 0) continue;
+
+            block.Text!.Paint(canvas, new SKPoint((float)x, (float)(y - block.Top(0))));
+            y += block.Bottom(block.LineCount - 1) - block.Top(0) + block.GapAfter;
+        }
+
+        return y;
     }
 
 
