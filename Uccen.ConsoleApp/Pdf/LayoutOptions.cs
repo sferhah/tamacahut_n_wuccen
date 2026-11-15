@@ -85,6 +85,7 @@ public class LayoutOptions
     public List<string> BackCoverTranslationParagraphs { get; set; } = new();
     public double BackCoverTranslationSize { get; set; } = 11.5;
     public double BackCoverTranslationLineSpacing { get; set; } = 1.35;
+    public double ImageCaptionTextSize { get; set; } = 6.0;
     public double BackCoverTop { get; set; } = 0.14; // where the content starts (fraction of page height)
 
     /// <summary>For print: pad with blank pages so the total is a multiple of this (4 for a folded booklet). 0 = off.</summary>
@@ -115,10 +116,14 @@ public sealed record PlacedPiece(Block Block, int FirstLine, int LineCount, doub
 /// <summary>An SVG illustration placed across a facing-page spread.</summary>
 public sealed record PlacedIllustration(string Path, double X, double Y, double Width, double Height);
 
+public sealed record PlacedImageCaption(string Path, double X, double Y, double Width, double Height,
+                                        bool IsLeftPage, Block? Caption, double CaptionY);
+
 public sealed class Spread
 {
     public List<PlacedPiece> Source { get; } = new();
     public List<PlacedPiece> Translation { get; } = new();
     public List<PlacedIllustration> Illustrations { get; } = new();
-    public bool IsEmpty => Source.Count == 0 && Translation.Count == 0 && Illustrations.Count == 0;
+    public List<PlacedImageCaption> ImageCaptions { get; } = new();
+    public bool IsEmpty => Source.Count == 0 && Translation.Count == 0 && Illustrations.Count == 0 && ImageCaptions.Count == 0;
 }

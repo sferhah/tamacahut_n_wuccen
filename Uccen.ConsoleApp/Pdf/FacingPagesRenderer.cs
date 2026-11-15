@@ -11,6 +11,8 @@ public sealed class FacingPagesRenderer
 {
     private readonly LayoutOptions _o;
     private readonly double _pageW, _pageH, _textW, _textH;
+    private static readonly Regex ImageMarkup = new(@"\{\{Image\|([^|]+)\|([^|]*)\|(\d+(?:\.\d+)?)px\}\}", RegexOptions.Compiled);
+    private sealed record ImageCaptionRequest(string Path, string Caption, double WidthPixels, bool IsSource);
 
     public FacingPagesRenderer(LayoutOptions options)
     {
@@ -113,11 +115,12 @@ public sealed class FacingPagesRenderer
         var cur = new Spread();
         double yS = 0, yT = 0;
 
-        void NewSpread()
+        Spread NewSpread()
         {
             spreads.Add(cur);
             cur = new Spread();
             yS = yT = 0;
+            return cur;
         }
 
         // How many lines of b, starting at line `start`, fit below height y.
@@ -142,20 +145,58 @@ public sealed class FacingPagesRenderer
 
             if (_o.NewSpreadPerTale && !cur.IsEmpty) NewSpread();
 
-            var pairs = new List<(Block S, Block T)>
+            var pairs = new List<(Block S, Block T, ImageCaptionRequest? Image)>
             {
                 (MakeBlock(tale.Source.Title, _o.SourceFont, true, true),
-                 MakeBlock(tale.Translation.Title, _o.TranslationFont, false, true))
+                 MakeBlock(tale.Translation.Title, _o.TranslationFont, false, true), null)
             };
             bool centerContent = tale.Source.Title?.StartsWith("#", StringComparison.Ordinal) == true
                               || tale.Translation.Title?.StartsWith("#", StringComparison.Ordinal) == true;
             for (int i = 0; i < tale.Source.Paragraphs.Count; i++)
-                pairs.Add((MakeBlock(tale.Source.Paragraphs[i], _o.SourceFont, true, false, centerContent),
-                           MakeBlock(tale.Translation.Paragraphs[i], _o.TranslationFont, false, false, centerContent)));
-
-            foreach (var (S, T) in pairs)
             {
-                if (S.LineCount == 0 && T.LineCount == 0) continue;
+                string sourceParagraph = tale.Source.Paragraphs[i];
+                string translationParagraph = tale.Translation.Paragraphs[i];
+                var sourceMatches = ImageMarkup.Matches(sourceParagraph);
+                var translationMatches = ImageMarkup.Matches(translationParagraph);
+                if (sourceMatches.Count > 1 || translationMatches.Count > 1)
+                    throw new InvalidDataException("A paragraph can contain only one image markup.");
+                if (sourceMatches.Count > 0 && translationMatches.Count > 0)
+                    throw new InvalidDataException("An aligned paragraph pair cannot contain image markup on both sides.");
+
+                if (sourceMatches.Count == 0 && translationMatches.Count == 0)
+                {
+                    pairs.Add((MakeBlock(sourceParagraph, _o.SourceFont, true, false, centerContent),
+                               MakeBlock(translationParagraph, _o.TranslationFont, false, false, centerContent), null));
+                    continue;
+                }
+
+                bool imageIsSource = sourceMatches.Count > 0;
+                var match = imageIsSource ? sourceMatches[0] : translationMatches[0];
+                var image = ParseImageMarkup(match, imageIsSource);
+                string imageParagraph = imageIsSource ? sourceParagraph : translationParagraph;
+                string otherParagraph = imageIsSource ? translationParagraph : sourceParagraph;
+                string before = imageParagraph[..match.Index];
+                string after = imageParagraph[(match.Index + match.Length)..];
+
+                string sourcePrefix = imageIsSource ? before : otherParagraph;
+                string translationPrefix = imageIsSource ? otherParagraph : before;
+                if (!string.IsNullOrWhiteSpace(sourcePrefix) || !string.IsNullOrWhiteSpace(translationPrefix))
+                    pairs.Add((MakeBlock(sourcePrefix, _o.SourceFont, true, false, centerContent),
+                               MakeBlock(translationPrefix, _o.TranslationFont, false, false, centerContent), null));
+
+                pairs.Add((MakeBlock(null, _o.SourceFont, true, false),
+                           MakeBlock(null, _o.TranslationFont, false, false), image));
+
+                string sourceSuffix = imageIsSource ? after : string.Empty;
+                string translationSuffix = imageIsSource ? string.Empty : after;
+                if (!string.IsNullOrWhiteSpace(sourceSuffix) || !string.IsNullOrWhiteSpace(translationSuffix))
+                    pairs.Add((MakeBlock(sourceSuffix, _o.SourceFont, true, false, centerContent, bodySize: 6.0),
+                               MakeBlock(translationSuffix, _o.TranslationFont, false, false, centerContent, bodySize: 6.0), null));
+            }
+
+            foreach (var (S, T, image) in pairs)
+            {
+                if (S.LineCount == 0 && T.LineCount == 0 && image is null) continue;
 
                 if (_o.AlignParagraphTops) yS = yT = Math.Max(yS, yT);
 
@@ -181,6 +222,9 @@ public sealed class FacingPagesRenderer
 
                 if (S.LineCount > 0) yS += S.GapAfter;
                 if (T.LineCount > 0) yT += T.GapAfter;
+
+                if (image is not null)
+                    PlaceImageCaption(cur, image, ref yS, ref yT, NewSpread);
             }
 
             if (!string.IsNullOrWhiteSpace(tale.IllustrationSvgPath))
@@ -221,6 +265,64 @@ public sealed class FacingPagesRenderer
     }    
 
 
+    private static ImageCaptionRequest ParseImageMarkup(Match match, bool isSource)
+    {
+        if (!double.TryParse(match.Groups[3].Value, System.Globalization.NumberStyles.AllowDecimalPoint,
+                             System.Globalization.CultureInfo.InvariantCulture, out double widthPixels) || widthPixels <= 0)
+            throw new InvalidDataException($"Invalid image width in markup: {match.Value}");
+
+        string path = match.Groups[1].Value.Trim();
+        if (!Path.IsPathRooted(path))
+            path = Path.Combine(PathHelper.GetSveltePath(), "public", "images", path);
+
+        return new ImageCaptionRequest(path, match.Groups[2].Value.Trim(), widthPixels, isSource);
+    }
+
+    private void PlaceImageCaption(Spread spread, ImageCaptionRequest request, ref double yS, ref double yT,
+                                  Func<Spread> newSpread)
+    {
+        using var svg = new SKSvg();
+        var picture = svg.Load(request.Path)
+                      ?? throw new InvalidDataException($"Cannot load SVG: {request.Path}");
+        var bounds = picture.CullRect;
+        if (bounds.Width <= 0 || bounds.Height <= 0)
+            throw new InvalidDataException($"SVG has invalid dimensions: {request.Path}");
+
+        var caption = MakeBlock(request.Caption, request.IsSource ? _o.SourceFont : _o.TranslationFont,
+                                request.IsSource, isTitle: false, centerContent: true, maxWidth: _textW,
+                                bodySize: _o.ImageCaptionTextSize);
+        double captionHeight = caption.LineCount > 0 ? caption.Bottom(caption.LineCount - 1) - caption.Top(0) : 0;
+        double captionGap = caption.LineCount > 0 ? Mm(3) : 0;
+        double maxImageHeight = _textH - captionHeight - captionGap;
+        if (maxImageHeight <= 0)
+            throw new InvalidDataException("Image caption is too tall to fit in the page text area.");
+
+        double requestedWidth = request.WidthPixels * 0.75;
+        double scale = Math.Min(Math.Min(requestedWidth, _textW) / bounds.Width, maxImageHeight / bounds.Height);
+        double width = bounds.Width * scale;
+        double height = bounds.Height * scale;
+        double itemHeight = height + captionGap + captionHeight;
+        double y = Math.Max(yS, yT);
+
+        if (y + itemHeight > _textH + 0.01 && !spread.IsEmpty)
+        {
+            spread = newSpread();
+            y = 0;
+        }
+        if (itemHeight > _textH + 0.01)
+            throw new InvalidDataException("Image and caption are too tall to fit in the page text area.");
+
+        bool isFirstPage = request.IsSource == _o.SourceOnLeft;
+        bool isLeftPage = isFirstPage != _o.RightToLeftBook;
+        double pageOffset = isLeftPage ? 0 : _pageW;
+        double x = pageOffset + (_pageW - width) / 2;
+        spread.ImageCaptions.Add(new PlacedImageCaption(request.Path, x, y, width, height, isLeftPage,
+            caption.LineCount > 0 ? caption : null, y + height + captionGap));
+
+        double nextY = y + itemHeight + (request.IsSource ? _o.SourceParagraphGap : _o.TranslationParagraphGap);
+        yS = yT = nextY;
+    }
+
     // 3) Draw to PDF.
     public FacingPagesRenderer Render(Book book, string outputPath)
     {
@@ -247,8 +349,8 @@ public sealed class FacingPagesRenderer
         foreach (var s in spreads)
         {
             var (left, right) = _o.SourceOnLeft ? (s.Source, s.Translation) : (s.Translation, s.Source);
-            DrawPage(doc, left, s.Illustrations, isLeftPage: !_o.RightToLeftBook, ++pageNumber);
-            DrawPage(doc, right, s.Illustrations, isLeftPage: _o.RightToLeftBook, ++pageNumber);
+            DrawPage(doc, left, s.Illustrations, s.ImageCaptions, isLeftPage: !_o.RightToLeftBook, ++pageNumber);
+            DrawPage(doc, right, s.Illustrations, s.ImageCaptions, isLeftPage: _o.RightToLeftBook, ++pageNumber);
         }
 
         if (_o.HasBackCover)
@@ -421,7 +523,7 @@ public sealed class FacingPagesRenderer
     }
 
     private void DrawPage(SKDocument doc, List<PlacedPiece> pieces, List<PlacedIllustration> illustrations,
-                          bool isLeftPage, int pageNumber)
+                          List<PlacedImageCaption> imageCaptions, bool isLeftPage, int pageNumber)
     {
         var canvas = doc.BeginPage((float)_pageW, (float)_pageH);
 
@@ -445,6 +547,16 @@ public sealed class FacingPagesRenderer
 
         foreach (var illustration in illustrations)
             DrawIllustration(canvas, illustration, y0, isLeftPage ? 0 : _pageW);
+
+        foreach (var imageCaption in imageCaptions.Where(item => item.IsLeftPage == isLeftPage))
+        {
+            double pageOffset = isLeftPage ? 0 : _pageW;
+            DrawIllustration(canvas, new PlacedIllustration(imageCaption.Path, imageCaption.X, imageCaption.Y,
+                imageCaption.Width, imageCaption.Height), y0, pageOffset);
+            if (imageCaption.Caption is not null)
+                imageCaption.Caption.Text!.Paint(canvas, new SKPoint((float)((_pageW - _textW) / 2),
+                    (float)(y0 + imageCaption.CaptionY - imageCaption.Caption.Top(0))));
+        }
 
         if (_o.PageNumbers)
         {
