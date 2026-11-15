@@ -53,15 +53,17 @@ public static class PdfHelper
 
         if (cover?.Source.Title == "#0")
         {
-            (string? sourceAuthor, string? sourceTitle) = GetAuthorAndTitle(cover.Source.Paragraphs);
-            (string? translationAuthor, string? translationTitle) = GetAuthorAndTitle(cover.Translation.Paragraphs);
+            (string? sourceAuthor, string? sourceTitle, string? textBelow) = GetAuthorAndTitle(cover.Source.Paragraphs);
+            (string? translationAuthor, string? translationTitle, string? translationTextBelow) = GetAuthorAndTitle(cover.Translation.Paragraphs);
 
             options.CoverAuthor = translationAuthor;
 
             options.CoverTitle = sourceTitle;
             options.CoverSubtitle = translationTitle;
 
-            options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");            
+            options.CoverSvgPath = PathHelper.GetSvelteImagePath(@"0");
+
+            options.CoverTextBelowImage = translationTextBelow;
 
             book.Tales.Remove(cover);
         }
@@ -83,8 +85,8 @@ public static class PdfHelper
         new FacingPagesRenderer(options).Render(book, args.PdfFilePath).PatchWithPdfSharp(args.PdfFilePath);        
     }
 
-    public static (string? author, string? title) GetAuthorAndTitle(List<string> paragraphs)
+    public static (string? author, string? title, string? textBelow) GetAuthorAndTitle(List<string> paragraphs)
     {
-        return (author: paragraphs.FirstOrDefault(), title: paragraphs.Skip(1).FirstOrDefault());
+        return (author: paragraphs.FirstOrDefault(), title: paragraphs.Skip(1).FirstOrDefault(), textBelow: paragraphs.Skip(2).FirstOrDefault());
     }
 }

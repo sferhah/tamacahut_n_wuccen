@@ -296,9 +296,7 @@ public sealed class FacingPagesRenderer
             .Where(block => block.LineCount > 0)
             .ToList();
 
-        double contentHeight = blocks.Sum(block => block.Bottom(block.LineCount - 1) - block.Top(0))
-                             + blocks.Take(Math.Max(0, blocks.Count - 1)).Sum(block => block.GapAfter);
-        double y = (_pageH - contentHeight) / 2;
+        double y = Mm(_o.TopMm);
 
         foreach (var block in blocks)
         {
@@ -340,11 +338,14 @@ public sealed class FacingPagesRenderer
             y = DrawCoverText(canvas, _o.CoverSubtitle, _o.TranslationFont, _o.CoverSubtitleSize, 400,
                               margin, y + Mm(4), width);
 
+        bool hasCoverTextBelowImage = !string.IsNullOrWhiteSpace(_o.CoverTextBelowImage);
+        double coverTextY = _pageH - Mm(_o.BottomMm) - Mm(4) - (hasCoverTextBelowImage ? 14.4 : 0);
+
         if (!string.IsNullOrWhiteSpace(_o.CoverSvgPath))
         {
-            // Box for the image: below the title, above the bottom margin.
+            // Box for the image: below the title, above the bottom margin and optional caption.
             double boxTop = y + Mm(_o.CoverImageGapMm);
-            double boxBottom = _pageH - Mm(_o.BottomMm);
+            double boxBottom = hasCoverTextBelowImage ? coverTextY - Mm(4) : _pageH - Mm(_o.BottomMm);
             double boxW = _pageW * _o.CoverImageMaxWidth;   // full page width, no margins
             double boxH = boxBottom - boxTop;
 
@@ -387,6 +388,9 @@ public sealed class FacingPagesRenderer
                 }
             }
         }
+
+        if (hasCoverTextBelowImage)
+            DrawCoverText(canvas, _o.CoverTextBelowImage, _o.TranslationFont, 12, 400, margin, coverTextY, width);
 
         doc.EndPage();
     }

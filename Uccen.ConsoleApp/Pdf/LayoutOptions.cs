@@ -67,6 +67,7 @@ public class LayoutOptions
     /// <summary>Optional second line, e.g. the title in the translation language.</summary>
     public string? CoverSubtitle { get; set; }
     public string? CoverSvgPath { get; set; }
+    public string? CoverTextBelowImage { get; set; }
     public double CoverTitleSize { get; set; } = 26;
     public double CoverSubtitleSize { get; set; } = 18;
     /// <summary>Where the title starts, as a fraction of the page height from the top.</summary>
@@ -77,7 +78,8 @@ public class LayoutOptions
     public double CoverImageGapMm { get; set; } = 8;
     public bool HasCover => !string.IsNullOrWhiteSpace(CoverAuthor)
                          || !string.IsNullOrWhiteSpace(CoverTitle)
-                         || !string.IsNullOrWhiteSpace(CoverSvgPath);
+                         || !string.IsNullOrWhiteSpace(CoverSvgPath)
+                         || !string.IsNullOrWhiteSpace(CoverTextBelowImage);
 
     // ----- back cover (last page) -----
     public List<string> BackCoverTranslationParagraphs { get; set; } = new();
