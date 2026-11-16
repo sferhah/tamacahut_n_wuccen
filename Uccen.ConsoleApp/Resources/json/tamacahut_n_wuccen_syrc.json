@@ -396,7 +396,7 @@
           "ܐܲܣ݁ܢ݁ܝ܃ ܪܘܚܢ ܐܲܕ ܕ‑ܐܟܪܢ ܬܝܒܚܝܪܬ ܣ݁ܐܪܡܢ܃ ܕܓ‑ܣ ܐܲܝܢ ܕ‑ܝܬ݁ܟܐܬܐܒ ܪܒ݁ܝ. ܒܐܒ‑ܝܣ ܝܪܛ̰ܐ‑ܬ݁܃ ܝܘܠܣ‑ܝܬ݁܃ ܝܼܙܒ݁ܠ‑ܝܬ݁܃ ܝܛ̰݁ܐ‑ܬ݁܃ ܝܼܚܡ݁ܪ‑ܝܬ݁܃ ܝܣ݁ܘْ‑ܝܬ݁܄ ܝܢ݁ܨ̰‑ܐܣ ܛ̰݁ܪܒ ܘܼܪ ܐܲܣ‑ܝܛ݁ܝܠ݁ܝ ܐܲܪܐ ܘܘܫ݁ܢ.",
           "ܘܼܦ̰ܐܢ ܬܐܘ݁ܘܪܬ ܓܪ ܬܓܘܣܐ܃ ܟܫܡܢ. ܫ̰݁ܐܢ ܣ ܬܐܘܐܢܬ ܬܐܚ̰ܣܐܝܬ܃ ܐܲܦ̰ܩ݁ܘܣ܃ ܠ݁ܘܒܝܐܢ܃ ܛܘܡܐܛܝܫ ܣܚ̰ܠܨ̰ܢ ܣ ܝܼܦ̰ܠܦ̰ܠ ܕ ܠܒܨܠ ܕ ܬܝܫ݁ܪܬ ܕ ܠܚܒܩ.",
           "ܝܼܢܝܣܝ ܝܠ݁ܐܢ ܕ ܐܲܟܝ݁ܐܣ܃ ܡܝ ܝܫ̰݁ܐ ܫܘܝܛ ܝܼܪܘܚ ܝܼܩܝܣ݁ ܝܼܡܐܢ‑ܝܣ ܕܝ ܬܘ݁ܘܪܬ܄ ܘܼܫ݁ܢ ܝܫ̰݁ܐ ܐܲܪܡܝ ܝܛ݁ܡܒܠ. ܣܠܐܢ ܝܼ ܠܗܐܦ̰݁ܐ ܢ ܒܐܒ ܢ ܬܒܚܝܪܬ ܝܼܪܘܚ‑ܕ ܐܲܕ ܝܣ݁ܦ̰ܩܕ: ܪܘْܠܢ: ܝܼܢܝܣܝ ܝܼܥܕ݁ܐ‑ܕ ܕܝ ܬܘ݁ܘܪܬ: ܘܼܫ݁ܢ ܘܼܪ ܝܙܡܝܪ ܐܲܪܐ: ܝܦ̰݁ܥ̰‑ܝܬ ܠܥܩܠ. ܝܢ݁ܐ‑ܝܐܣ ܝܼܢܝܣܝ:\n— ܪ݁ ܝܼܡܐܢ‑ܝܟ ܬܡ݁ܘܬܨ̰!",
-          "ܝܟܫܡ ܒܐܒ ܢ ܬܒܚܝܪܬ܃ ܝܐܦ̰‑ܢ ܘܼܫ݁ܢ ܝܛ̰݁ܠ܃ ܝܒܙܓ ܐܲܡ ܘܼܝܕ݁ܝܕ܃ ܝܼܚܣܒ‑ܝܬ ܝܡ݁ܘܬ. ܝܣ݁ܘܣܠ܃ ܝܼܥܘ݁ܕ܃ ܝܛ݁ܦ̰‑ܝܬ ܣܓ ܘܼܨ̰ܐܪ܃ ܝܼܨ̰ܓ݁ܪ‑ܝܬ ܥ̰ܪ ܒܪ݁ܐ ܢ ܬܒܚܝܪܬ: ܝܪܘܠ.",
+          "ܝܟܫܡ ܒܐܒ ܢ ܬܒܚܝܪܬ܃ ܝܐܦ̰‑ܢ ܘܼܫ݁ܢ ܝܛ̰݁ܠ܃ ܝܒܙܓ ܐܲܡ ܘܼܝܕ݁ܝܕ܃ ܝܼܚܣܒ‑ܝܬ ܝܡ݁ܘܬ. ܝܣ݁ܘܣܦ̰܃ ܝܼܥܘ݁ܕ܃ ܝܛ݁ܦ̰‑ܝܬ ܣܓ ܘܼܨ̰ܐܪ܃ ܝܼܨ̰ܓ݁ܪ‑ܝܬ ܥ̰ܪ ܒܪ݁ܐ ܢ ܬܒܚܝܪܬ: ܝܪܘܠ.",
           "ܝܩ݁ܝܡ ܘܪܓܐܙ ܠܐ ܝܣܟܝܦ̰ܝܦ̰."
         ]
       },
@@ -1241,6 +1241,7 @@
           "",
           "",
           "",
+          "",
           ""
         ]
       },
@@ -1250,6 +1251,7 @@
           "'''Plongez au cœur de la mémoire orale kabyle à travers les ruses et les aventures d'un héros intemporel : le chacal.'''",
           "De 1920 à 1942, pendant plus de vingt ans, Brahim Zellal a sillonné la Kabylie pour recueillir et préserver ce précieux cycle de fables animalières issues de la tradition populaire. Publié pour la première fois en 1964, ''Le Roman de chacal'' offre un miroir fascinant de la société et des rapports humains, où l'intelligence et la malice du faible répondent à la force des puissants.",
           "Un monument du patrimoine littéraire amazigh, sauvé de l'oubli par un travail de collecte patient et passionné.",
+          "",
           "'''L'auteur'''\n'''Brahim ''''''Zellal''' (1898‑1972) était professeur d'arabe dans un  lycée de Blida. Titulaire d'une licence en langue arabe et d'un diplôme supérieur de berbère, il a mis sa double formation universitaire au service de la sauvegarde et de la transmission de la littérature orale kabyle."
         ]
       }

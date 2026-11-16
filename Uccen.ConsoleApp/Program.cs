@@ -11,12 +11,37 @@ await GenerateBilingualPdf();
 
 static async Task GenerateJsonFiles()
 {
-    string[] fileNames = ["uccen.pptx", "uccen.eng.pptx", "uccen.arb.pptx", "uccen.arq.pptx"];   
+    string[] fileNames = ["uccen.pptx", "uccen.eng.pptx", "uccen.arb.pptx", "uccen.arq.pptx"];
+
+    Book? previousBook = null;
 
     foreach (var fileName in fileNames)
     {
         var book = PptxHelper.ExtractJson(PathHelper.GetFullPathWithinProject(@$"Resources\pptx\{fileName}"));
-        book.Tales = book.Tales.Where(t => !t.Source.Title?.StartsWith("#ignore", StringComparison.OrdinalIgnoreCase) ?? false).ToList();
+
+        if (previousBook != null)
+        {
+            for (int i = 0; i < book.Tales.Count; i++)
+            {
+                var tale = book.Tales[i];
+                var previousTale = previousBook.Tales[i];
+
+                if (tale.Source.Title != previousTale.Source.Title)
+                {
+                    throw new Exception();
+                }
+
+                for (int j = 0; j < tale.Source.Paragraphs.Count; j++)
+                {
+                    if (tale.Source.Paragraphs[j] != previousTale.Source.Paragraphs[j])
+                    {
+                        throw new Exception($"Paragraph mismatch in tale \n{tale.Source.Paragraphs[j]}\n!=\n{previousTale.Source.Paragraphs[j]}");
+                    }
+                }
+            }
+        }
+
+        previousBook = book;
 
         var languageCode = GetLanguageCode(fileName);
         var svelteDataPath = PathHelper.GetSvelteDataPath(languageCode);
