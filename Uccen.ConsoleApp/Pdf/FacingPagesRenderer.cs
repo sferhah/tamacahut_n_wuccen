@@ -39,6 +39,16 @@ public sealed class FacingPagesRenderer
         return false;
     }
 
+    private static bool ContainsArabicScript(string text) => text.EnumerateRunes().Any(rune =>
+        (rune.Value >= 0x0600 && rune.Value <= 0x06FF) ||
+        (rune.Value >= 0x0750 && rune.Value <= 0x077F) ||
+        (rune.Value >= 0x0870 && rune.Value <= 0x089F) ||
+        (rune.Value >= 0x08A0 && rune.Value <= 0x08FF) ||
+        (rune.Value >= 0xFB50 && rune.Value <= 0xFDFF) ||
+        (rune.Value >= 0xFE70 && rune.Value <= 0xFEFF) ||
+        (rune.Value >= 0x10EC0 && rune.Value <= 0x10EFF) ||
+        (rune.Value >= 0x1EE00 && rune.Value <= 0x1EEFF));
+
     // NFC: letter + combining mark -> precomposed letter where one exists.
     // Soft hyphens are dropped: this layout never hyphenates.
     private static string Normalize(string text) =>
@@ -101,6 +111,9 @@ public sealed class FacingPagesRenderer
                 LineHeight = style.LineHeight,
                 TextColor = style.TextColor,
                 FontItalic = italic,
+                BackgroundColor = italic && ContainsArabicScript(content)
+                    ? new SKColor(245, 245, 245)
+                    : style.BackgroundColor,
             };
             tb.AddText(content, emphasisStyle);
             pos = m.Index + m.Length;
