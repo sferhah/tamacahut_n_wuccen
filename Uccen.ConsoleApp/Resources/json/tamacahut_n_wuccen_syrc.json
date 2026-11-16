@@ -5,14 +5,34 @@
         "Title": "#0",
         "Paragraphs": [
           "ܒܪܐܗܝܡ ܙܠ݁ܐܠ",
-          "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ"
+          "'''ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ'''",
+          ""
         ]
       },
       "Translation": {
         "Title": "#0",
         "Paragraphs": [
           "Brahim ZELLAL",
-          "Le Roman de Chacal"
+          "'''Le Roman de Chacal'''",
+          "Édition bilingue kabyle‑français – Version numérique interactive"
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ",
+        "Paragraphs": [
+          "",
+          "",
+          ""
+        ]
+      },
+      "Translation": {
+        "Title": "Le Roman de Chacal",
+        "Paragraphs": [
+          "'''Texte d'origine et traduction française :''' Collecté, transcrit et traduit par '''Brahim ''''''Zellal'''.\n'''Source de référence :'''  « ''Le Roman de Chacal : Texte berbère et français'' » présenté par '''Tassadit Yacine''' (Éditions Awal / L'Harmattan).\n'''Standardisation du texte kabyle :''' Sami FERḤAḤ.\n'''Illustrations et mise en page :''' Générées par IA et éditées par Sami FERḤAḤ.\n'''Développement et version web :''' Sami FERḤAḤ.",
+          "''Œuvre partagée gratuitement à des fins de préservation culturelle. Ne peut être vendue.''",
+          "'''Consultez la version interactive sur :'''\n{{Image|qr_code_pwa.svg|https://tamacahut‑n‑wuccen.netlify.app|150px}}"
         ]
       }
     },
@@ -21,7 +41,7 @@
         "Title": "༺",
         "Paragraphs": [
           "ܬܝܓܝ ܕ ܬܝܡܘܫܘܗܐ ܢ ܘܕܪܐܪ ܢ ܓ̰ܪܓ̰ܪ܃ ܐܲܕܪܐܪ ܐܲܒܪܟܐܢ܃ ܐܲܕܪܐܪ ܢ ܢ݁ܝܦ̰܃ ܐܲܕܪܐܪ ܢ ܠܚܝܦ̰: ܐܲܟ݁ܢ ܝܼ ܣ‑ܝܢ݁ܐ ܘܝܢ ܢ ܙ݁ܡܐܢ:",
-          "''ܘ'ܝܒܥ̰ܐܢ ܠܚܪܡܐ ܐܲܕ ܬܐܓܐܪ''\n''ܝܐܠܝ ܣ ܐܲܕܪܐܪ܃''\n''ܝܫ̰݁ ܐܲܒܠ݁ܘܨ̰ ܒܘ ܬܫܐܫܝܬ܄''\n''ܘ'ܝܒܥ̰ܐܢ ܝܼܪܕܢ ܢ ܬܦ̰ܐܙܝܬ''\n''ܝܼܨܘܒ݁ ܣ ܐܲܙܐܥ̰ܐܪ:''\n''ܐܲܕ ܝܥ̰ܠܒ ܐܲܓܕܝ ܕ ܬܡܪܝܬ!''",
+          "'' ܘ'ܝܒܥ̰ܐܢ ܠܚܪܡܐ ܐܲܕ ܬܐܓܐܪ''\n'' ܝܐܠܝ ܣ ܐܲܕܪܐܪ܃''\n'' ܝܫ̰݁ ܐܲܒܠ݁ܘܨ̰ ܒܘ ܬܫܐܫܝܬ܄''\n'' ܘ'ܝܒܥ̰ܐܢ ܝܼܪܕܢ ܢ ܬܦ̰ܐܙܝܬ''\n'' ܝܼܨܘܒ݁ ܣ ܐܲܙܐܥ̰ܐܪ:''\n'' ܐܲܕ ܝܥ̰ܠܒ ܐܲܓܕܝ ܕ ܬܡܪܝܬ!''",
           "ܝܘܪܐ‑ܬܢܬ ܫ݁ܝܚ̰ ܝܒܪܐܗܝܡ ܐܲܣܕܩܐܘ ܕܝ ܬ݁ܢܐܨܦ̰ܐ ܢ ܠܩܪܢ ܪܒܥܛܐܫ܃ ܐܲܕ ܝܣ݁ܝܦ̰ܣ ܦ̰ܠ݁‑ܐܣ ܪܒ݁ܝ ܕܝ ܕ݁ܘܢܝܬ܃ ܝܥܦ̰ܘ ܦ̰ܠ݁‑ܐܣ ܕܝ ܠܐܚ̰ܪܬ! ܐܲܡܝܢ!"
         ]
       },
@@ -29,7 +49,7 @@
         "Title": "༻",
         "Paragraphs": [
           "Ce sont les contes de la montagne du Djurdjura, la montagne noire, la montagne de l'honneur, la montagne de la misère : comme disait l'ancien :",
-          "''Que celui qui désir vivre dans l'honneur''\n''Monte dans la Montagne''\n''Et se nourrisse d'(amers) glands à cupule.''\n''Que celui qui désire le pur froment''\n''Descende dans la plaine :''\n''Il y sera plus maltraité qu'un chien…''",
+          "'' Que celui qui désir vivre dans l'honneur''\n'' Monte dans la Montagne''\n'' Et se nourrisse d'(amers) glands à cupule.''\n'' Que celui qui désire le pur froment''\n'' Descende dans la plaine :''\n'' Il y sera plus maltraité qu'un chien…''",
           "Vers attribués au Cheikh Ibrahim des Beni‑Sedka vers le milieu du XIVᵉ siècle (de l'Hégire), que Dieu allège sa peine en ce monde et lui accorde le pardon en l'autre."
         ]
       }
@@ -38,13 +58,13 @@
       "Source": {
         "Title": "#1",
         "Paragraphs": [
-          "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܝܙܡ"
+          "'''ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܝܙܡ'''"
         ]
       },
       "Translation": {
         "Title": "#1",
         "Paragraphs": [
-          "Le chacal et lion"
+          "'''Le chacal et lion'''"
         ]
       }
     },
@@ -358,13 +378,13 @@
       "Source": {
         "Title": "#2",
         "Paragraphs": [
-          "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܼܢܝܣܝ"
+          "'''ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܼܢܝܣܝ'''"
         ]
       },
       "Translation": {
         "Title": "#2",
         "Paragraphs": [
-          "Le chacal et le hérisson"
+          "'''Le chacal et le hérisson'''"
         ]
       }
     },
@@ -505,7 +525,7 @@
           "ܝܘْܩܡ ܘܘܫ݁ܢ ܬܐܡܥ̰ܪܐ܃ ܘܼܪ ܝܼܓܝ ܬܐܩܒܐܝܠܝܬ ܘܼܪ ܕ‑ܝܩܨ̰ܝ ܝܼ ܬܣܠܝܬ܃ ܝܓ̰݁ܐ‑ܬ݁ ܕ ܬܐܡܥ̰ܒܘܢܬ ܡܣܟܝܢܬ: ܘܼܪ ܠ݁ܝܢ ܠܥܪܐܣ܃ ܘܼܪ ܝܠ݁ܝ ܢ݁ܘܐܠ܃ ܠܚܐܨܘܠ ܕ ܬܐܡܥ̰ܪܐ ܬܐܡܣ݁ܐܣܬ.",
           "ܘܼܣܐܢ‑ܕ ܠܘْܚܘܫ ܐܲܕ ܐܲܣ‑ܣܒܐܪܟܢ: ܬ݁ܟܠܢ ܐܲܕ ܬܢ‑ܝܣ݁ܫ̰݁܃ ܐܲܕ ܕ‑ܟ݁ܣܢ ܙ̰݁ܟ݁: ܘܼܠܐ ܕ ܝܝܘܢ ܘܼܪ ܐܲܣ‑ܬܒܠܝܥ ܬܠܩܝܡܬ. ܡܝ ܝܐܣ‑ܝܢ݁ܐ ܘܐܠܒܥܨ̰: ܡܒܪܘܟ ܬܐܡܛ݁ܘܬ܃ ܐܲ ܣܝ ܡܚܡ݁ܕ! ܝܪ݁‑ܐܣ‑ܕ: ܡܐ ܬܒܪܟ! ܐܲܟ݁ܢ ܐܲܪܡܝ ܕ ܐܲܢܓ݁ܐܪܘ.",
           "ܐܲܬ ܪܒ݁ܝ ܘܼܡܝ ܘܼܪ ܝܗܘܝ ܐܲܪܐ ܙ̰݁ܘܐܓ̰ ܢ݁ܝ ܒܓ݁ܢܢ‑ܬ‑ܝܕ ܕܓ ܓܢܘܐܢ: ܝܼܚ̰ܠܛ‑ܕ ܘܼܓܦ̰݁ܘܪ ܕ ܝܝܛܝܙ̰ ܕ ܬܣܠܝܬ ܢ ܘܐܢܛ̰ܐܪ ܕ ܘܐܨ̰ܘ ܕ ܠܒܪܐܩ ܕ ܪ݁ܥܘܕ ܕ ܘܒܪܘܪܝ܃ ܐܲܪܡܝ ܥ̰ܝܠܢ ܡܕ݁ܢ ܐܲܕ ܬܢܓܪ ܕ݁ܘܢܝܬ.",
-          "ܘܼܥ̰ܐܠܢ ܦ̰݁ܥ̰ܢ‑ܕ ܠܘْܚܘܫ ܥ̰ܪ ܒܪ݁ܐ܃ ܒ݁ܗܕܠܢ ܘܼܫ݁ܢ܃ ܠܐ ܣ‑ܩ݁ܐܪܢ:\n''ܝܐ ܠܐܛܝܦ̰! ܝܐ ܠܐܛܝܦ̰!''\n''ܪܘܐܠܘܬ܃ ܪܘܐܠܘܬ!''\n''ܠܗܘܐ܃ ܬܐܦ̰ܘܟܬ!''\n''ܘܼܫ݁ܢ ܝܘ݁ܝ‑ܕ ܬܐܡܛ݁ܘܬ!''\n''ܪܘܐܠܘܬ܃ ܪܘܐܠܘܬ!''\n''ܘܼܪ ܐܲܥ̰‑ܕ‑ܝܦ̰ܟܝ ܬܐܩܣ݁ܘܠܬ:''\n''ܐܲܕ ܐܲܣ‑ܕ‑ܝܦ̰ܟ ܪܒ݁ܝ ܬܐܩܛ̰݁ܘܠܬ!''",
+          "ܘܼܥ̰ܐܠܢ ܦ̰݁ܥ̰ܢ‑ܕ ܠܘْܚܘܫ ܥ̰ܪ ܒܪ݁ܐ܃ ܒ݁ܗܕܠܢ ܘܼܫ݁ܢ܃ ܠܐ ܣ‑ܩ݁ܐܪܢ:\n'' ܝܐ ܠܐܛܝܦ̰! ܝܐ ܠܐܛܝܦ̰!''\n'' ܪܘܐܠܘܬ܃ ܪܘܐܠܘܬ!''\n'' ܠܗܘܐ܃ ܬܐܦ̰ܘܟܬ!''\n'' ܘܼܫ݁ܢ ܝܘ݁ܝ‑ܕ ܬܐܡܛ݁ܘܬ!''\n'' ܪܘܐܠܘܬ܃ ܪܘܐܠܘܬ!''\n'' ܘܼܪ ܐܲܥ̰‑ܕ‑ܝܦ̰ܟܝ ܬܐܩܣ݁ܘܠܬ:''\n'' ܐܲܕ ܐܲܣ‑ܕ‑ܝܦ̰ܟ ܪܒ݁ܝ ܬܐܩܛ̰݁ܘܠܬ!''",
           "ܘܼܫ݁ܢ ܠܐ ܬܢ‑ܝܕ ܝܟ݁ܐܬ ܣ ܬܩܣܠܝܢ ܬܝܠܡܐܘܝܢ ܝܪܛ̰ܐ ܝܼܪܟܠ ܝܼܙ̰ܩܕܘܪܢ‑ܝܣ.",
           "ܣ݁ܝܢ܃ ܝܠܚܐ ܕ ܬܠܥ̰ܡܬ ܐܲܪܡܝ ܕ ܐܲܣܡܝ ܝܘܦ̰ܐ ܬܥܕ݁ܐ‑ܬ: ܝܪ݁ܐ‑ܬ݁ ܝܼ ܬܝܪܙܐ: ܬܐܡܛ݁ܘܬ ܢ ܠܥܐܠܝ ܝܬ݁ܐܥ̰‑ܝܬ݁ ܝܝܪ ܪܓܐܙ܃ ܘܼܪ ܐܲܣ‑ܝܣ݁ܝܢ ܐܲܪܐ ܠܚܟܐܪ‑ܝܣ!"
         ]
@@ -516,7 +536,7 @@
           "À l'occasion de son mariage, le chacal donna une fête, mais il ne respecta pas les coutumes honorables de la Kabylie. Il n'y eut ni trousseau, ni demoiselles d'honneur, ni festin. Ce fut une fête parfaitement ridicule.",
           "Les animaux vinrent lui présenter leurs vœux, mais alors qu'ils escomptaient un bon repas, ils n'eurent même pas une bouchée. Quand l'un d'eux lui disait : Bénie (soit la nouvelle épouse !). Si Mohammed répondait : Oui, si elle baraque !… et ainsi pour tous jusqu'au dernier.",
           "Les gardiens manifestèrent leur désapprobation d'un pareil mariage par des signes nombreux dans les cieux. Il y eut ensemble : soleil, pluie, vent, arc‑en‑ciel, tonnerre, éclairs, grêle, et l'on crut que la fin du monde était arrivée.",
-          "Alors les animaux vinrent, dehors, faire le charivari au chacal. Ils criaient :\n''Pitié, seigneur, pitié !''\n''Sauvez‑vous, sauvez‑vous !''\n''Pluie et soleil !''\n''Le chacal a pris femme :''\n''Sauvez‑vous, sauvez‑vous !''\n''Il ne nous a pas donné une assiettée :''\n''Que Dieu lui donne un abcès !''\n''Sauvez‑vous, sauvez‑vous !''",
+          "Alors les animaux vinrent, dehors, faire le charivari au chacal. Ils criaient :\n'' Pitié, seigneur, pitié !''\n'' Sauvez‑vous, sauvez‑vous !''\n'' Pluie et soleil !''\n'' Le chacal a pris femme :''\n'' Sauvez‑vous, sauvez‑vous !''\n'' Il ne nous a pas donné une assiettée :''\n'' Que Dieu lui donne un abcès !''\n'' Sauvez‑vous, sauvez‑vous !''",
           "Si Mohammed, (qui leur lançait toutes les assiettes vides de sa maison) y perdit toute sa vaisselle.",
           "Il vécut un certain temps avec la chamelle puis, reconnaissant son infériorité vis‑à‑vis d'elle, il en fit une bête de labour : (ainsi veut l'aveugle fatalité qui) accorde la femme parfaite à un homme de rien qui la rend malheureuse."
         ]
@@ -620,7 +640,7 @@
           "ܝܪ݁ܐ‑ܝܐܣ‑ܕ ܘܙܪܡ:\n— ܐܲܢܝܕܐ ܝܠ݁ܐ ܠܚ̰ܝܪ ܝܼ ܝܝ‑ܬܚ̰ܕܡܨ̰܉ ܦ̰݁ܥ̰ܥ̰‑ܕ ܣܓ ܘܡܪܘܙ̰‑ܝܘ ܢ ܕ݁ܗܒ ܕ ܠܦ̰ܛ݁ܐ܃ ܐܲܕ ܝܼܝܝ‑ܝܘܬ ܘܓܪܝܣ܃ ܝܼܥܝܘܕ‑ܝܝܝ ܝܝܛܝܙ̰܃ ܝܼܘܐܟ݁ܢ ܐܲܕ ܣܢܨܠܥ̰ ܬܐܣܠܣܬ‑ܝܘ܃ ܟܫ̰ ܬܘ݁ܝܨ̰‑ܝܝܝ‑ܕ! ܐܲܡܟ ܐܲܪܐ ܐܲܦ̰ܥ̰ ܬܐܚ̰݁ܐܡܬ‑ܝܘ: ܬܣܥܪܩܨ̰‑ܝܝܝ‑ܬ݁! ܬܘ݁ܝܨ̰‑ܕ ܠܡܘܬ: ܫܗ݁ܕ: ܐܲܕ ܬܡ݁ܬܨ̰!",
           "ܝܢ݁ܐ‑ܝܐܣ ܘܪܓܐܙ:\n— ܕܥܐܥ̰‑ܟ ܣ ܪܒ݁ܝ܃ ܡܐ ܘܼܪ ܝܼܝܝ‑ܬܦ̰ܟܝܨ̰ ܫ݁ܪܥ.\nܝܦ̰ܟܐ‑ܝܐܣ‑ܬ. ܪܘܚܢ ܣ ܘܼܫ݁ܢ܃ ܚܟܐܢ‑ܐܣ܃ ܝܢ݁ܐ‑ܝܐܣܢ:\n— ܘܼܪ ܣ݁ܝܢܥ̰ ܝܼ ܬܝܓܝ: ܪܘܚܬ ܣ ܝܼܢܝܣܝ.",
           "ܐܲܟ݁ܢ ܘ݁ܨ̰ܢ܃ ܝܡ݁ܘܩܠ‑ܕ ܕܓ‑ܣܢ܃ ܝܦ̰ܗܡ ܕ݁ܥܘܐ‑ܢܣܢ. ܟ݁ܪܢ ܐܲܕ ܨܠ݁ܝܢ܃ ܝܢ݁ܐ‑ܝܐܣܢ:\n— ܐܲܠܐ! ܫ݁ܪܥ ܝܼܓܢ݁ܝ ܠܥܡܪ ܝܠ݁ܝ! ܟܫ̰܃ ܐܲܝ ܐܲܙܪܡ܃ ܪܣ‑ܕ ܥ̰ܪ ܠܩܐܥܐ܃ ܩ݁ܝܡ‑ܕ ܣ݁ܝܐ܃ ܐܲܚ̰ܨܝܡ‑ܝܟ ܐܲܕ ܝܩ݁ܝܡ ܣ݁ܝܢ: ܡܟܘܠ ܝܝܘܢ ܕܓ‑ܘܢ ܐܲܕ ܕ‑ܝܫܐܪܥ܃ ܐܲܕ ܦ̰ܪܘܥ̰ ܓܐܪ‑ܐܘܢ.",
-          "ܐܲܟ݁ܢ ܕ‑ܝܪܣ ܘܙܪܡ ܥ̰ܪ ܠܩܐܥܐ܃ ܝܢܕܗ ܝܼܢܝܣܝ ܦ̰ ܘܪܓܐܙ܃ ܝܢ݁ܐ:\n''ܘ'ܝܛ݁ܦ̰ܢ ܐܲܚܕܝܦ̰ ܝܐܘܝ ܠܚܝܦ̰:''\n''ܐܲ ܘܪ ܝܒܨ̰ܘ ܕ ܘܼܥ̰ܝܠܝܦ̰!''",
+          "ܐܲܟ݁ܢ ܕ‑ܝܪܣ ܘܙܪܡ ܥ̰ܪ ܠܩܐܥܐ܃ ܝܢܕܗ ܝܼܢܝܣܝ ܦ̰ ܘܪܓܐܙ܃ ܝܢ݁ܐ:\n'' ܘ'ܝܛ݁ܦ̰ܢ ܐܲܚܕܝܦ̰ ܝܐܘܝ ܠܚܝܦ̰:''\n'' ܐܲ ܘܪ ܝܒܨ̰ܘ ܕ ܘܼܥ̰ܝܠܝܦ̰!''",
           "ܝܼܘ݁ܬ ܘܪܓܐܙ ܐܲܙܪܡ܃ ܝܒܨ̰ܐ‑ܬ ܡܢܐܨܦ̰: ܝܛ݁ܦ̰ ܐܲܛ̰ܪܘ܃ ܝܼܢܥ̰ܕ‑ܐܣ ܐܲܩܪ݁ܘ.",
           "ܝܘܥ̰ܐܠ ܝܼܒܪܢ‑ܕ ܥ̰ܪ ܕܦ̰݁ܝܪ܃ ܝܘܦ̰ܐ‑ܕ ܝܼܢܝܣܝ ܝܪܘܠ܃ ܝܼܘ݁ܬ ܕܓ ܦ̰ܐܣ݁ܢ‑ܝܣ܃ ܝܼܣܘܥ̰:\n— ܐܲܗ! ܝܡܢܥ ܝܼܡܢܣܝ ܝܼܥܓ݁ܐܠܢ!\nܘ'ܝܬ݁ܐܡܢܢ ܒܢܐܕܡ܃ ܐܲܒܪܟܐܢ ܘܼܩܪ݁ܘ!…",
           "ܕܝ ܕ݁ܘܢܝܬ܃ ܐܲܝܢ ܬܛ̰݁ܝܨ̰܃ ܐܲܕ ܬ‑ܬܥ̰ܠ݁ܬܨ̰܄ ܒܢܐܕܡ܃ ܡܝ ܬ‑ܬܛ̰݁ܝܨ̰܃ ܐܲܕ ܟ‑ܝܩܠܥ!"
@@ -633,7 +653,7 @@
           "— Quel bien ? Demanda le serpent. J'étais sorti de mon palais d'or et d'argent pour m'exposer à la gelée, puis au soleil, afin de changer de peau. Tu m'as pris et c'est de ta faute si je suis maintenant égaré. Comment retrouverai‑je ma maison ? Tu mérites la mort. Fais tes prières, tu vas mourir.",
           "L'homme supplia :\n— Au nom de Dieu, accorde‑moi le droit de faire juger cette affaire.\nLe serpent acquiesça. Ils allèrent trouver le chacal, lui exposèrent le différend. Si Mohammed se récusa :\n— Je ne connais rien à ces histoires‑là, Allez voir hérisson.",
           "Quand ils furent arrivés, le hérisson, d'un seul coup d'œil, comprit de quoi il s'agissait. Ils allaient se lancer dans les formules préliminaires d'usage :\n— Non ! Dit le hérisson, pas de justice en l'air, Toi, le serpent, descends et mets‑toi ici ; la partie adverse se mettra là. Chacun de vous plaidera sa cause et je dirai mon jugement.",
-          "Le serpent était à peine parvenu au sol que le hérisson mit l'homme en garde :\n''Celui qui tient un bâton et subit l'opprobre''\n''Qu'il supporte les funestes conséquences !''\n— Qu'attends‑tu ?",
+          "Le serpent était à peine parvenu au sol que le hérisson mit l'homme en garde :\n'' Celui qui tient un bâton et subit l'opprobre''\n'' Qu'il supporte les funestes conséquences !''\n— Qu'attends‑tu ?",
           "L'homme frappa de son bâton et coupa le serpent en deux tronçons, puis il prit une pierre et lui en écrasa la tête.",
           "Quand il se retourna, le hérisson avait disparu.\nDe dépit, il frappa dans ses mains :\n— Ah ! criait‑il, le souper des miens m'a échappé !\nMéfiez‑vous de l'homme, créature aux noirs desseins !",
           "En ce monde, quand on plante, on récole ; chez les hommes, quand on aide, on est payé d'ingratitude."
@@ -644,13 +664,13 @@
       "Source": {
         "Title": "#3",
         "Paragraphs": [
-          "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܘܓܕܝ"
+          "'''ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܘܓܕܝ'''"
         ]
       },
       "Translation": {
         "Title": "#3",
         "Paragraphs": [
-          "Le chacal et le chien"
+          "'''Le chacal et le chien'''"
         ]
       }
     },
@@ -658,7 +678,7 @@
       "Source": {
         "Title": "ܥ̰ܦ̰ ܬܒܢܥܡ݁ܬ݁ ܢ ܘܘܫ݁ܢ ܕ ܘܓܕܝ",
         "Paragraphs": [
-          "ܕܝ ܕ݁ܘܢܝܬ ܬܐܩܕܝܡܬ܃ ܘܼܫ݁ܢ ܕ ܘܘܫ݁ܐܝ ܠ݁ܐܢ ܕ ܐܲܬܡܐܬܢ. ܝܝܘܢ܃ ܝܼܣܡ‑ܝܣ ܡܚܡ݁ܕ܄ ܘܐܝܨ̰܃ ܪܐܒܚ܃ ܟܣ݁ܢ ܠܡܐܠ ܘܚܕ‑ܣܢ: ܐܲܕ ܒܪܘܢ ܨ݁ܒܚ܃ ܐܲܕ ܟܣܢ ܐܲܪ ܬܐܡܕ݁ܝܬ܃ ܐܲܕ ܝܪܘܘ ܠܡܐܠ܃ ܐܲܕ ܬ‑ܝܕ‑ܝܪ݁ܢ ܣ ܐܲܚ̰݁ܐܡ.",
+          "ܕܝ ܕ݁ܘܢܝܬ ܬܐܩܕܝܡܬ܃ ܘܼܫ݁ܢ ܕ ܘܘܫ݁ܐܝ ܠ݁ܐܢ ܕ ܐܲܬܡܐܬܢ. ܝܝܘܢ܃ ܝܼܣܡ‑ܝܣ ܡܚܡ݁ܕ܄ ܘܐܝܨ̰܃ ܪܐܒܚ. ܟܣ݁ܢ ܠܡܐܠ ܘܚܕ‑ܣܢ: ܐܲܕ ܒܪܘܢ ܨ݁ܒܚ܃ ܐܲܕ ܟܣܢ ܐܲܪ ܬܐܡܕ݁ܝܬ܃ ܐܲܕ ܝܪܘܘ ܠܡܐܠ܃ ܐܲܕ ܬ‑ܝܕ‑ܝܪ݁ܢ ܣ ܐܲܚ̰݁ܐܡ.",
           "ܐܲܣ݁ܢ݁ܝ܃ ܟܣܐܢ ܠܡܐܠ܃ ܬܘܥ̰ܐܠ ܬܘܫ݁ܐܓ ܬܝܚ̰ܣܝ ܕܓ ܝܦ̰ܪܝ. ܬܣܘܥ̰‑ܕ. ܘܼܫ݁ܐܝ܃ ܝܘܦ̰ܐ‑ܬ‑ܝܕ ܠܚܐܠ ܝܫܥ̰ܠ ܕܝ ܠܓ̰ܝܗܐ ܢ݁ܝܨ̰ܢ: ܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ:\n— ܘܼܪ ܬ݁ܐܓܐܕ!\nܝܪܣ ܐܲܕ ܬ݁‑ܝܕ‑ܝܣܠ݁ܟ: ܝܘܦ̰ܐ‑ܬ݁‑ܝܢ ܬܙ̰ܪܚ. ܝܡܫܚ ܝܼܕܐܡ݁ܢ܃ ܝܘܥ̰ܐܠ ܝܼܟܡ݁ܠ‑ܐܣ: ܝܢܥ̰ܐ‑ܬ݁܃ ܝܫ̰݁ܐ‑ܬ݁.",
           "ܬܐܡܕ݁ܝܬ܃ ܡܝ ܕ‑ܒܪܢܢ ܣ ܐܲܚ̰݁ܐܡ܃ ܘܼܫ݁ܐܝ ܝܕ݁ܐ‑ܕ ܕܝ ܬܠܡ݁ܐܣܬ ܢ ܠܡܐܠ܃ ܘܼܫ݁ܢ ܥܙܠܢ‑ܬ ܐܲܟ݁ܝܢ.",
           "ܝܩ݁ܝܡ ܘܚܕ‑ܣ ܕܝ ܬܛ̰ܓܝ. ܘܼܣ݁ܐܢ ܝܼܡܙܘܘܪܐ܃ ܝܥ̰ܠܝ‑ܕ ܦ̰ܠ݁‑ܐܣ ܝܝܨ̰ ܝܢܕܡ ܕܓ ܘܐܝܢ ܝܚ̰ܕܡ.",
@@ -940,7 +960,7 @@
         "Paragraphs": [
           "ܘܼܪ ܐܲܣ‑ܝܓܝ ܐܲܪܐ ܝܼܒܠ݁ܝܪܓ̰ ܝܼ ܘܘܫ݁ܢ ܐܲܪܕ ܐܲܣ‑ܝܥܐܘܕ ܬܐܢܕܝܬ. ܝܼܥܐܣ݁‑ܝܬ: ܐܲܪܡܝ ܬ‑ܝܣ݁ܥ̰ܦ̰ܠ܃ ܝܡ݁ܥ̰ ܦ̰ܠ݁‑ܐܣ܃ ܝܼܚܘܙܐ‑ܬ ܣܓ ܘܼܣܠܣܘܠ ܘܼܙܐܓܘܪ܃ ܝܘܦ̰ܓ ܝܣ݁܃ ܝܼܪܦ̰ܕ‑ܝܬ ܕܓ ܓܢܘܐܢ.",
           "ܐܲܪ ܝܼܬܢ݁ܨ̰ ܝܬ݁ܐܠܝ܃ ܝܼܬܢ݁ܨ̰ ܝܬ݁ܐܠܝ܃ ܐܲܪܡܝ ܝܼ ܕ‑ܝܚ̰ܠ݁ܐ ܝܼܕܘܪܐܪ ܥܠܐܝܢ. ܝܼܡܝܪܢ܃ ܝܢ݁ܐ‑ܝܐܣ:\n— ܕ ܐܲܫܘ ܬܘܐܠܐܨ̰܃ ܐܲ ܡܚܡ݁ܕ܉\n— ܝܪ݁ܐ‑ܝܐܣ‑ܕ ܘܘܫ݁ܢ: ܝܼܕܘܪܐܪ܃ ܝܼܙܘܥ̰ܐܪ܃ ܝܼܣܐܦ̰݁ܢ: ܐܲܬܢܐ ܝܼܪܟܠ ܕ݁ܐܘܐ‑ܬܢܥ̰!\nܝܪܢܐ ܝܘܠܝ ܝܣ݁܃ ܝܢ݁ܐ‑ܝܐܣ:\n— ܕ ܐܲܫܘ ܬܘܐܠܐܨ̰܉\n— ܝܪ݁ܐ‑ܝܐܣ‑ܕ: ܝܥ̰ܠܝ‑ܕ ܫܐܠܘܐܘ ܦ̰ ܘܐܠ݁ܢ‑ܝܘ: ܘܼܪ ܦ̰ܪܝܙܥ̰ ܐܲܪܐ ܡܠܝܚ ܬܐܡܘܪܬ!\nܝܪܢܐ ܝܘܠܝ ܝܝܣ݁܃ ܝܢ݁ܐ‑ܝܐܣ:\n— ܝܼ ܬܘܪܐ܃ ܐܲܫܘ ܬܘܐܠܐܨ̰܉\n— ܝܪ݁ܐ‑ܝܐܣ‑ܕ: ܢܚ̰ܠ݁ܐ‑ܕ ܐܲܣܝܓܢܐ!",
-          "ܝܼܡܝܪܢ܃ ܝܒܪܐ‑ܝܐܣ‑ܕ ܝܼܒܠ݁ܝܪܓ̰ ܝܼ ܘܘܫ݁ܢ: ܐܲܕ ܕ‑ܝܥ̰ܠܝ ܣܝ ܬܝܣ ܣܒܥܐ܃ ܐܲܕ ܝܩܒܪ܃ ܐܲܕ ܝܡ݁ܬ.\nܐܲܪ ܕ‑ܝܬܢ݁ܨ̰ ܘܘܫ݁ܢ܃ ܝܼܥ̰ܠ݁ܝ‑ܕ܃ ܝܼܬܢ݁ܨ̰‑ܕ ܝܼܥ̰ܠ݁ܝ‑ܕ܃ ܐܲܪܡܝ ܬܐܣܐ‑ܣ ܬܟܦ̰ܐ܃ ܐܲܨ̰ܝܚܐܢ ܝܒܨ̰ܐ ܣܝ ܠܚ̰ܘܦ̰.\nܝܦ̰݁ܥ̰‑ܝܬ ܠܥܩܠ: ܝܬ݁ܘ ܣܝܕܝ ܥܒܕܠܩܐܕܪ܃ ܠܐ ܣ‑ܝܩ݁ܐܪ:\n''ܐܲ ܣܝܕܝ ܥܒܕܠܓܪܢܝܢ!''\n''ܕܝ ܬܡܕܐ ܢܥ̰ ܕܓ ܘܐܠܝܡ!''\n''ܐܲ ܣܝܕܝ ܥܒܕܠܓܪܢܝܢ''\n''ܕܝ ܬܡܕܐ ܢܥ̰ ܕܓ ܘܐܠܝܡ!''",
+          "ܝܼܡܝܪܢ܃ ܝܒܪܐ‑ܝܐܣ‑ܕ ܝܼܒܠ݁ܝܪܓ̰ ܝܼ ܘܘܫ݁ܢ: ܐܲܕ ܕ‑ܝܥ̰ܠܝ ܣܝ ܬܝܣ ܣܒܥܐ܃ ܐܲܕ ܝܩܒܪ܃ ܐܲܕ ܝܡ݁ܬ.\nܐܲܪ ܕ‑ܝܬܢ݁ܨ̰ ܘܘܫ݁ܢ܃ ܝܼܥ̰ܠ݁ܝ‑ܕ܃ ܝܼܬܢ݁ܨ̰‑ܕ ܝܼܥ̰ܠ݁ܝ‑ܕ܃ ܐܲܪܡܝ ܬܐܣܐ‑ܣ ܬܟܦ̰ܐ܃ ܐܲܨ̰ܝܚܐܢ ܝܒܨ̰ܐ ܣܝ ܠܚ̰ܘܦ̰.\nܝܦ̰݁ܥ̰‑ܝܬ ܠܥܩܠ: ܝܬ݁ܘ ܣܝܕܝ ܥܒܕܠܩܐܕܪ܃ ܠܐ ܣ‑ܝܩ݁ܐܪ:\n'' ܐܲ ܣܝܕܝ ܥܒܕܠܓܪܢܝܢ!''\n'' ܕܝ ܬܡܕܐ ܢܥ̰ ܕܓ ܘܐܠܝܡ!''\n'' ܐܲ ܣܝܕܝ ܥܒܕܠܓܪܢܝܢ''\n'' ܕܝ ܬܡܕܐ ܢܥ̰ ܕܓ ܘܐܠܝܡ!''",
           "ܝܛ݁ܪܨ̰ܩ‑ܕ ܕܝ ܬܡܕܐ: ܘܼܦ̰ܓܢ ܘܐܡܐܢ ܣ ܝܼܓܢ݁ܝ܄ ܝܣܠܟ ܣܝ ܠܡܘܬ܃ ܠܐܡܥܢܐ ܬܟ݁ܐ ܦ̰ܠ݁‑ܐܣ ܬܟܦ̰݁ܐܪܬ!\nܝܫܥܦ̰: ܣܓ ܘܐܣ݁ ܢ݁ܝ܃ ܘܼܪ ܕ‑ܝܫܥ̰ܝܠ ܕ ܝܼܒܠ݁ܝܪܓ̰."
         ]
       },
@@ -949,7 +969,7 @@
         "Paragraphs": [
           "La cigogne ne laissa pas au chacal le temps de lui tendre un nouveau piège. Elle le surveilla et, dès qu'il eut un moment d'inattention, elle se précipita sur lui, le saisit par l'échine et l'enleva dans les airs.",
           "Elle tournoya, tournoya en s'élevant toujours plus haut, jusqu'à dépasser les plus hautes montagnes. Alors elle lui demanda :\n— Que vois‑tu, Mohammed ?\n— Nous dominons, dit‑il, les montagnes, les plaines, les rivières…\nElle l'enleva encore plus haut :\n— Que vois‑tu ?\n— Un voile s'étend sur mes yeux, répondit‑il, je ne distingue plus bien le sol.\nElle l'emporta encore plus haut et demanda :\n— Et maintenant, que vois‑tu ?\n— Nous avons dépassé les nuages, répondit‑il.",
-          "Alors la cigogne le laissa tomber de cette hauteur vertigineuse pour qu'il s'écrasât sur le sol et en mourût.\nLe chacal embat en tournoyant, tournoya en tombant, le cœur et la rate prêts à éclater sous l'effet de la peur.\nQuant à la tête, il ne lui en restait guère : il ne retrouvait même plus le nom authentique du patron des causes désespérées et il bredouillait :\n''Saint patron à la forte tête !''\n''Si possible dans une mare ou dans la paille !''\n''Saint patron à la forte tête !''\n''Dans une mare ou dans la paille !''",
+          "Alors la cigogne le laissa tomber de cette hauteur vertigineuse pour qu'il s'écrasât sur le sol et en mourût.\nLe chacal embat en tournoyant, tournoya en tombant, le cœur et la rate prêts à éclater sous l'effet de la peur.\nQuant à la tête, il ne lui en restait guère : il ne retrouvait même plus le nom authentique du patron des causes désespérées et il bredouillait :\n'' Saint patron à la forte tête !''\n'' Si possible dans une mare ou dans la paille !''\n'' Saint patron à la forte tête !''\n'' Dans une mare ou dans la paille !''",
           "Il s'abattit dans une mare dont les eaux rejaillirent haut dans le ciel. S'il avait échappé à la mort, il avait subi un supplice choisi.\nSur un point au moins il était corrigé : il ne devait plus s'occuper des affaires de la cigogne."
         ]
       }
@@ -958,13 +978,13 @@
       "Source": {
         "Title": "#4",
         "Paragraphs": [
-          "ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܝܙܡ"
+          "'''ܬܐܡܐܫܐܗܘܬ ܢ ܘܘܫ݁ܢ ܕ ܝܝܙܡ'''"
         ]
       },
       "Translation": {
         "Title": "#4",
         "Paragraphs": [
-          "Le chacal et le lion"
+          "'''Le chacal et le lion'''"
         ]
       }
     },
@@ -973,7 +993,7 @@
         "Title": "ܠܩܪܐܝܐ ܢ ܘܘܫ݁ܢ",
         "Paragraphs": [
           "ܝܦ̰݁ܥ̰‑ܕ ܘܘܫ݁ܢ ܣܝ ܬܡܕܐ ܠܐ ܝܬ݁ܪܓܝܓܝ ܐܲܡ ܝܝܦ̰ܪ. ܬܟܦ̰ܐ ܦ̰ܠ݁‑ܐܣ ܕ݁ܘܢܝܬ ܣܝ ܬܘܓܕܝ ܕ ܘܼܣܡ݁ܝܨ̰.",
-          "ܝܘܦ̰ܐ ܐܲܥ̰ܪܒܐܠ ܕ ܐܲܩܕܝܡ܃ ܝܘܥ̰ܐܠ܃ ܐܲܟ݁ܢ ܝܼܘܐܠܐ ܬܝܠܦ̰ܬ܃ ܝܛ݁ܦ̰‑ܝܬ ܕ ܐܲܡܢܕܐܝܪ܃ ܝܒܕܐ ܬܝܝܝܬܐ:\n''    ܬܐ ܬܦ̰ܠܐ܃ ܬܐ ܘܼܪ ܬܦ̰ܠܝ:''\n''    ܕ ܐܲܙ̰ܕܝܕ ܝܼ ܘܪ ܢܘܦ̰ܝ!''",
+          "ܝܘܦ̰ܐ ܐܲܥ̰ܪܒܐܠ ܕ ܐܲܩܕܝܡ܃ ܝܘܥ̰ܐܠ܃ ܐܲܟ݁ܢ ܝܼܘܐܠܐ ܬܝܠܦ̰ܬ܃ ܝܛ݁ܦ̰‑ܝܬ ܕ ܐܲܡܢܕܐܝܪ܃ ܝܒܕܐ ܬܝܝܝܬܐ:\n''     ܬܐ ܬܦ̰ܠܐ܃ ܬܐ ܘܼܪ ܬܦ̰ܠܝ:''\n''     ܕ ܐܲܙ̰ܕܝܕ ܝܼ ܘܪ ܢܘܦ̰ܝ!''",
           "ܬܘܐܠܐ‑ܬ‑ܝܕ ܬܝܠܦ̰ܬ ܠܐ ܝܬ݁ܪܓܝܓܝ܃ ܝܕ݁ܟ݁ܝܪ܃ ܐܲܡ ܘܝܢ ܐܲܪܐ ܬܪܟܒ ܠܝܚܐܠܐ܄ ܬܢ݁ܐ‑ܝܐܣ‑ܕ:\n— ܬܥ̰ܪܝܨ̰܃ ܐܲ ܣܝ ܡܚܡ݁ܕ܉\n— ܝܪ݁ܐ‑ܝܐܣ: ܐܲ ܡ݁ ܘܼܚ̰ܢܦ̰ܘܦ̰܃ ܐܲ ܡ݁ ܘܼܣܢܦ̰ܘܦ̰! ܘܼܪ ܬܛ̰ܪܝܨ̰ ܐܲܪܐ ܢܟ ܥ̰ܪܝܥ̰: ܒܐܒܐ ܝܥ̰ܪܐ܃ ܙ̰ܕ݁ܝ ܝܥ̰ܪܐ. ܐܲ‑ܬ݁‑ܐܢ ܬܩܘܒ݁ܬ݁‑ܝܣ ܕܓ ܝܝܥ̰ܝܠ ܝܼܢ݁ܐ!",
           "ܬܘܡܢ‑ܝܬ ܬܝܠܦ̰ܬ. ܦ̰ܪܐܢ ܐܲܕ ܐܲܣ‑ܝܣܥ̰ܪ ܐܲܪ݁ܐܘ‑ܝܣ܃ ܝܼܪܒ݁ܝ‑ܬܢ: ܐܲܕ ܐܲܣ‑ܬܦ̰ܟ ܠܚܩ ܢ ܠܥܬܐܒ‑ܝܣ. ܬܘ݁ܝ‑ܝܐܣ‑ܬܢ‑ܝܕ ܥ̰ܪ ܠܥ̰ܐܪ‑ܝܣ: ܕܝ ܬܢܐܫ ܝܝܕ‑ܣܢ܃ ܕ ܝܼܒܠܟܘܟܢ: ܡܝ ܬܡ݁ܘܩܠ ܕܓ‑ܣܢ ܝܡ݁ܐܬܣܢ܃ ܐܲܕ ܝܓ̰݁ܘܓ̰݁ܓ ܘܘܠ‑ܝܣ ܬܫ̰݁ܐ ܬܣܘܐ.",
           "ܝܣ݁ܠܦ̰‑ܐܣܢ ܝܼܪܟܠ ܣܝ ܡܚܡ݁ܕ ܝܝܘܢ ܝܝܘܢ܄ ܐܲܪܡܝ ܝܟܦ̰ܐ܃ ܝܼܒܪ݁ܐ ܕܝ ܬܝܠܦ̰ܬ܃ ܝܢ݁ܐ‑ܝܐܣ:\n— ܐܲ ܠܐܠ݁ܐ܃ ܝܼܘܐܟ݁ܢ ܐܲܝ ܥ̰ܪܢ ܘܐܪ݁ܐܫ܃ ܘܼܪ ܕ‑ܬ݁ܪܘܚܘ ܐܲܪܐ ܐܲܕ ܬܢ‑ܬܬ݁ܫܘ݁ܝܠܨ̰ ܟܘܠ݁ ܐܲܣ݁: ܡܝ ܣܢ‑ܕ‑ܬܘ݁ܝܨ̰ ܐܲܥܘܝܢ܃ ܦ̰ܟ‑ܝܝܝ‑ܬ‑ܝܕ ܕܓ ܡܝ ܢ ܬܘ݁ܘܪܬ܃ ܬܪܘܚܨ̰.\n— ܬܢ݁ܐ‑ܝܐܣ: ܝܝܪܒܚ!",
@@ -981,7 +1001,7 @@
           "ܝܒܪܢ ܘܘܫ݁ܢ ܦ̰ ܘܐܪ݁ܐܘ ܢ ܬܝܠܦ̰ܬ܃ ܝܫ̰݁‑ܝܬܢ.",
           "ܝܪ݁ܐ ܝܼܥ̰ܣܐܢ‑ܢܣܢ ܕܝ ܬܒܨ̰ܐܢܝܢ‑ܢܣܢ܃ ܝܼܥܠ݁ܩ‑ܝܬܢܬ܃ ܐܲܪ ܬ݁ܛ̰ܢܛ̰ܘܢܢ ܦ̰ܠ݁‑ܐܣܢܬ ܝܼܓܠܦ̰ܐܢ ܢ ܘܐܪܛ̰݁ܢ ܕ ܝܝܙܐܢ ܝܼܙܓܙܐܘܢ.",
           "ܡܝ ܕ‑ܬܒܕ݁ ܬܝܠܦ̰ܬ ܣ ܘܥܘܝܢ܃ ܝܝܢ'ܐܣ ܘܘܫ݁ܢ:\n— ܣܠ! ܣܠ! ܐܲܟ݁ܢ ܠܐ ܩ݁ܐܪܢ܃ ܣܠ!",
-          "ܐܲܣ݁ ܢ݁ܝ܃ ܬܙ̰݁ܡ‑ܝܬܢ܃ ܘܼܪ ܬ݁‑ܬܗܢ݁ܐ ܐܲܪܐ ܬܐܣܐ‑ܣ܃ ܬܕܗܡ ܐܲܕ ܬܢ‑ܬܛ̰ܪ: ܬܘܦ̰ܐ‑ܢ ܐܲܝܢ ܬܘܦ̰ܐ! ܝܼܢܓ݁ܙ ܘܘܫ݁ܢ܃ ܝܪܘܠ ܕܝ ܠܥ̰ܐܪ: ܬܬܒܥ‑ܝܬ ܬܝܠܦ̰ܬ܃ ܬܛ݁ܦ̰‑ܝܬ ܣܓ ܘܼܨ̰ܐܪ ܕܝ ܛ݁ܠܐܡ. ܝܘܥ̰ܐܠ ܐܲܪ ܝܼܕܣ݁܃ ܝܩ݁ܐܪ‑ܐܣ:\n‑ ܘܼܗ! ܬܛ݁ܦ̰ ܐܲܛ̰ܐܪ܃ ܬܥ̰ܝܠ ܕ ܐܲܨ̰ܐܪ! ܬܛ݁ܦ̰ ܐܲܛ̰ܐܪ܃ ܬܥ̰ܝܠ ܕ ܐܲܨ̰ܐܪ!",
+          "ܐܲܣ݁ ܢ݁ܝ܃ ܬܙ̰݁ܡ‑ܝܬܢ܃ ܘܼܪ ܬ݁‑ܬܗܢ݁ܐ ܐܲܪܐ ܬܐܣܐ‑ܣ܃ ܬܕܗܡ ܐܲܕ ܬܢ‑ܬܛ̰ܪ: ܬܘܦ̰ܐ‑ܢ ܐܲܝܢ ܬܘܦ̰ܐ! ܝܼܢܓ݁ܙ ܘܘܫ݁ܢ܃ ܝܪܘܠ ܕܝ ܠܥ̰ܐܪ: ܬܬܒܥ‑ܝܬ ܬܝܠܦ̰ܬ܃ ܬܛ݁ܦ̰‑ܝܬ ܣܓ ܘܼܨ̰ܐܪ ܕܝ ܛ݁ܠܐܡ. ܝܘܥ̰ܐܠ ܐܲܪ ܝܼܕܣ݁܃ ܝܩ݁ܐܪ‑ܐܣ:\n— ܘܼܗ! ܬܛ݁ܦ̰ ܐܲܛ̰ܐܪ܃ ܬܥ̰ܝܠ ܕ ܐܲܨ̰ܐܪ! ܬܛ݁ܦ̰ ܐܲܛ̰ܐܪ܃ ܬܥ̰ܝܠ ܕ ܐܲܨ̰ܐܪ!",
           "ܝܼܟܠ݁ܚ̰‑ܐܣ܃ ܬܒܪܐ‑ܝܐ܃ ܝܪܘܠ܃ ܝܦ̰݁ܥ̰ ܣܝ ܠܓ̰ܝܗܐ ܢ݁ܝܨ̰ܢ܃ ܝܡܢܥ."
         ]
       },
@@ -989,7 +1009,7 @@
         "Title": "L'école du chacal",
         "Paragraphs": [
           "Le chacal sortit de la mare tremblant de peur et de froid.",
-          "Il trouva un vieux tamis et, voyant venir la laie, il le tint comme un tambourin et, en s'accompagnant, se mit à chanter :\n''    Ce trou est percé; Celui‑là ne l'est point !''\n''    Nous n'avons pas trouvé plus neuf !''",
+          "Il trouva un vieux tamis et, voyant venir la laie, il le tint comme un tambourin et, en s'accompagnant, se mit à chanter :\n''     Ce trou est percé; Celui‑là ne l'est point !''\n''     Nous n'avons pas trouvé plus neuf !''",
           "La laie, le voyant frissonner en chantant, le crut en proie à une transe mystique :\n— Serais‑tu versé dans les saintes écritures, Si Mohammed ? Demanda‑t‑elle.\n— Mère belle‑hure, mère beau‑groin, répondit‑il, ne sais‑tu pas que je suis lettré, fils de lettré, petit‑fils de lettré ? Voilà le mausolée de mon aïeul sur ce mamelon.",
           "La laie le crut et décida de lui confier ses petits pour leur instruction et éducation, moyennant rétribution. Elle les emmena donc tous les douze vers la caverne‑école. Ils étaient tous grassouillets (et grognaient le plus gentiment du monde) ; lorsque la mère les contemplait, elle sentait son cœur s'épanouir de joie et de fierté.",
           "Si Mohammed caressa les marcassins l'un après l'autre, puis il avertit la mère :\n— Noble dame, dit‑il, pour que les enfants profitent de mon enseignement, il ne faut pas que tu viennes les déranger à chaque instant : les provisions, il faudra les déposer sur le seuil, puis te retirer.\n— C'est bien, dit‑elle.",
@@ -1100,7 +1120,7 @@
       "Source": {
         "Title": "ܝܼܙܡ ܕ ܘܘܫ݁ܢ ܕ ܝܝܦ̰ܝܣ",
         "Paragraphs": [
-          "ܐܲܣܡܝ ܝܘܦ̰ܐ ܝܝܙܡ ܐܲܢܓܐ ܬܢܬ‑ܝܓܪ ܩ݁ܘܪܢܬ ܣܓ ܘܘܫ݁ܢ܃ ܐܲܝܢ ܐܲܪܐ ܕ‑ܝܓ̰݁ ܐܲܕ ܬ‑ܝܕ‑ܝܐܦ̰ ܝܫ̰݁ܐ‑ܬ ܢܬ݁ܐ ܕ ܝܝܦ̰ܝܣ ܠܐ ܬ‑ܬ݁ܐܒܐܥܢ܃ ܝܡܨܐܠܐܚ ܝܝܕ‑ܣܢ ܝܼ ܣܝܢ܃ ܝܼܥܐܗܕ‑ܝܬܢ ܣ ܪܒ݁ܝ ܘܼܪ ܬܢ‑ܝܫ̰݁ܝ. ܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ ܝܼ ܘܘܫ݁ܢ:\n''ܝ݁ܐ܃ ܐܲ ܕ݁ܝܒ܃ ܐܲܕ ܢܨܐܦ̰ܪ܃''\n''ܕ ܪ݁ܒܚ‑ܝܟ ܝܼܒܐܢ ܦ̰ܠ݁‑ܝ:''\n''ܡܐ ܢܥ̰ܝܥ̰ ܣܝ ܡܕ݁ܢ܃ ܐܲܕ ܬܫ̰݁ܨ̰܄''\n''ܡܐ ܢܥ̰ܐܢ‑ܝ ܡܕ݁ܢ܃ ܬܫ̰݁ܨ̰‑ܝ!''",
+          "ܐܲܣܡܝ ܝܘܦ̰ܐ ܝܝܙܡ ܐܲܢܓܐ ܬܢܬ‑ܝܓܪ ܩ݁ܘܪܢܬ ܣܓ ܘܘܫ݁ܢ܃ ܐܲܝܢ ܐܲܪܐ ܕ‑ܝܓ̰݁ ܐܲܕ ܬ‑ܝܕ‑ܝܐܦ̰ ܝܫ̰݁ܐ‑ܬ ܢܬ݁ܐ ܕ ܝܝܦ̰ܝܣ ܠܐ ܬ‑ܬ݁ܐܒܐܥܢ܃ ܝܡܨܐܠܐܚ ܝܝܕ‑ܣܢ ܝܼ ܣܝܢ܃ ܝܼܥܐܗܕ‑ܝܬܢ ܣ ܪܒ݁ܝ ܘܼܪ ܬܢ‑ܝܫ̰݁ܝ. ܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ ܝܼ ܘܘܫ݁ܢ:\n'' ܝ݁ܐ܃ ܐܲ ܕ݁ܝܒ܃ ܐܲܕ ܢܨܐܦ̰ܪ܃''\n'' ܕ ܪ݁ܒܚ‑ܝܟ ܝܼܒܐܢ ܦ̰ܠ݁‑ܝ:''\n'' ܡܐ ܢܥ̰ܝܥ̰ ܣܝ ܡܕ݁ܢ܃ ܐܲܕ ܬܫ̰݁ܨ̰܄''\n'' ܡܐ ܢܥ̰ܐܢ‑ܝ ܡܕ݁ܢ܃ ܬܫ̰݁ܨ̰‑ܝ!''",
           "ܫܪܟܢ ܬܐܚ̰ܪ݁ܐܛ̰ܬ ܣܓ ܘܐܣ݁ ܢ݁ܝ: ܢܝܬܢܝ ܬ݁ܩܕ݁ܝܡܢ‑ܐܣ‑ܕ ܨ݁ܝܐܕܐ܄ ܢܬ݁ܐ ܝܬ݁ܥ̰ܝܡܝ‑ܝܐܣ ܕܓ ܘܡܨ̰ܝܩ܃ ܝܬ݁ܪܘܛ̰ܘ‑ܬ݁. ܡܝ ܝܟܦ̰ܐ ܠܡܐܟܠܐ܃ ܫ̰݁ܢ ܢܝܬܢܝ ܬܝܣܝܓܐܪ. ܠܚܐܢ ܐܲܟ݁ܢ݁ܝ ܐܲܝܢ ܠܚܐܢ.",
           "ܝܝܘ݁ܐܣ݁܃ ܢܥ̰ܐܢ‑ܕ ܐܲܚ̰ܪܦ̰ܝ ܕ ܬܝܚ̰ܣܝ ܕ ܝܼܙܝܡܪ. ܝܼܨ̰ܠܒ‑ܕ ܝܝܦ̰ܝܣ ܒܛ݁ܘ. ܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ:\n— ܦ̰ܪܩ‑ܝܬܢ ܓܐܪ‑ܐܢܥ̰.\nܝܼܦ̰ܪܩ‑ܝܬܢ ܝܝܦ̰ܝܣ: ܐܲܚ̰ܪܦ̰ܝ ܝܼ ܝܝܙܡ܃ ܬܝܚ̰ܣܝ ܝܼ ܝܝܡܐܢ‑ܝܣ܃ ܝܼܙܝܡܪ ܝܼ ܘܘܫ݁ܢ. ܝܘْܬ‑ܝܬ ܝܝܙܡ܃ ܢܬܐܢ ܘܐܫ݁ܐܪܢ‑ܝܣ ܕܝ ܬܐܣܐ‑ܣ܃ ܝܕ݁ܐ‑ܕ ܠܥܡܪ‑ܝܣ. ܝܢ݁ܐ‑ܝܐܣ ܝܼ ܘܘܫ݁ܢ:\n— ܦ̰ܪܩ‑ܝܬܢ ܟܫ̰݁ܝܢܝ.\n— ܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ: ܐܲ ܠܡܝܪ ܢ ܠܘْܚܘܫ܃ ܝܼܙܝܡܪ܃ ܐܲܕ ܬܣܦ̰ܣܘܨ̰ ܝܣ݁ ܝܼܡܝ‑ܟ܄ ܐܲܚ̰ܪܦ̰ܝ܃ ܐܲܕ ܬܦ̰ܬܪܨ̰ ܝܣ݁܄ ܬܝܚ̰ܣܝ܃ ܐܲܕ ܬ݁‑ܬܫ̰݁ܨ̰ ܕ ܝܼܡܢܣܝ.\n‑ܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ: ܘܝ ܟ‑ܝܦ̰ܟܐܢ ܬܐܡܘܣܢܝ ܝܐܓܝ܃ ܐܲ ܡܚܡ݁ܕ܉\n‑ܝܼܓ̰ܐܘܒ‑ܝܬ‑ܝܕ: ܕ ܐܲܫ݁ܐܪܢ‑ܝܟ ܝܢܬܐܢ ܕܝ ܬܐܣܐ ܢ ܝܝܦ̰ܝܣ!"
         ]
@@ -1108,7 +1128,7 @@
       "Translation": {
         "Title": "Le lion, le chacal et l'hyène",
         "Paragraphs": [
-          "Le lion constata un jour que le chacal déjouait ses plans. Alors il se réconcilia avec lui et avec l'hyène qui profitaient toujours des restes de sa chasse. Il jura donc de ne jamais les dévorer et il ajouta, pour le chacal :\n''Partons en voyage, chacal !''\n''Avec moi, ton bonheur est assuré :''\n''Si je tue les autres, tu dévoreras ;''\n''S'ils me tuaient, tu me dévorerais !''",
+          "Le lion constata un jour que le chacal déjouait ses plans. Alors il se réconcilia avec lui et avec l'hyène qui profitaient toujours des restes de sa chasse. Il jura donc de ne jamais les dévorer et il ajouta, pour le chacal :\n'' Partons en voyage, chacal !''\n'' Avec moi, ton bonheur est assuré :''\n'' Si je tue les autres, tu dévoreras ;''\n'' S'ils me tuaient, tu me dévorerais !''",
           "Les trois compères firent donc cause commune pour les mauvais coups : le chacal et l'hyène rabattaient le gibier, le lion l'attendait au passage et tuait. Le roi des animaux se nourrissait des meilleurs morceaux et ses compagnons se contentaient des restes. Cette entente dura un certain temps.",
           "Un jour qu'ils avaient tué un mouton, une brebis et un agneau. L'hyène exigea le partage :\n— Partage entre nous trois, dit le lion.\nL'hyène attribua le mouton au lion, la brebis à elle‑même et l'agneau au chacal. Le lion la frappa. Ses griffes s'enfoncèrent dans son foie : c'en était fait de sa vie. Il dit donc au chacal :\n— Fais toi‑même le partage.\n— Roi des animaux, tu déjeuneras de l'agneau, pour t'ouvrir l'appétit, tu dîneras du mouton et tu souperas de la brebis.\n— Qui t'a donné tant de sagesse ? Demanda le lion.\n— Tes griffes, répondit‑il, en plantant les siennes dans le foie de l'hyène."
         ]
@@ -1121,7 +1141,8 @@
           "ܝܠܚܐ ܝܝܙܡ ܕ ܘܘܫ݁ܢ ܐܲܝܢ ܠܚܐܢ܃ ܡܠܐܠܢ‑ܕ ܕ ܘܼܣܪܕܘܢ.\nܥܘܗܕܢ‑ܬ ܣ ܪܒ݁ܝ ܘܼܪ ܬ‑ܫ̰݁ܝܢ܃ ܘܼܥ̰ܐܠܢ ܕ݁ܘܟܠܢ.",
           "ܐܲܣܪܕܘܢ ܝܪܘܐ ܠܚܫܝܫ: ܝܼܕܘ݁ܪ܃ ܝܠ݁ܡܠܡ܃ ܐܲܕ ܬ‑ܬܕܗܢ ܬܝܩܝܬ ܢ ܙ݁ܝܬ.",
           "ܡܝ ܡ݁ܘܩܠܢ ܕܓ‑ܣ ܝܼܡܕ݁ܘܟܐܠ‑ܝܣ܃ ܐܲܪ ܕ‑ܝܬ݁ܐܪܘْ ܝܝܡܝ‑ܢܣܢ ܐܲܡܐܢ.",
-          "ܘܼܥ̰ܐܠܢ ܡܫܐܘܐܪܢ ܦ̰ܠ݁‑ܐܣ ܐܲܕ ܬ‑ܫ̰݁ܢ܃ ܪܛ̰ܢ ܠܥܗܘܕ ܢ ܪܒ݁ܝ. ܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ:\n— ܢܟܢܝ ܐܲܩܠ‑ܐܥ̰ ܢܡ݁ܘܬ ܣܝ ܠܐܛ̰: ܝܣ݁ܦ̰ܟ ܝܝܘܢ ܣܓ‑ܢܥ̰ ܐܲܕ ܝܼܣܒ݁ܠ ܝܼܡܐܢ‑ܝܣ ܝܼܘܐܟ݁ܢ ܐܲܕ ܣܠܟܢ ܘܝܝܐܨ̰! ܬܘܪܐ܃ ܐܲ ܘܝܢ ܝܠ݁ܐܢ ܕ ܝܝܪ ܠܐܨܠ ܕܓ‑ܢܥ̰܃ ܐܲܕ ܬ‑ܢܫ̰݁.\nܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ:\n— ܢܟ܃ ܒܐܒܐ ܕ ܝܼܙܡ܃ ܝܡ݁ܐ ܕ ܬܐܣܕ݁ܐ!\nܝܼܢܛܩ‑ܕ ܘܘܫ݁ܢ܃ ܝܢ݁ܐ:\n— ܘܼܠܐܫ ܠܐܨܠ ܝܝܦ̰ܢ ܐܲܚ̰݁ܐܡ ܢ ܠܡܝܪ ܢ ܠܘْܚܘܫ!\nܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ:\n— ܢܟ܃ ܒܐܒܐ ܕ ܘܼܫ݁ܢ܃ ܝܡ݁ܐ ܕ ܬܘܫ݁ܢܬ.\nܝܼܢܛܩ‑ܕ ܝܝܙܡ܃ ܝܢ݁ܐ:\n— ܕ ܠܐܨܠ!\nܝܩ݁ܝܡ‑ܕ ܘܼܣܪܕܘܢ: ܝܢ݁ܐ‑ܝܐܣܢ:\n— ܢܟ܃ ܝܡ݁ܐ ܕ ܬܐܓܡܐܪܬ܃ ܚ̰ܐܠܝ ܕ ܐܲܥܘܕܝܘ܄ ܥ̰ܐܣ ܐܲܪ ܒܐܒܐ܃ ܘܼܪ ܬ‑ܣ݁ܝܢܥ̰ ܐܲܪܐ. (ܝܘܓܐܕ ܐܲܕ ܕ‑ܝܝܢܝ ܕ ܐܲܥ̰ܝܘܠ.)\nܢ݁ܐܢ‑ܐܣ:\n— ܡܐܫ̰݁ܝ ܐܲܟ݁ܐ! ܝܼܢܝ‑ܝܐܢܥ̰ ܘܝ ܕ ܒܐܒܐܟ ܢܥ̰ ܐܲܕ ܟ‑ܢܫ̰݁!\n— ܝܪ݁ܐ‑ܝܐܣܢ‑ܕ: ܣܪ݁ܚܬ‑ܝܝܝ ܐܲܕ ܪܘܚܥ̰ ܐܲܕ ܕ‑ܣܬܩܣܝܥ̰ ܦ̰ܠ݁‑ܐܣ.\nܫܘܒܟܥ̰‑ܟܘܢ ܣ ܪܒ݁ܝ ܐܲܪܕ ܐܲ ܕ‑ܘܥ̰ܐܠܥ̰܃ ܐܲܕ ܐܲܘܢ‑ܕ‑ܐܘܝܥ̰ ܠܚ̰ܒܐܪ ܢ ܨ݁ܚ.\nܣܪ݁ܚܢ‑ܐܣ ܝܼܪܘܚ."
+          "ܘܼܥ̰ܐܠܢ ܡܫܐܘܐܪܢ ܦ̰ܠ݁‑ܐܣ ܐܲܕ ܬ‑ܫ̰݁ܢ܃ ܪܛ̰ܢ ܠܥܗܘܕ ܢ ܪܒ݁ܝ. ܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ:\n— ܢܟܢܝ ܐܲܩܠ‑ܐܥ̰ ܢܡ݁ܘܬ ܣܝ ܠܐܛ̰: ܝܣ݁ܦ̰ܟ ܝܝܘܢ ܣܓ‑ܢܥ̰ ܐܲܕ ܝܼܣܒ݁ܠ ܝܼܡܐܢ‑ܝܣ ܝܼܘܐܟ݁ܢ ܐܲܕ ܣܠܟܢ ܘܝܝܐܨ̰! ܬܘܪܐ܃ ܐܲ ܘܝܢ ܝܠ݁ܐܢ ܕ ܝܝܪ ܠܐܨܠ ܕܓ‑ܢܥ̰܃ ܐܲܕ ܬ‑ܢܫ̰݁.\nܝܢ݁ܐ‑ܝܐܣ ܝܝܙܡ:\n— ܢܟ܃ ܒܐܒܐ ܕ ܝܼܙܡ܃ ܝܡ݁ܐ ܕ ܬܐܣܕ݁ܐ!\nܝܼܢܛܩ‑ܕ ܘܘܫ݁ܢ܃ ܝܢ݁ܐ:\n— ܘܼܠܐܫ ܠܐܨܠ ܝܝܦ̰ܢ ܐܲܚ̰݁ܐܡ ܢ ܠܡܝܪ ܢ ܠܘْܚܘܫ!\nܝܢ݁ܐ‑ܝܐܣ ܘܘܫ݁ܢ:\n— ܢܟ܃ ܒܐܒܐ ܕ ܘܼܫ݁ܢ܃ ܝܡ݁ܐ ܕ ܬܘܫ݁ܢܬ.\nܝܼܢܛܩ‑ܕ ܝܝܙܡ܃ ܝܢ݁ܐ:\n— ܕ ܠܐܨܠ!\nܝܩ݁ܝܡ‑ܕ ܘܼܣܪܕܘܢ: ܝܢ݁ܐ‑ܝܐܣܢ:\n— ܢܟ܃ ܝܡ݁ܐ ܕ ܬܐܓܡܐܪܬ܃ ܚ̰ܐܠܝ ܕ ܐܲܥܘܕܝܘ܄ ܥ̰ܐܣ ܐܲܪ ܒܐܒܐ܃ ܘܼܪ ܬ‑ܣ݁ܝܢܥ̰ ܐܲܪܐ. (ܝܘܓܐܕ ܐܲܕ ܕ‑ܝܝܢܝ ܕ ܐܲܥ̰ܝܘܠ.)\nܢ݁ܐܢ‑ܐܣ:\n— ܡܐܫ̰݁ܝ ܐܲܟ݁ܐ! ܝܼܢܝ‑ܝܐܢܥ̰ ܘܝ ܕ ܒܐܒܐܟ ܢܥ̰ ܐܲܕ ܟ‑ܢܫ̰݁!\n— ܝܪ݁ܐ‑ܝܐܣܢ‑ܕ: ܣܪ݁ܚܬ‑ܝܝܝ ܐܲܕ ܪܘܚܥ̰ ܐܲܕ ܕ‑ܣܬܩܣܝܥ̰ ܦ̰ܠ݁‑ܐܣ. ܫܘܒܟܥ̰‑ܟܘܢ ܣ ܪܒ݁ܝ ܐܲܪܕ ܐܲ ܕ‑ܘܥ̰ܐܠܥ̰܃ ܐܲܕ ܐܲܘܢ‑ܕ‑ܐܘܝܥ̰ ܠܚ̰ܒܐܪ ܢ ܨ݁ܚ.",
+          "ܣܪ݁ܚܢ‑ܐܣ ܝܼܪܘܚ."
         ]
       },
       "Translation": {
@@ -1130,7 +1151,8 @@
           "Au bout d'un certain temps, le lion et le chacal firent la rencontre du mulet. Ils lui promirent de ne pas le dévorer et firent route ensemble.",
           "Le mulet, qui trouvait de l'herbe à volonté, fut bientôt gras à souhait croupe arrondie et poil lustré.",
           "À sa vue, ses compagnons sentirent bientôt l'eau leur venir à la bouche.",
-          "Ils s'entendirent pour le dévorer, au mépris de la foi jurée.\n— Nous mourons de faim, lui dit le chacal : l'un de nous doit se sacrifier pour sauver la vie des deux autres. En conséquence, nous devons manger celui d'entre nous qui a la moins noble l'origine.\n— Mon père est lion, ma mère est lionne, dit le lion.\n— Il est roi des animaux, dit le chacal : il ne peut y avoir maison plus noble.\n— Moi, ajouta‑t‑il, mon père est chacal, ma mère de même.\n— C'est de bonne famille, dit le lion.\nRestait le mulet qui dit :\n— Ma mère est la jument ; mon oncle maternel, cheval ; quant à mon père, je ne l'ai pas connu. Il avait peur de dire que c'était l'âne.\n— Ce n'est pas une réponse, dirent les deux autres : dis‑nous qui est ton père ou nous te dévorons !\n— Permettez‑moi, d'aller me renseigner dit‑il et je vous jure de revenir vous donner une réponse plus nette.\nIls le laissèrent partir."
+          "Ils s'entendirent pour le dévorer, au mépris de la foi jurée.\n— Nous mourons de faim, lui dit le chacal : l'un de nous doit se sacrifier pour sauver la vie des deux autres. En conséquence, nous devons manger celui d'entre nous qui a la moins noble l'origine.\n— Mon père est lion, ma mère est lionne, dit le lion.\n— Il est roi des animaux, dit le chacal : il ne peut y avoir maison plus noble.\n— Moi, ajouta‑t‑il, mon père est chacal, ma mère de même.\n— C'est de bonne famille, dit le lion.\nRestait le mulet qui dit :\n— Ma mère est la jument ; mon oncle maternel, cheval ; quant à mon père, je ne l'ai pas connu. Il avait peur de dire que c'était l'âne.\n— Ce n'est pas une réponse, dirent les deux autres : dis‑nous qui est ton père ou nous te dévorons !\n— Permettez‑moi, d'aller me renseigner dit‑il et je vous jure de revenir vous donner une réponse plus nette.",
+          "Ils le laissèrent partir."
         ]
       }
     },
@@ -1209,6 +1231,26 @@
           "Le feu s'allumerait dans son cœur,\nComme dans celui du diable,\nEt personne ne pourrait l'éteindre.\nIl se trouverait dans le précipice\nIl mourrait dans d'atroces souffrances,\nPreuves de la justice de Dieu.",
           "Mais Si Rabah, nos regrets l'accompagnent :\nC'était un sage\nEt sa conduite a été irréprochable.\nIl a mis en garde les gens (trop) confiants.\nEt rendu service à ses amis.\nQui n'a eu à se louer de sa fréquentation ?",
           "Il personnifie l'homme de bien\nQui suit toujours les voies\nRecommandées par la loi.\nSi la vie ne lui est pas toujours clémente,\nElle passe néanmoins comme un rêve\nEt il atteint son but : le Paradis."
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "ω",
+        "Paragraphs": [
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      "Translation": {
+        "Title": "Ω",
+        "Paragraphs": [
+          "'''Plongez au cœur de la mémoire orale kabyle à travers les ruses et les aventures d'un héros intemporel : le chacal.'''",
+          "De 1920 à 1942, pendant plus de vingt ans, Brahim Zellal a sillonné la Kabylie pour recueillir et préserver ce précieux cycle de fables animalières issues de la tradition populaire. Publié pour la première fois en 1964, ''Le Roman de chacal'' offre un miroir fascinant de la société et des rapports humains, où l'intelligence et la malice du faible répondent à la force des puissants.",
+          "Un monument du patrimoine littéraire amazigh, sauvé de l'oubli par un travail de collecte patient et passionné.",
+          "'''L'auteur'''\n'''Brahim ''''''Zellal''' (1898‑1972) était professeur d'arabe dans un  lycée de Blida. Titulaire d'une licence en langue arabe et d'un diplôme supérieur de berbère, il a mis sa double formation universitaire au service de la sauvegarde et de la transmission de la littérature orale kabyle."
         ]
       }
     }

@@ -5,14 +5,34 @@
         "Title": "#0",
         "Paragraphs": [
           "براهيم زَلّال",
-          "تاماشاهوت ن ووشَّن"
+          "'''تاماشاهوت ن ووشَّن'''",
+          ""
         ]
       },
       "Translation": {
         "Title": "#0",
         "Paragraphs": [
           "Brahim ZELLAL",
-          "Le Roman de Chacal"
+          "'''Le Roman de Chacal'''",
+          "Édition bilingue kabyle‑français – Version numérique interactive"
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "تاماشاهوت ن ووشَّن",
+        "Paragraphs": [
+          "",
+          "",
+          ""
+        ]
+      },
+      "Translation": {
+        "Title": "Le Roman de Chacal",
+        "Paragraphs": [
+          "'''Texte d'origine et traduction française :''' Collecté, transcrit et traduit par '''Brahim ''''''Zellal'''.\n'''Source de référence :'''  « ''Le Roman de Chacal : Texte berbère et français'' » présenté par '''Tassadit Yacine''' (Éditions Awal / L'Harmattan).\n'''Standardisation du texte kabyle :''' Sami FERḤAḤ.\n'''Illustrations et mise en page :''' Générées par IA et éditées par Sami FERḤAḤ.\n'''Développement et version web :''' Sami FERḤAḤ.",
+          "''Œuvre partagée gratuitement à des fins de préservation culturelle. Ne peut être vendue.''",
+          "'''Consultez la version interactive sur :'''\n{{Image|qr_code_pwa.svg|https://tamacahut‑n‑wuccen.netlify.app|150px}}"
         ]
       }
     },
@@ -21,7 +41,7 @@
         "Title": "༺",
         "Paragraphs": [
           "تيڨي د تيموشوها ن وَدرار ن جَرجَر، أدرار أبَركان، أدرار ن نّيف، أدرار ن لحيف: أكَّن ئ سـ ـيَنّا وين ن زّمان:",
-          "''و ـيبغان لحَرما أد تاڨار''\n''يالي س أدرار،''\n''يَڜّ أبَلّوض بو تشاشيت؛''\n''و ـيبغان ئردَن ن تفازيت''\n''ئصوبّ س أزاغار:''\n''أد يَغلَب أڨدي د تَمريت!''",
+          "'' و ـيبغان لحَرما أد تاڨار''\n'' يالي س أدرار،''\n'' يَڜّ أبَلّوض بو تشاشيت؛''\n'' و ـيبغان ئردَن ن تفازيت''\n'' ئصوبّ س أزاغار:''\n'' أد يَغلَب أڨدي د تَمريت!''",
           "يورا ـتَنت شّيخ يَبراهيم أسَدقاو دي تّناصفا ن لقَرن ربَعطاش، أد يَسّيفَس فَلّـ ـاس رَبّي دي دّونيت، يَعفو فَلّـ ـاس دي لاخَرت! أمين!"
         ]
       },
@@ -29,7 +49,7 @@
         "Title": "༻",
         "Paragraphs": [
           "Ce sont les contes de la montagne du Djurdjura, la montagne noire, la montagne de l'honneur, la montagne de la misère : comme disait l'ancien :",
-          "''Que celui qui désir vivre dans l'honneur''\n''Monte dans la Montagne''\n''Et se nourrisse d'(amers) glands à cupule.''\n''Que celui qui désire le pur froment''\n''Descende dans la plaine :''\n''Il y sera plus maltraité qu'un chien…''",
+          "'' Que celui qui désir vivre dans l'honneur''\n'' Monte dans la Montagne''\n'' Et se nourrisse d'(amers) glands à cupule.''\n'' Que celui qui désire le pur froment''\n'' Descende dans la plaine :''\n'' Il y sera plus maltraité qu'un chien…''",
           "Vers attribués au Cheikh Ibrahim des Beni‑Sedka vers le milieu du XIVᵉ siècle (de l'Hégire), que Dieu allège sa peine en ce monde et lui accorde le pardon en l'autre."
         ]
       }
@@ -38,13 +58,13 @@
       "Source": {
         "Title": "#1",
         "Paragraphs": [
-          "تاماشاهوت ن ووشَّن د ييزَم"
+          "'''تاماشاهوت ن ووشَّن د ييزَم'''"
         ]
       },
       "Translation": {
         "Title": "#1",
         "Paragraphs": [
-          "Le chacal et lion"
+          "'''Le chacal et lion'''"
         ]
       }
     },
@@ -358,13 +378,13 @@
       "Source": {
         "Title": "#2",
         "Paragraphs": [
-          "تاماشاهوت ن ووشَّن د ئنيسي"
+          "'''تاماشاهوت ن ووشَّن د ئنيسي'''"
         ]
       },
       "Translation": {
         "Title": "#2",
         "Paragraphs": [
-          "Le chacal et le hérisson"
+          "'''Le chacal et le hérisson'''"
         ]
       }
     },
@@ -505,7 +525,7 @@
           "يَوقَم ووشَّن تامَغرا، ؤر ئڨي تاقبايليت ؤر د ـيَقضي ئ تَسليت، يَجّا ـتّ د تامَغبونت مَسكينت: ؤر لّين لَعراس، ؤر يَلّي نّوال، لحاصول د تامَغرا تامَسّاست.",
           "ؤسانـ ـد لَوحوش أد أسـ ـسباركَن: تَّكلَن أد تَنـ ـيَسَّڜّ، أد د ـكّسَن چَّكّ: ؤلا د ييوَن ؤر أسـ ـتَبليع تَلقيمت. مي ياسـ ـيَنّا والبَعض: مَبروك تامَطّوت، أ سي محَمَّد! يَرّ ـاسـ ـد: ما تَبرَك! أكَّن أرمي د أنَڨّارو.",
           "أت رَبّي ؤمي ؤر يَهوي أرا چّواج نّي بَڨّنَنـ ـتـ ـيد دَڨ ڨَنوان: ئخَلطـ ـد ؤڨَفّور د ييطيچ د تَسليت ن وانݫار د واضو د لَبراق د رّعود د وَبروري، أرمي غيلَن مَدَّن أد تَنڨَر دّونيت.",
-          "ؤغالَن فّغَنـ ـد لَوحوش غَر بَرّا، بَّهدَلن ؤشَّن، لا سـ ـقّارَن:\n''يا لاطيف! يا لاطيف!''\n''روالوت، روالوت!''\n''لَهوا، تافوكت!''\n''ؤشَّن يَوّيـ ـد تامَطّوت!''\n''روالوت، روالوت!''\n''ؤر أغـ ـد ـيَفكي تاقَسّولت:''\n''أد أسـ ـد ـيَفك رَبّي تاقَݫّولت!''",
+          "ؤغالَن فّغَنـ ـد لَوحوش غَر بَرّا، بَّهدَلن ؤشَّن، لا سـ ـقّارَن:\n'' يا لاطيف! يا لاطيف!''\n'' روالوت، روالوت!''\n'' لَهوا، تافوكت!''\n'' ؤشَّن يَوّيـ ـد تامَطّوت!''\n'' روالوت، روالوت!''\n'' ؤر أغـ ـد ـيَفكي تاقَسّولت:''\n'' أد أسـ ـد ـيَفك رَبّي تاقَݫّولت!''",
           "ؤشَّن لا تَنـ ـيد يَكّات س تقَسلين تيلماوين يَرݫا ئركَل ئچَقدورَنـ ـيس.",
           "سّيَن، يَلحا د تَلغَمت أرمي د أسمي يوفا تعَدّا ـت: يَرّا ـتّ ئ تيَرزا: تامَطّوت ن لعالي يَتّاغـ ـيتّ يير رڨاز، ؤر أسـ ـيَسّين أرا لَحكار ـيس!"
         ]
@@ -516,7 +536,7 @@
           "À l'occasion de son mariage, le chacal donna une fête, mais il ne respecta pas les coutumes honorables de la Kabylie. Il n'y eut ni trousseau, ni demoiselles d'honneur, ni festin. Ce fut une fête parfaitement ridicule.",
           "Les animaux vinrent lui présenter leurs vœux, mais alors qu'ils escomptaient un bon repas, ils n'eurent même pas une bouchée. Quand l'un d'eux lui disait : Bénie (soit la nouvelle épouse !). Si Mohammed répondait : Oui, si elle baraque !… et ainsi pour tous jusqu'au dernier.",
           "Les gardiens manifestèrent leur désapprobation d'un pareil mariage par des signes nombreux dans les cieux. Il y eut ensemble : soleil, pluie, vent, arc‑en‑ciel, tonnerre, éclairs, grêle, et l'on crut que la fin du monde était arrivée.",
-          "Alors les animaux vinrent, dehors, faire le charivari au chacal. Ils criaient :\n''Pitié, seigneur, pitié !''\n''Sauvez‑vous, sauvez‑vous !''\n''Pluie et soleil !''\n''Le chacal a pris femme :''\n''Sauvez‑vous, sauvez‑vous !''\n''Il ne nous a pas donné une assiettée :''\n''Que Dieu lui donne un abcès !''\n''Sauvez‑vous, sauvez‑vous !''",
+          "Alors les animaux vinrent, dehors, faire le charivari au chacal. Ils criaient :\n'' Pitié, seigneur, pitié !''\n'' Sauvez‑vous, sauvez‑vous !''\n'' Pluie et soleil !''\n'' Le chacal a pris femme :''\n'' Sauvez‑vous, sauvez‑vous !''\n'' Il ne nous a pas donné une assiettée :''\n'' Que Dieu lui donne un abcès !''\n'' Sauvez‑vous, sauvez‑vous !''",
           "Si Mohammed, (qui leur lançait toutes les assiettes vides de sa maison) y perdit toute sa vaisselle.",
           "Il vécut un certain temps avec la chamelle puis, reconnaissant son infériorité vis‑à‑vis d'elle, il en fit une bête de labour : (ainsi veut l'aveugle fatalité qui) accorde la femme parfaite à un homme de rien qui la rend malheureuse."
         ]
@@ -620,7 +640,7 @@
           "يَرّا ـياسـ ـد وَزرَم:\n— أنيدا يَلّا لخير ئ ييـ ـتخَدمَض⸮ فّغَغـ ـد سَڨ وَمروچـ ـيو ن دّهَب د لفَطّا، أد ئييـ ـيوَت وَڨريس، ئعيوَد ـييي ييطيچ، ئواكَّن أد سنَصلَغ تاسلَستـ ـيو، كَڜ تَوّيضـ ـيييـ ـد! أمَك أرا أفَغ تاخّامتـ ـيو: تسَعرَقضـ ـيييـ ـتّ! تَوّيضـ ـد لموت: شَهَّد: أد تَمّتَض!",
           "يَنّا ـياس وَرڨاز:\n— دعاغـ ـك س رَبّي، ما ؤر ئييـ ـتَفكيض شّرَع.\nيَفكا ـياسـ ـت. روحَن س ؤشَّن، حكانـ ـاس، يَنّا ـياسَن:\n— ؤر سّينَغ ئ تيڨي: روحَت س ئنيسي.",
           "أكَّن وّضَن، يَمّوقَلـ ـد دَڨـ ـسَن، يَفهَم دَّعوا ـنسَن. كّرَن أد صَلّين، يَنّا ـياسَن:\n— ألا! شّرَع ئڨَنّي لَعمَر يَلّي! كَڜ، أي أزرَم، ٱرسـ ـد غَر لقاعا، قّيمـ ـد سّيا، أخصيمـ ـيك أد يَقّيم سّيَن: مكول ييوَن دَڨـ ـوَن أد د ـيشارَع، أد فروغ ڨار ـاوَن.",
-          "أكَّن د ـيَرس وَزرَم غَر لقاعا، يَندَه ئنيسي ف وَرڨاز، يَنّا:\n''و ـيطّفَن أحديف ياوي لحيف:''\n''أ وَر يَبضو د ؤغيليف!''",
+          "أكَّن د ـيَرس وَزرَم غَر لقاعا، يَندَه ئنيسي ف وَرڨاز، يَنّا:\n'' و ـيطّفَن أحديف ياوي لحيف:''\n'' أ وَر يَبضو د ؤغيليف!''",
           "ئوَّت وَرڨاز أزرَم، يَبضا ـت مناصَف: يَطَّف أݫرو، ئنغَد ـاس أقَرّو.",
           "يوغال ئبرَنـ ـد غَر دَفّير، يوفا ـد ئنيسي يَروَل، ئوَّت دَڨ فاسَّنـ ـيس، ئسوغ:\n— أه! يَمنَع ئمَنسي ئعَڨّالَن!\nو ـيتّامنَن بنادَم، أبَركان ؤقَرّو!…",
           "دي دّونيت، أيَن تَݫّيض، أد تـ ـتغَلّتَض؛ بنادَم، مي تـ ـتَݫّيض، أد كـ ـيَقلَع!"
@@ -633,7 +653,7 @@
           "— Quel bien ? Demanda le serpent. J'étais sorti de mon palais d'or et d'argent pour m'exposer à la gelée, puis au soleil, afin de changer de peau. Tu m'as pris et c'est de ta faute si je suis maintenant égaré. Comment retrouverai‑je ma maison ? Tu mérites la mort. Fais tes prières, tu vas mourir.",
           "L'homme supplia :\n— Au nom de Dieu, accorde‑moi le droit de faire juger cette affaire.\nLe serpent acquiesça. Ils allèrent trouver le chacal, lui exposèrent le différend. Si Mohammed se récusa :\n— Je ne connais rien à ces histoires‑là, Allez voir hérisson.",
           "Quand ils furent arrivés, le hérisson, d'un seul coup d'œil, comprit de quoi il s'agissait. Ils allaient se lancer dans les formules préliminaires d'usage :\n— Non ! Dit le hérisson, pas de justice en l'air, Toi, le serpent, descends et mets‑toi ici ; la partie adverse se mettra là. Chacun de vous plaidera sa cause et je dirai mon jugement.",
-          "Le serpent était à peine parvenu au sol que le hérisson mit l'homme en garde :\n''Celui qui tient un bâton et subit l'opprobre''\n''Qu'il supporte les funestes conséquences !''\n— Qu'attends‑tu ?",
+          "Le serpent était à peine parvenu au sol que le hérisson mit l'homme en garde :\n'' Celui qui tient un bâton et subit l'opprobre''\n'' Qu'il supporte les funestes conséquences !''\n— Qu'attends‑tu ?",
           "L'homme frappa de son bâton et coupa le serpent en deux tronçons, puis il prit une pierre et lui en écrasa la tête.",
           "Quand il se retourna, le hérisson avait disparu.\nDe dépit, il frappa dans ses mains :\n— Ah ! criait‑il, le souper des miens m'a échappé !\nMéfiez‑vous de l'homme, créature aux noirs desseins !",
           "En ce monde, quand on plante, on récole ; chez les hommes, quand on aide, on est payé d'ingratitude."
@@ -644,13 +664,13 @@
       "Source": {
         "Title": "#3",
         "Paragraphs": [
-          "تاماشاهوت ن ووشَّن د وَڨدي"
+          "'''تاماشاهوت ن ووشَّن د وَڨدي'''"
         ]
       },
       "Translation": {
         "Title": "#3",
         "Paragraphs": [
-          "Le chacal et le chien"
+          "'''Le chacal et le chien'''"
         ]
       }
     },
@@ -658,7 +678,7 @@
       "Source": {
         "Title": "غَف تبَنعَمَّتّ ن ووشَّن د وَڨدي",
         "Paragraphs": [
-          "دي دّونيت تاقديمت، ؤشَّن د ووشّاي لّان د أتماتَن. ييوَن، ئسَمـ ـيس محَمَّد؛ وايَض، رابَح، كَسَّن لمال وَحد ـسَن: أد برون صّبَح، أد كسَن أر تامَدّيت، أد يَروو لمال، أد تـ ـيد ـيرَّن س أخّام.",
+          "دي دّونيت تاقديمت، ؤشَّن د ووشّاي لّان د أتماتَن. ييوَن، ئسَمـ ـيس محَمَّد؛ وايَض، رابَح. كَسَّن لمال وَحد ـسَن: أد برون صّبَح، أد كسَن أر تامَدّيت، أد يَروو لمال، أد تـ ـيد ـيرَّن س أخّام.",
           "أسَّنّي، كسان لمال، توغال توشّاڨ تيخسي دَڨ يَفري. تسوغـ ـد. ؤشّاي، يوفا ـتـ ـيد لحال يَشغَل دي لجيها نّيضَن: يَنّا ـياس ووشَّن:\n— ؤر تّاڨاد!\nيَرس أد تّـ ـيد ـيسَلَّك: يوفا ـتّـ ـين تَچرَح. يَمشَح ئدامَّن، يوغال ئكَمَّلـ ـاس: يَنغا ـتّ، يَڜّا ـتّ.",
           "تامَدّيت، مي د ـبَرنَن س أخّام، ؤشّاي يَدّا ـد دي تلَمّاست ن لمال، ؤشَّن عَزلَنـ ـت أكّين.",
           "يَقّيم وَحد ـس دي تَݫڨي. ؤسّان ئمَزوورا، يَغليـ ـد فَلّـ ـاس ييض يَندَم دَڨ وايَن يَخدَم.",
@@ -940,7 +960,7 @@
         "Paragraphs": [
           "ؤر أسـ ـيڨي أرا ئبَلّيرَج ئ ووشَّن أرد أسـ ـيعاوَد تانديت. ئعاسّـ ـيت: أرمي تـ ـيَسَّغفَل، يَمَّغ فَلّـ ـاس، ئحوزا ـت سَڨ ؤسَلسول ؤزاڨور، يوفَڨ يَسّ، ئرفَد ـيت دَڨ ڨَنوان.",
           "أر ئتَنَّض يَتّالي، ئتَنَّض يَتّالي، أرمي ئ د ـيخَلّا ئدورار علايَن. ئميرَن، يَنّا ـياس:\n— د أشو توالاض، أ محَمَّد⸮\n— يَرّا ـياسـ ـد ووشَّن: ئدورار، ئزوغار، ئسافَّن: أتنا ئركَل دّاوا ـتنَغ!\nيَرنا يولي يَسّ، يَنّا ـياس:\n— د أشو توالاض⸮\n— يَرّا ـياسـ ـد: يَغليـ ـد شالواو ف والَّنـ ـيو: ؤر فريزَغ أرا مليح تامورت!\nيَرنا يولي ييسّ، يَنّا ـياس:\n— ئ تورا، أشو توالاض⸮\n— يَرّا ـياسـ ـد: نخَلّا ـد أسيڨنا!",
-          "ئميرَن، يَبرا ـياسـ ـد ئبَلّيرَج ئ ووشَّن: أد د ـيَغلي سي تيس سَبعا، أد يَقبَر، أد يَمَّت.\nأر د ـيتَنَّض ووشَّن، ئغَلّيـ ـد، ئتَنَّضـ ـد ئغَلّيـ ـد، أرمي تاسا ـس تَكفا، أضيحان يَبضا سي لخوف.\nيَفَّغـ ـيت لَعقَل: يَتّو سيدي عَبدَلقادَر، لا سـ ـيَقّار:\n''أ سيدي عَبدَلڨَرنين!''\n''دي تَمدا نَغ دَڨ واليم!''\n''أ سيدي عَبدَلڨَرنين''\n''دي تَمدا نَغ دَڨ واليم!''",
+          "ئميرَن، يَبرا ـياسـ ـد ئبَلّيرَج ئ ووشَّن: أد د ـيَغلي سي تيس سَبعا، أد يَقبَر، أد يَمَّت.\nأر د ـيتَنَّض ووشَّن، ئغَلّيـ ـد، ئتَنَّضـ ـد ئغَلّيـ ـد، أرمي تاسا ـس تَكفا، أضيحان يَبضا سي لخوف.\nيَفَّغـ ـيت لَعقَل: يَتّو سيدي عَبدَلقادَر، لا سـ ـيَقّار:\n'' أ سيدي عَبدَلڨَرنين!''\n'' دي تَمدا نَغ دَڨ واليم!''\n'' أ سيدي عَبدَلڨَرنين''\n'' دي تَمدا نَغ دَڨ واليم!''",
           "يَطَّرضقـ ـد دي تَمدا: ؤفڨَن وامان س ئڨَنّي؛ يَسلَك سي لموت، لامَعنا تَكّا فَلّـ ـاس تكَفّارت!\nيَشعَف: سَڨ واسّ نّي، ؤر د ـيَشغيل د ئبَلّيرَج."
         ]
       },
@@ -949,7 +969,7 @@
         "Paragraphs": [
           "La cigogne ne laissa pas au chacal le temps de lui tendre un nouveau piège. Elle le surveilla et, dès qu'il eut un moment d'inattention, elle se précipita sur lui, le saisit par l'échine et l'enleva dans les airs.",
           "Elle tournoya, tournoya en s'élevant toujours plus haut, jusqu'à dépasser les plus hautes montagnes. Alors elle lui demanda :\n— Que vois‑tu, Mohammed ?\n— Nous dominons, dit‑il, les montagnes, les plaines, les rivières…\nElle l'enleva encore plus haut :\n— Que vois‑tu ?\n— Un voile s'étend sur mes yeux, répondit‑il, je ne distingue plus bien le sol.\nElle l'emporta encore plus haut et demanda :\n— Et maintenant, que vois‑tu ?\n— Nous avons dépassé les nuages, répondit‑il.",
-          "Alors la cigogne le laissa tomber de cette hauteur vertigineuse pour qu'il s'écrasât sur le sol et en mourût.\nLe chacal embat en tournoyant, tournoya en tombant, le cœur et la rate prêts à éclater sous l'effet de la peur.\nQuant à la tête, il ne lui en restait guère : il ne retrouvait même plus le nom authentique du patron des causes désespérées et il bredouillait :\n''Saint patron à la forte tête !''\n''Si possible dans une mare ou dans la paille !''\n''Saint patron à la forte tête !''\n''Dans une mare ou dans la paille !''",
+          "Alors la cigogne le laissa tomber de cette hauteur vertigineuse pour qu'il s'écrasât sur le sol et en mourût.\nLe chacal embat en tournoyant, tournoya en tombant, le cœur et la rate prêts à éclater sous l'effet de la peur.\nQuant à la tête, il ne lui en restait guère : il ne retrouvait même plus le nom authentique du patron des causes désespérées et il bredouillait :\n'' Saint patron à la forte tête !''\n'' Si possible dans une mare ou dans la paille !''\n'' Saint patron à la forte tête !''\n'' Dans une mare ou dans la paille !''",
           "Il s'abattit dans une mare dont les eaux rejaillirent haut dans le ciel. S'il avait échappé à la mort, il avait subi un supplice choisi.\nSur un point au moins il était corrigé : il ne devait plus s'occuper des affaires de la cigogne."
         ]
       }
@@ -958,13 +978,13 @@
       "Source": {
         "Title": "#4",
         "Paragraphs": [
-          "تاماشاهوت ن ووشَّن د ييزَم"
+          "'''تاماشاهوت ن ووشَّن د ييزَم'''"
         ]
       },
       "Translation": {
         "Title": "#4",
         "Paragraphs": [
-          "Le chacal et le lion"
+          "'''Le chacal et le lion'''"
         ]
       }
     },
@@ -973,7 +993,7 @@
         "Title": "لَقرايا ن ووشَّن",
         "Paragraphs": [
           "يَفَّغـ ـد ووشَّن سي تَمدا لا يَتَّرڨيڨي أم ييفَر. تَكفا فَلّـ ـاس دّونيت سي توڨدي د ؤسَمّيض.",
-          "يوفا أغَربال د أقديم، يوغال، أكَّن ئوالا تيلَفت، يَطَّفـ ـيت د أمَندايَر، يَبدا تيييتا:\n''    تا تَفلا، تا ؤر تَفلي:''\n''    د أچديد ئ وَر نوفي!''",
+          "يوفا أغَربال د أقديم، يوغال، أكَّن ئوالا تيلَفت، يَطَّفـ ـيت د أمَندايَر، يَبدا تيييتا:\n''     تا تَفلا، تا ؤر تَفلي:''\n''     د أچديد ئ وَر نوفي!''",
           "توالا ـتـ ـيد تيلَفت لا يَتَّرڨيڨي، يَدَّكّير، أم وين أرا تَركَب ليحالا؛ تَنّا ـياسـ ـد:\n— تَغريض، أ سي محَمَّد⸮\n— يَرّا ـياس: أ مّ ؤخَنفوف، أ مّ ؤسَنفوف! ؤر تَݫريض أرا نَك غريغ: بابا يَغرا، چَدّي يَغرا. أ ـتّـ ـان تقوبَّتّـ ـيس دَڨ ييغيل ئنّا!",
           "تومَنـ ـيت تيلَفت. فران أد أسـ ـيَسغَر أرّاو ـيس، ئرَبّيـ ـتَن: أد أسـ ـتَفك لحَق ن لَعتابـ ـيس. تَوّيـ ـياسـ ـتَنـ ـيد غَر لغار ـيس: دي تناش ييد ـسَن، د ئبَلكوكَن: مي تَمّوقَل دَڨـ ـسَن يَمّاتسَن، أد يَجّوجَّڨ وولـ ـيس تَڜّا تَسوا.",
           "يَسَّلفـ ـاسَن ئركَل سي محَمَّد ييوَن ييوَن؛ أرمي يَكفا، ئبَرّا دي تيلَفت، يَنّا ـياس:\n— أ لالّا، ئواكَّن أي غرَن وارّاش، ؤر د ـتّروحو أرا أد تَنـ ـتَتّشَوّيلَض كولّ أسّ: مي سَنـ ـد ـتَوّيض أعوين، ٱفكـ ـيييـ ـتـ ـيد دَڨ مي ن تَوّورت، تروحَض.\n— تَنّا ـياس: ييربَح!",
@@ -981,7 +1001,7 @@
           "يَبرَن ووشَّن ف وارّاو ن تيلَفت، يَڜّـ ـيتَن.",
           "يَرّا ئغسانـ ـنسَن دي تَبضانينـ ـنسَن، ئعَلَّقـ ـيتَنت، أر تّݫَنݫونَن فَلّـ ـاسَنت ئڨَلفان ن وارَݫَّن د ييزان ئزَڨزاوَن.",
           "مي د ـتبَدّ تيلَفت س وَعوين، يينـ ـاس ووشَّن:\n— سَل! سَل! أكَّن لا قّارَن، سَل!",
-          "أسّ نّي، تَچَّمـ ـيتَن، ؤر تّـ ـتهَنّا أرا تاسا ـس، تَدهَم أد تَنـ ـتݫَر: توفا ـن أيَن توفا! ئنَڨَّز ووشَّن، يَروَل دي لغار: تَتبَعـ ـيت تيلَفت، تَطَّفـ ـيت سَڨ ؤضار دي طّلام. يوغال أر ئدَسّ، يَقّار ـاس:\n‑ ؤه! تَطَّف أݫار، تغيل د أضار! تَطَّف أݫار، تغيل د أضار!",
+          "أسّ نّي، تَچَّمـ ـيتَن، ؤر تّـ ـتهَنّا أرا تاسا ـس، تَدهَم أد تَنـ ـتݫَر: توفا ـن أيَن توفا! ئنَڨَّز ووشَّن، يَروَل دي لغار: تَتبَعـ ـيت تيلَفت، تَطَّفـ ـيت سَڨ ؤضار دي طّلام. يوغال أر ئدَسّ، يَقّار ـاس:\n— ؤه! تَطَّف أݫار، تغيل د أضار! تَطَّف أݫار، تغيل د أضار!",
           "ئكَلَّخـ ـاس، تَبرا ـيا، يَروَل، يَفَّغ سي لجيها نّيضَن، يَمنَع."
         ]
       },
@@ -989,7 +1009,7 @@
         "Title": "L'école du chacal",
         "Paragraphs": [
           "Le chacal sortit de la mare tremblant de peur et de froid.",
-          "Il trouva un vieux tamis et, voyant venir la laie, il le tint comme un tambourin et, en s'accompagnant, se mit à chanter :\n''    Ce trou est percé; Celui‑là ne l'est point !''\n''    Nous n'avons pas trouvé plus neuf !''",
+          "Il trouva un vieux tamis et, voyant venir la laie, il le tint comme un tambourin et, en s'accompagnant, se mit à chanter :\n''     Ce trou est percé; Celui‑là ne l'est point !''\n''     Nous n'avons pas trouvé plus neuf !''",
           "La laie, le voyant frissonner en chantant, le crut en proie à une transe mystique :\n— Serais‑tu versé dans les saintes écritures, Si Mohammed ? Demanda‑t‑elle.\n— Mère belle‑hure, mère beau‑groin, répondit‑il, ne sais‑tu pas que je suis lettré, fils de lettré, petit‑fils de lettré ? Voilà le mausolée de mon aïeul sur ce mamelon.",
           "La laie le crut et décida de lui confier ses petits pour leur instruction et éducation, moyennant rétribution. Elle les emmena donc tous les douze vers la caverne‑école. Ils étaient tous grassouillets (et grognaient le plus gentiment du monde) ; lorsque la mère les contemplait, elle sentait son cœur s'épanouir de joie et de fierté.",
           "Si Mohammed caressa les marcassins l'un après l'autre, puis il avertit la mère :\n— Noble dame, dit‑il, pour que les enfants profitent de mon enseignement, il ne faut pas que tu viennes les déranger à chaque instant : les provisions, il faudra les déposer sur le seuil, puis te retirer.\n— C'est bien, dit‑elle.",
@@ -1100,7 +1120,7 @@
       "Source": {
         "Title": "ئزَم د ووشَّن د ييفيس",
         "Paragraphs": [
-          "أسمي يوفا ييزَم أنڨا تَنتـ ـيڨَر قّورَنت سَڨ ووشَّن، أيَن أرا د ـيَجّ أد تـ ـيد ـياف يَڜّا ـت نَتّا د ييفيس لا تـ ـتّاباعَن، يَمصالاح ييد ـسَن ئ سين، ئعاهَد ـيتَن س رَبّي ؤر تَنـ ـيَڜّي. يَنّا ـياس ييزَم ئ ووشَّن:\n''يّا، أ دّيب، أد نصافَر،''\n''د رّبَحـ ـيك ئبان فَلّـ ـي:''\n''ما نغيغ سي مَدَّن، أد تَڜَّض؛''\n''ما نغانـ ـي مَدَّن، تَڜَّضـ ـي!''",
+          "أسمي يوفا ييزَم أنڨا تَنتـ ـيڨَر قّورَنت سَڨ ووشَّن، أيَن أرا د ـيَجّ أد تـ ـيد ـياف يَڜّا ـت نَتّا د ييفيس لا تـ ـتّاباعَن، يَمصالاح ييد ـسَن ئ سين، ئعاهَد ـيتَن س رَبّي ؤر تَنـ ـيَڜّي. يَنّا ـياس ييزَم ئ ووشَّن:\n'' يّا، أ دّيب، أد نصافَر،''\n'' د رّبَحـ ـيك ئبان فَلّـ ـي:''\n'' ما نغيغ سي مَدَّن، أد تَڜَّض؛''\n'' ما نغانـ ـي مَدَّن، تَڜَّضـ ـي!''",
           "شَركَن تاخَرّاݫت سَڨ واسّ نّي: نيتني تّقَدّيمَنـ ـاسـ ـد صّيادا؛ نَتّا يَتّغيميـ ـياس دَڨ وَمضيق، يَتّروݫوـ ـتّ. مي يَكفا لماكلا، ڜَّن نيتني تيسيڨار. لحان أكَّنّي أيَن لحان.",
           "ييوّاسّ، نغانـ ـد أخَرفي د تيخسي د ئزيمَر. ئضلَبـ ـد ييفيس بَطّو. يَنّا ـياس ييزَم:\n— فَرقـ ـيتَن ڨار ـانَغ.\nئفَرقـ ـيتَن ييفيس: أخَرفي ئ ييزَم، تيخسي ئ ييمانـ ـيس، ئزيمَر ئ ووشَّن. يَوتـ ـيت ييزَم، نتان واشّارَنـ ـيس دي تاسا ـس، يَدّا ـد لَعمَر ـيس. يَنّا ـياس ئ ووشَّن:\n— فَرقـ ـيتَن كَڜّيني.\n— يَنّا ـياس ووشَّن: أ لمير ن لَوحوش، ئزيمَر، أد تسَفسوض يَسّ ئميـ ـك؛ أخَرفي، أد تفَترَض يَسّ؛ تيخسي، أد تّـ ـتَڜَّض د ئمَنسي.\n‑يَنّا ـياس ييزَم: وي كـ ـيَفكان تاموسني ياڨي، أ محَمَّد⸮\n‑ئجاوَبـ ـيتـ ـيد: د أشّارَنـ ـيك يَنتان دي تاسا ن ييفيس!"
         ]
@@ -1108,7 +1128,7 @@
       "Translation": {
         "Title": "Le lion, le chacal et l'hyène",
         "Paragraphs": [
-          "Le lion constata un jour que le chacal déjouait ses plans. Alors il se réconcilia avec lui et avec l'hyène qui profitaient toujours des restes de sa chasse. Il jura donc de ne jamais les dévorer et il ajouta, pour le chacal :\n''Partons en voyage, chacal !''\n''Avec moi, ton bonheur est assuré :''\n''Si je tue les autres, tu dévoreras ;''\n''S'ils me tuaient, tu me dévorerais !''",
+          "Le lion constata un jour que le chacal déjouait ses plans. Alors il se réconcilia avec lui et avec l'hyène qui profitaient toujours des restes de sa chasse. Il jura donc de ne jamais les dévorer et il ajouta, pour le chacal :\n'' Partons en voyage, chacal !''\n'' Avec moi, ton bonheur est assuré :''\n'' Si je tue les autres, tu dévoreras ;''\n'' S'ils me tuaient, tu me dévorerais !''",
           "Les trois compères firent donc cause commune pour les mauvais coups : le chacal et l'hyène rabattaient le gibier, le lion l'attendait au passage et tuait. Le roi des animaux se nourrissait des meilleurs morceaux et ses compagnons se contentaient des restes. Cette entente dura un certain temps.",
           "Un jour qu'ils avaient tué un mouton, une brebis et un agneau. L'hyène exigea le partage :\n— Partage entre nous trois, dit le lion.\nL'hyène attribua le mouton au lion, la brebis à elle‑même et l'agneau au chacal. Le lion la frappa. Ses griffes s'enfoncèrent dans son foie : c'en était fait de sa vie. Il dit donc au chacal :\n— Fais toi‑même le partage.\n— Roi des animaux, tu déjeuneras de l'agneau, pour t'ouvrir l'appétit, tu dîneras du mouton et tu souperas de la brebis.\n— Qui t'a donné tant de sagesse ? Demanda le lion.\n— Tes griffes, répondit‑il, en plantant les siennes dans le foie de l'hyène."
         ]
@@ -1121,7 +1141,8 @@
           "يَلحا ييزَم د ووشَّن أيَن لحان، ملالَنـ ـد د ؤسَردون.\nعوهدَنـ ـت س رَبّي ؤر تـ ـڜّين، ؤغالَن دّوكلَن.",
           "أسَردون يَروا لَحشيش: ئدَوَّر، يَلَّملَم، أد تـ ـتَدهَن تيقيت ن زّيت.",
           "مي مّوقلَن دَڨـ ـس ئمَدّوكالـ ـيس، أر د ـيَتّارَو ييميـ ـنسَن أمان.",
-          "ؤغالَن مشاوارَن فَلّـ ـاس أد تـ ـڜَّن، رݫَن لَعهود ن رَبّي. يَنّا ـياس ووشَّن:\n— نَكني أقلـ ـاغ نَمّوت سي لاݫ: يَسَّفك ييوَن سَڨـ ـنَغ أد ئسَبَّل ئمانـ ـيس ئواكَّن أد سَلكَن ويياض! تورا، أ وين يَلّان د يير لاصَل دَڨـ ـنَغ، أد تـ ـنَڜّ.\nيَنّا ـياس ييزَم:\n— نَك، بابا د ئزَم، يَمّا د تاسَدّا!\nئنطَقـ ـد ووشَّن، يَنّا:\n— ؤلاش لاصَل ييفَن أخّام ن لمير ن لَوحوش!\nيَنّا ـياس ووشَّن:\n— نَك، بابا د ؤشَّن، يَمّا د توشَّنت.\nئنطَقـ ـد ييزَم، يَنّا:\n— د لاصَل!\nيَقّيمـ ـد ؤسَردون: يَنّا ـياسَن:\n— نَك، يَمّا د تاڨمارت، خالي د أعوديو؛ غاس أر بابا، ؤر تـ ـسّينَغ أرا. (يوڨاد أد د ـييني د أغيول.)\nنّانـ ـاس:\n— ماڜّي أكّا! ئنيـ ـيانَغ وي د باباك نَغ أد كـ ـنَڜّ!\n— يَرّا ـياسَنـ ـد: سَرّحَتـ ـييي أد روحَغ أد د ـستَقسيغ فَلّـ ـاس.\nشوبكَغـ ـكوَن س رَبّي أرد أ د ـوغالَغ، أد أوَنـ ـد ـاويغ لَخبار ن صَّح.\nسَرّحَنـ ـاس ئروح."
+          "ؤغالَن مشاوارَن فَلّـ ـاس أد تـ ـڜَّن، رݫَن لَعهود ن رَبّي. يَنّا ـياس ووشَّن:\n— نَكني أقلـ ـاغ نَمّوت سي لاݫ: يَسَّفك ييوَن سَڨـ ـنَغ أد ئسَبَّل ئمانـ ـيس ئواكَّن أد سَلكَن ويياض! تورا، أ وين يَلّان د يير لاصَل دَڨـ ـنَغ، أد تـ ـنَڜّ.\nيَنّا ـياس ييزَم:\n— نَك، بابا د ئزَم، يَمّا د تاسَدّا!\nئنطَقـ ـد ووشَّن، يَنّا:\n— ؤلاش لاصَل ييفَن أخّام ن لمير ن لَوحوش!\nيَنّا ـياس ووشَّن:\n— نَك، بابا د ؤشَّن، يَمّا د توشَّنت.\nئنطَقـ ـد ييزَم، يَنّا:\n— د لاصَل!\nيَقّيمـ ـد ؤسَردون: يَنّا ـياسَن:\n— نَك، يَمّا د تاڨمارت، خالي د أعوديو؛ غاس أر بابا، ؤر تـ ـسّينَغ أرا. (يوڨاد أد د ـييني د أغيول.)\nنّانـ ـاس:\n— ماڜّي أكّا! ئنيـ ـيانَغ وي د باباك نَغ أد كـ ـنَڜّ!\n— يَرّا ـياسَنـ ـد: سَرّحَتـ ـييي أد روحَغ أد د ـستَقسيغ فَلّـ ـاس. شوبكَغـ ـكوَن س رَبّي أرد أ د ـوغالَغ، أد أوَنـ ـد ـاويغ لَخبار ن صَّح.",
+          "سَرّحَنـ ـاس ئروح."
         ]
       },
       "Translation": {
@@ -1130,7 +1151,8 @@
           "Au bout d'un certain temps, le lion et le chacal firent la rencontre du mulet. Ils lui promirent de ne pas le dévorer et firent route ensemble.",
           "Le mulet, qui trouvait de l'herbe à volonté, fut bientôt gras à souhait croupe arrondie et poil lustré.",
           "À sa vue, ses compagnons sentirent bientôt l'eau leur venir à la bouche.",
-          "Ils s'entendirent pour le dévorer, au mépris de la foi jurée.\n— Nous mourons de faim, lui dit le chacal : l'un de nous doit se sacrifier pour sauver la vie des deux autres. En conséquence, nous devons manger celui d'entre nous qui a la moins noble l'origine.\n— Mon père est lion, ma mère est lionne, dit le lion.\n— Il est roi des animaux, dit le chacal : il ne peut y avoir maison plus noble.\n— Moi, ajouta‑t‑il, mon père est chacal, ma mère de même.\n— C'est de bonne famille, dit le lion.\nRestait le mulet qui dit :\n— Ma mère est la jument ; mon oncle maternel, cheval ; quant à mon père, je ne l'ai pas connu. Il avait peur de dire que c'était l'âne.\n— Ce n'est pas une réponse, dirent les deux autres : dis‑nous qui est ton père ou nous te dévorons !\n— Permettez‑moi, d'aller me renseigner dit‑il et je vous jure de revenir vous donner une réponse plus nette.\nIls le laissèrent partir."
+          "Ils s'entendirent pour le dévorer, au mépris de la foi jurée.\n— Nous mourons de faim, lui dit le chacal : l'un de nous doit se sacrifier pour sauver la vie des deux autres. En conséquence, nous devons manger celui d'entre nous qui a la moins noble l'origine.\n— Mon père est lion, ma mère est lionne, dit le lion.\n— Il est roi des animaux, dit le chacal : il ne peut y avoir maison plus noble.\n— Moi, ajouta‑t‑il, mon père est chacal, ma mère de même.\n— C'est de bonne famille, dit le lion.\nRestait le mulet qui dit :\n— Ma mère est la jument ; mon oncle maternel, cheval ; quant à mon père, je ne l'ai pas connu. Il avait peur de dire que c'était l'âne.\n— Ce n'est pas une réponse, dirent les deux autres : dis‑nous qui est ton père ou nous te dévorons !\n— Permettez‑moi, d'aller me renseigner dit‑il et je vous jure de revenir vous donner une réponse plus nette.",
+          "Ils le laissèrent partir."
         ]
       }
     },
@@ -1209,6 +1231,26 @@
           "Le feu s'allumerait dans son cœur,\nComme dans celui du diable,\nEt personne ne pourrait l'éteindre.\nIl se trouverait dans le précipice\nIl mourrait dans d'atroces souffrances,\nPreuves de la justice de Dieu.",
           "Mais Si Rabah, nos regrets l'accompagnent :\nC'était un sage\nEt sa conduite a été irréprochable.\nIl a mis en garde les gens (trop) confiants.\nEt rendu service à ses amis.\nQui n'a eu à se louer de sa fréquentation ?",
           "Il personnifie l'homme de bien\nQui suit toujours les voies\nRecommandées par la loi.\nSi la vie ne lui est pas toujours clémente,\nElle passe néanmoins comme un rêve\nEt il atteint son but : le Paradis."
+        ]
+      }
+    },
+    {
+      "Source": {
+        "Title": "ω",
+        "Paragraphs": [
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      "Translation": {
+        "Title": "Ω",
+        "Paragraphs": [
+          "'''Plongez au cœur de la mémoire orale kabyle à travers les ruses et les aventures d'un héros intemporel : le chacal.'''",
+          "De 1920 à 1942, pendant plus de vingt ans, Brahim Zellal a sillonné la Kabylie pour recueillir et préserver ce précieux cycle de fables animalières issues de la tradition populaire. Publié pour la première fois en 1964, ''Le Roman de chacal'' offre un miroir fascinant de la société et des rapports humains, où l'intelligence et la malice du faible répondent à la force des puissants.",
+          "Un monument du patrimoine littéraire amazigh, sauvé de l'oubli par un travail de collecte patient et passionné.",
+          "'''L'auteur'''\n'''Brahim ''''''Zellal''' (1898‑1972) était professeur d'arabe dans un  lycée de Blida. Titulaire d'une licence en langue arabe et d'un diplôme supérieur de berbère, il a mis sa double formation universitaire au service de la sauvegarde et de la transmission de la littérature orale kabyle."
         ]
       }
     }
