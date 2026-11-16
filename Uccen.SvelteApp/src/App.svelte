@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import { ConfigDeserializer, type ScriptConfig } from './ConfigDeserializer';
+  import { discardEmptyTales } from './StoryData';
   import { TransliterationService } from './TransliterationService';
   import locales from './locales.json';
 
@@ -182,7 +183,7 @@
       throw new Error("Story data must be a book containing valid tales");
     }
 
-    return requestId === storyRequestId ? responseData.Tales : null;
+    return requestId === storyRequestId ? discardEmptyTales(responseData.Tales) : null;
   }
 
   function isBook(value: unknown): value is Book {

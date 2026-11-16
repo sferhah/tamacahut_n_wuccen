@@ -70,6 +70,16 @@ public static class PdfHelper
             book.Tales.Remove(cover);
         }
 
+        var flyleaf = book.Tales.FirstOrDefault();
+
+        if (flyleaf != null && flyleaf.Source.Paragraphs.All(p => string.IsNullOrEmpty(p)))
+        {
+            flyleaf.Translation.Title = flyleaf.Source.Title + " - " + flyleaf.Translation.Title;
+            flyleaf.Source.Title = string.Empty;
+            options.HasFlyLeaf = true;
+        }
+
+
         var backCover = book.Tales.LastOrDefault();
 
         if (backCover?.Translation.Title?.Trim() == "Ω")

@@ -93,7 +93,7 @@ public class LayoutOptions
 
     public bool HasBackCover => BackCoverTranslationParagraphs.Any(p => !string.IsNullOrWhiteSpace(p));
 
-    
+    public bool HasFlyLeaf { get; set; }   
 
 }
 

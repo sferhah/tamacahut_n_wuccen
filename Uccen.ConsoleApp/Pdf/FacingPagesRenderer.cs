@@ -346,11 +346,18 @@ public sealed class FacingPagesRenderer
             pageNumber++;
         }
 
-        foreach (var s in spreads)
+        int pageNumberOffset = _o.HasFlyLeaf ? pageNumber + 1 : 0;
+        for (int spreadIndex = 0; spreadIndex < spreads.Count; spreadIndex++)
         {
+            var s = spreads[spreadIndex];
             var (left, right) = _o.SourceOnLeft ? (s.Source, s.Translation) : (s.Translation, s.Source);
-            DrawPage(doc, left, s.Illustrations, s.ImageCaptions, isLeftPage: !_o.RightToLeftBook, ++pageNumber);
-            DrawPage(doc, right, s.Illustrations, s.ImageCaptions, isLeftPage: _o.RightToLeftBook, ++pageNumber);
+            int leftPageNumber = ++pageNumber - pageNumberOffset;
+            int rightPageNumber = ++pageNumber - pageNumberOffset;
+            if (_o.HasFlyLeaf && spreadIndex == 0 && !_o.SourceOnLeft)
+                (leftPageNumber, rightPageNumber) = (rightPageNumber, leftPageNumber);
+
+            DrawPage(doc, left, s.Illustrations, s.ImageCaptions, isLeftPage: !_o.RightToLeftBook, leftPageNumber);
+            DrawPage(doc, right, s.Illustrations, s.ImageCaptions, isLeftPage: _o.RightToLeftBook, rightPageNumber);
         }
 
         if (_o.HasBackCover)
@@ -558,7 +565,7 @@ public sealed class FacingPagesRenderer
                     (float)(y0 + imageCaption.CaptionY - imageCaption.Caption.Top(0))));
         }
 
-        if (_o.PageNumbers)
+        if (_o.PageNumbers && pageNumber > 0)
         {
             var num = new TextBlock
             {
