@@ -67,7 +67,7 @@ test("Arabic transliteration preserves the known-good rucher title and paragraph
   );
   assert.equal(
     TransliterationService.transliterate(rucherStory.Source.Paragraphs[0], arabicConfig),
-    "ييوّاسّ، ئروح ئنيسي د ووشّ\u064Eن أد د\u00A0ـاكر\u064Eن تام\u064Eنت سي تد\u064Eوّيرت ن تيزيزوا. ئنيسي ي\u064Eبنا أد د\u00A0ـي\u064Eرّ س\u064Eڨ ووشّ\u064Eن تّار ن تق\u064Eلّالت ن ل\u064Eخليعا."
+    "ييوّاسّ، ئروح ئنيسي د ووشّ\u064Eن أد د\u00A0ـاكر\u064Eن تام\u064Eنت سي تد\u064Eوّيرت ن تزيزوا. ئنيسي ي\u064Eبنا أد د\u00A0ـي\u064Eرّ س\u064Eڨ ووشّ\u064Eن تّار ن تق\u064Eلّالت ن ل\u064Eخليعا."
   );
 });
 
