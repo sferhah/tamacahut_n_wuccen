@@ -7,6 +7,8 @@
 
   const DEFAULT_SCRIPT = "latn";
   const DEFAULT_TRANSLATION = "und";
+  const PDF_SCRIPTS = new Set(["latn", "arab", "tfng"]);
+  const PDF_BASE_URL = "https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf";
   const STORAGE_KEYS = {
     script: "SelectedScript",
     page: "SelectedIndex",
@@ -17,11 +19,11 @@
   };
   const faceDefault = "Cambria,Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
   const translations = [
-    { key: "und", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { key: "und", pdfCode: "fra", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
    // { key: "fra", displayName: "Français2" },
-    { key: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { key: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-    { key: "arq", displayName: "دارجة دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
+    { key: "eng", pdfCode: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
+    { key: "arb", pdfCode: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
+    { key: "arq", pdfCode: "arq", displayName: "دارجة دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
   ];
   const MIN_TEXT_SIZE_INCREMENT = -2;
   const MAX_TEXT_SIZE_INCREMENT = 6;
@@ -94,6 +96,13 @@
     return /\p{Script=Arabic}/u.test(text);
   }
 
+  function getPdfUrl(scriptCode: string, translationCode: string): string {
+    const scriptSuffix = scriptCode === DEFAULT_SCRIPT ? "" : `_${scriptCode}`;
+    const translationSuffix =
+      translationCode === "fra" || translationCode === "und" ? "" : `.${translationCode}`;
+    return `${PDF_BASE_URL}/tamacahut_n_wuccen${scriptSuffix}${translationSuffix}.pdf`;
+  }
+
   let tales: Story[] = [];
   let tale: DisplayStory | null = null;
   let taleIllustration: string | null = null;
@@ -108,6 +117,7 @@
   let selectedTranslation = DEFAULT_TRANSLATION;
   let currentScript: ScriptOption = initialScripts[0];
   let currentTranslation: TranslationOption = translations[0];
+  let pdfUrl = "";
   let storyRequestId = 0;
   let kabyleTextSizeIncrement = 0;
   let translationTextSizeIncrement = 0;
@@ -122,6 +132,7 @@
   $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
   $: currentTranslation =
     translations.find((translation) => translation.key === selectedTranslation) || translations[0];
+  $: pdfUrl = getPdfUrl(selectedScript, currentTranslation.pdfCode);
   $: uiLocaleKey = selectedTranslation === "eng" ? "eng" : selectedTranslation === "arb" || selectedTranslation === "arq" ? "arb" : "fra";
   $: uiLocale = locales[uiLocaleKey];
   $: if (typeof document !== "undefined") document.documentElement.lang = uiLocale.lang;
@@ -631,6 +642,16 @@
                   <option value={translation.key}>{translation.displayName}</option>
                 {/each}
               </select>
+            {/if}
+            {#if PDF_SCRIPTS.has(selectedScript)}
+              <a
+                class="pdf-link"
+                href={pdfUrl}
+                aria-label={uiLocale.pdfVersion}
+                title={uiLocale.pdfVersion}
+              >
+                <img src="/images/pdf.svg" alt="" />
+              </a>
             {/if}
             {#if translationError}
               <span role="alert">{translationError}</span>
@@ -1195,6 +1216,37 @@
     border-radius: 4px;
     padding: 0 8px;
     background: white;   
+  }
+
+  .pdf-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    min-height: 32px;
+    margin-left: 6px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: inherit;
+    background: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    vertical-align: top;
+  }
+
+  .pdf-link img {
+    display: block;
+    width: 22px;
+    height: 22px;
+  }
+
+  .pdf-link:hover,
+  .pdf-link:focus-visible {
+    border-color: #ff3e00;
+    color: #ff3e00;
+    background: #fffbf9;
   }
 
   .custom-picker {
