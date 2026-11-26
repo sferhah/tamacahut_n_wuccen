@@ -159,7 +159,7 @@ export class TransliterationService {
     const rows: string[][] = [];
 
     // 1. columns
-    const header = ['Latin'];
+    const header = ['latn'];
     Object.keys(loadedConfigs).forEach(scriptName => {
       header.push(scriptName);
     });

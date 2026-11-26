@@ -867,7 +867,7 @@
               {#each transliterationsData[0] as column}
                 <th>
                   <div class="rotated">
-                    {column === "Latin" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column as keyof typeof uiLocale.mappingScripts] || column}
+                    {column === "latn" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column as keyof typeof uiLocale.mappingScripts] || column}
                   </div>
                 </th>
               {/each}

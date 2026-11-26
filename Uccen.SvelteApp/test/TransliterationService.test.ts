@@ -134,4 +134,18 @@ test("generates transliterated story files for every script mapping", () => {
   }
 
   assert.equal(generatedFileCount, inputFiles.length * scriptNames.length);
+
+  // Same summary table as App.svelte's loadHelpTable()
+  const helpTable = TransliterationService.getTransliterations(
+    Object.fromEntries(scriptNames.map((scriptName) => [scriptName, parseConfig(scriptName)]))
+  );
+  const helpTableUrl = new URL("transliteration_table.json", outputDirectory);
+
+  writeFileSync(
+    helpTableUrl,
+    `[\n${helpTable.map((row) => `  ${JSON.stringify(row)}`).join(",\n")}\n]\n`,
+    "utf8"
+  );
+  assert.deepEqual(JSON.parse(readFileSync(helpTableUrl, "utf8")), helpTable);
+  assert.deepEqual(helpTable[0], ["latn", ...scriptNames]);
 });
