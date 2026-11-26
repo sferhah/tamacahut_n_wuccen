@@ -339,7 +339,10 @@ public sealed class FacingPagesRenderer
         var spreads = Paginate(book.Tales);
 
         using var stream = File.Create(outputPath);
-        using var doc = SKDocument.CreatePdf(stream);
+        var metadata = SKDocumentPdfMetadata.Default;
+        metadata.Producer = "Skia/PDF";
+
+        using var doc = SKDocument.CreatePdf(stream, metadata);
         int pageNumber = 0;
 
         // Page 1: the cover if there is one, otherwise (optionally) blank.
