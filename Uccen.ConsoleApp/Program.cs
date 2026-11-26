@@ -8,6 +8,8 @@ using System.Text.Unicode;
 //PptxHelper.ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
 
+TaleXt.Date = new DateTime(2026, 11, 26);
+
 await GenerateBilingualPdf();
 
 static async Task GenerateJsonFiles()

@@ -1,5 +1,7 @@
 ﻿
+using System.Globalization;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 public class Tale
 {
@@ -11,6 +13,8 @@ public class Tale
 
 public static class TaleXt
 {
+    public static DateTime Date { get; set; } = DateTime.Now;
+
     public static void Validate(this IEnumerable<Tale> tales)
     {
         foreach (var tale in tales)
@@ -46,5 +50,25 @@ public static class TaleXt
 
         tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
         tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
+
+        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(ApplyDate).ToList();
+        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(ApplyDate).ToList();
+    }
+
+
+    public static string ApplyDate(string s)
+    {   
+        var culture = new CultureInfo("fr-FR");
+
+        return Regex.Replace(
+            s,
+            @"\{\{updated_at(?:\|([^}]+))?\}\}",
+            match =>
+            {   
+                string format = match.Groups[1].Success ? match.Groups[1].Value.Trim() : "yyyy-MM-dd";
+                return TaleXt.Date.ToString(format, culture);
+            },
+            RegexOptions.IgnoreCase
+        );
     }
 }
