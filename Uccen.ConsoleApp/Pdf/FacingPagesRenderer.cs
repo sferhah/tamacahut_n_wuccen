@@ -1,7 +1,4 @@
-﻿using PdfSharp;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using SkiaSharp;
+﻿using SkiaSharp;
 using Svg.Skia;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -430,47 +427,75 @@ public sealed class FacingPagesRenderer
 
     public void PatchWithPdfSharp(string outputPath)
     {
-        PdfSharpLicense.SetAgplLicense();
-        using var pdf = PdfReader.Open(outputPath, PdfDocumentOpenMode.Modify);
-        if (_o.RightToLeftBook)
-        {
-            pdf.ViewerPreferences.Direction = PdfReadingDirection.RightToLeft;  // << /ViewerPreferences << /Direction /R2L >> >> 
-        }
-
-        pdf.PageLayout = PdfPageLayout.TwoPageRight;                        // cover alone, then spreads 2|3, 4|5…            
-    
-        using var stream = new MemoryStream();
-        pdf.Save(stream);
-        byte[] pdfBytes = stream.ToArray();
-
-        pdfBytes = MakePdfDeterministic(pdfBytes);
-
-        File.WriteAllBytes(outputPath, pdfBytes);
+        SetPageLayoutAndDirection(outputPath, _o.RightToLeftBook);
     }
 
-    public static byte[] MakePdfDeterministic(byte[] pdfBytes)
+    public static void SetPageLayoutAndDirection(string pdfPath, bool rightToLeftBook)
     {
-        string pdfText = Encoding.Latin1.GetString(pdfBytes);
+        byte[] bytes = File.ReadAllBytes(pdfPath);
+        string text = Encoding.Latin1.GetString(bytes);
 
-        // 1. Blank out /ModDate(...) and /CreationDate(...) with spaces
-        pdfText = Regex.Replace(pdfText, @"/(ModDate|CreationDate)\([^\)]+\)",
-            m => new string(' ', m.Length));
+        // 1. Find the previous startxref byte offset
+        var startXrefMatches = Regex.Matches(text, @"startxref\s+(\d+)");
+        if (startXrefMatches.Count == 0)
+            throw new InvalidOperationException("Invalid PDF: missing startxref.");
+        long prevXrefOffset = long.Parse(startXrefMatches[^1].Groups[1].Value);
 
-        // 2. Normalize XMP timestamps (e.g., <xmp:ModifyDate>2026-11-26T...</xmp:ModifyDate>)
-        pdfText = Regex.Replace(pdfText,
-            @"(<(?:xmp:ModifyDate|xmp:CreateDate|xmp:MetadataDate|photoshop:DateCreated)>)[^<]+(</[^>]+>)",
-            m => m.Groups[1].Value + "2000-01-01T00:00:00Z".PadRight(m.Length - m.Groups[1].Length - m.Groups[2].Length) + m.Groups[2].Value);
+        // 2. Find the latest trailer dictionary to get /Size and /Root object number
+        var trailerMatches = Regex.Matches(text, @"trailer\s*<<((?:[^<>]|<<[^>]*>>)*)>>", RegexOptions.Singleline);
+        if (trailerMatches.Count == 0)
+            throw new InvalidOperationException("Invalid PDF: uses cross-reference streams (PDF 1.5+), which require a full parser.");
 
-        // 3. Replace random XMP UUIDs with a fixed zero UUID of exact same length (36 chars)
-        pdfText = Regex.Replace(pdfText,
-            @"(<(?:xmpMM:DocumentID|xmpMM:InstanceID)>uuid:)[0-9a-fA-F\-]{36}(</[^>]+>)",
-            "${1}00000000-0000-0000-0000-000000000000${2}");
+        string lastTrailer = trailerMatches[^1].Groups[1].Value;
+        int size = int.Parse(Regex.Match(lastTrailer, @"/Size\s+(\d+)").Groups[1].Value);
+        var rootMatch = Regex.Match(lastTrailer, @"/Root\s+(\d+)\s+(\d+)\s+R");
+        int rootObjNum = int.Parse(rootMatch.Groups[1].Value);
+        int rootGenNum = int.Parse(rootMatch.Groups[2].Value);
 
-        // 4. Replace random trailer /ID[<hex><hex>] with zeros of exact same length
-        pdfText = Regex.Replace(pdfText, @"/ID\s*\[\s*<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*\]",
-            m => $"/ID[<{new string('0', m.Groups[1].Length)}><{new string('0', m.Groups[2].Length)}>]".PadRight(m.Length));
+        // 3. Extract the existing /Root catalog dictionary (supports nested <<...>>)
+        var rootObjMatch = Regex.Match(
+            text,
+            $@"(?m)^{rootObjNum}\s+{rootGenNum}\s+obj\s*<<((?:[^<>]|<<[^>]*>>)*)>>\s*endobj",
+            RegexOptions.Singleline);
 
-        return Encoding.Latin1.GetBytes(pdfText);
+        if (!rootObjMatch.Success)
+            throw new InvalidOperationException("Could not locate /Root catalog object.");
+
+        string catalogBody = rootObjMatch.Groups[1].Value;
+
+        // Remove any existing /PageLayout or /ViewerPreferences so we don't duplicate keys
+        catalogBody = Regex.Replace(catalogBody, @"/PageLayout\s*/\w+", "");
+        catalogBody = Regex.Replace(catalogBody, @"/ViewerPreferences\s*<<.*?>>", "", RegexOptions.Singleline);
+
+        // 4. Add your /PageLayout and /ViewerPreferences
+        catalogBody += " /PageLayout /TwoPageRight";
+        if (rightToLeftBook)
+        {
+            catalogBody += " /ViewerPreferences << /Direction /R2L >>";
+        }
+
+        // 5. Build the incremental update block (100% deterministic, zero timestamps/IDs)
+        var sb = new StringBuilder();
+        if (!text.EndsWith("\n")) sb.Append('\n');
+
+        long newRootOffset = bytes.Length + sb.Length;
+        sb.Append($"{rootObjNum} {rootGenNum} obj\n<<{catalogBody}>>\nendobj\n");
+
+        long newXrefOffset = bytes.Length + sb.Length;
+        sb.Append("xref\n");
+        sb.Append($"{rootObjNum} 1\n");
+        sb.Append($"{newRootOffset:D10} {rootGenNum:D5} n \n");
+
+        sb.Append("trailer\n");
+        sb.Append($"<< /Size {size} /Root {rootObjNum} {rootGenNum} R /Prev {prevXrefOffset} >>\n");
+        sb.Append("startxref\n");
+        sb.Append($"{newXrefOffset}\n");
+        sb.Append("%%EOF\n");
+
+        // 6. Append to the PDF
+        using var fs = new FileStream(pdfPath, FileMode.Append, FileAccess.Write);
+        byte[] appendBytes = Encoding.Latin1.GetBytes(sb.ToString());
+        fs.Write(appendBytes, 0, appendBytes.Length);
     }
 
 
