@@ -643,16 +643,6 @@
                 {/each}
               </select>
             {/if}
-            {#if PDF_SCRIPTS.has(selectedScript)}
-              <a
-                class="pdf-link"
-                href={pdfUrl}
-                aria-label={uiLocale.pdfVersion}
-                title={uiLocale.pdfVersion}
-              >
-                <img src="/images/pdf.svg" alt="" />
-              </a>
-            {/if}
             {#if translationError}
               <span role="alert">{translationError}</span>
             {/if}
@@ -770,6 +760,16 @@
           </svg>
           <span class="contents-label">{uiLocale.contents}</span>
         </button>
+        {#if PDF_SCRIPTS.has(selectedScript)}
+          <a
+            class="pdf-link"
+            href={pdfUrl}
+            aria-label={uiLocale.pdfVersion}
+            title={uiLocale.pdfVersion}
+          >
+            <img src="/images/pdf.svg" alt="" />
+          </a>
+        {/if}
       </div>
       <div class="pagination-controls">
         <button on:click={previous} disabled={page <= 0} aria-label={uiLocale.previousPage}>
@@ -954,7 +954,8 @@
     grid-column: 2;
   }
   .pagination-help,
-  .contents-btn {
+  .contents-btn,
+  .pdf-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -964,6 +965,25 @@
     border-color: #e2e2e2;
     border-radius: 6px;
     color: #36434a;
+  }
+  .pdf-link {
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+  }
+  .pdf-link img {
+    display: block;
+    width: 22px;
+    height: 22px;
+  }
+  .pdf-link:hover,
+  .pdf-link:focus-visible {
+    border-color: #b6c0c5;
+    background: #f7f8f8;
   }
   .pagination-help {
     grid-column: 3;
@@ -1133,8 +1153,10 @@
     }
 
     .pagination-help,
-    .contents-btn {
+    .contents-btn,
+    .pdf-link {
       width: 38px;
+      height: 38px;
       min-height: 38px;
       padding: 0;
     }
@@ -1216,37 +1238,6 @@
     border-radius: 4px;
     padding: 0 8px;
     background: white;   
-  }
-
-  .pdf-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    min-height: 32px;
-    margin-left: 6px;
-    padding: 4px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: inherit;
-    background: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    vertical-align: top;
-  }
-
-  .pdf-link img {
-    display: block;
-    width: 22px;
-    height: 22px;
-  }
-
-  .pdf-link:hover,
-  .pdf-link:focus-visible {
-    border-color: #ff3e00;
-    color: #ff3e00;
-    background: #fffbf9;
   }
 
   .custom-picker {
