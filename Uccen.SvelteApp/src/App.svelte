@@ -145,7 +145,6 @@
   let dialogElement: HTMLDialogElement;
   let contentsDialogElement: HTMLDialogElement;
   let contentsSearch = "";
-  let transliterationsData: string[][] = [];
   let contentsItems: ContentsItem[] = [];
   let filteredContentsItems: ContentsItem[] = [];
   $: contentsItems = buildContentsItems(tales, currentConfig);
@@ -179,8 +178,6 @@
     } finally {
       loading = false;
     }
-
-    loadHelpTable();
   }
 
   async function fetchStories(languageCode: string): Promise<Story[] | null> {
@@ -345,24 +342,11 @@
     });
   }
 
-  function loadHelpTable(): void {
-    try {
-      const configs = Object.fromEntries(
-        initialScripts
-          .filter((script) => script.name !== DEFAULT_SCRIPT)
-          .map((script) => [script.name, ConfigDeserializer.parse(script.name)])
-      );
-      transliterationsData = TransliterationService.getTransliterations(configs);
-    } catch (error) {
-      console.error("Error generating help table", error);
-    }
-  }
-
-  function openHelp(): void {
+  function openAbout(): void {
     dialogElement.showModal();
   }
 
-  function closeHelp(): void {
+  function closeAbout(): void {
     dialogElement.close();
   }
 
@@ -430,7 +414,7 @@
       event.clientY < bounds.top ||
       event.clientY > bounds.bottom;
 
-    if (clickedOutside) closeHelp();
+    if (clickedOutside) closeAbout();
   }
 
   function handleScriptChange(event: Event): void {
@@ -760,16 +744,6 @@
           </svg>
           <span class="contents-label">{uiLocale.contents}</span>
         </button>
-        {#if PDF_SCRIPTS.has(selectedScript)}
-          <a
-            class="pdf-link"
-            href={pdfUrl}
-            aria-label={uiLocale.pdfVersion}
-            title={uiLocale.pdfVersion}
-          >
-            <img src="/images/pdf.svg" alt="" />
-          </a>
-        {/if}
       </div>
       <div class="pagination-controls">
         <button on:click={previous} disabled={page <= 0} aria-label={uiLocale.previousPage}>
@@ -788,8 +762,8 @@
           </svg>
         </button>
       </div>
-      <button on:click={openHelp} class="help-btn pagination-help" aria-label={uiLocale.transliterationHelp} title={uiLocale.transliterationHelp}>
-        <span aria-hidden="true">?</span>
+      <button on:click={openAbout} class="help-btn pagination-help" aria-label={uiLocale.about} title={uiLocale.about}>
+        <span aria-hidden="true">i</span>
       </button>
     </nav>
   </main>
@@ -852,46 +826,53 @@
     </div>
   </dialog>
 
-    <!-- Help modal (native dialog) -->
-  <dialog bind:this={dialogElement} class="modal" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"} on:click={handleDialogClick}>
+  <!-- About modal (native dialog) -->
+  <dialog
+    bind:this={dialogElement}
+    class="modal about-modal"
+    aria-labelledby="about-title"
+    lang={uiLocale.lang}
+    dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}
+    on:click={handleDialogClick}
+  >
     <div class="modal-header">
-      <h3>{uiLocale.mapping}</h3>
-      <button on:click={closeHelp} class="close-btn" aria-label={uiLocale.close}>&times;</button>
+      <h3 id="about-title">{uiLocale.about}</h3>
+      <button on:click={closeAbout} class="close-btn" aria-label={uiLocale.close}>&times;</button>
     </div>
-    
-    <div class="modal-body">
-      {#if transliterationsData.length > 0}
-        <table class="help-table">
-          <thead>
-            <tr>              
-              {#each transliterationsData[0] as column}
-                <th>
-                  <div class="rotated">
-                    {column === "latn" ? uiLocale.mappingLatin : uiLocale.mappingScripts[column as keyof typeof uiLocale.mappingScripts] || column}
-                  </div>
-                </th>
-              {/each}
-            </tr>
-          </thead>
-          <tbody>            
-            {#each transliterationsData.slice(1) as row}
-              <tr>
-                {#each row as cell}
-                  <td>{cell}</td>
-                {/each}
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      {:else}
-        <p>{uiLocale.loadingHelp}</p>
-      {/if}
-    </div>
-    <div class="help-footer">
-      <a href="https://github.com/sferhah/tamacahut_n_wuccen" target="_blank" rel="noopener noreferrer">
-        {uiLocale.sourceCode}
-        <span aria-hidden="true">↗</span>
-      </a>
+
+    <div class="modal-body about-body">
+      <p class="about-description">{uiLocale.aboutDescription}</p>
+      <ul class="about-links">
+        <li>
+          {#if PDF_SCRIPTS.has(selectedScript)}
+            <a class="about-link" href={pdfUrl}>
+              <img src="/images/pdf.svg" alt="" />
+              <span class="about-link-text">
+                <span class="about-link-label">{uiLocale.pdfVersion}</span>
+                <span class="about-link-detail"><bdi>{currentScript.displayName}</bdi> · <bdi>{currentTranslation.displayName}</bdi></span>
+              </span>
+            </a>
+          {:else}
+            <div class="about-link about-link-disabled">
+              <img src="/images/pdf.svg" alt="" />
+              <span class="about-link-text">
+                <span class="about-link-label">{uiLocale.pdfVersion}</span>
+                <span class="about-link-detail">{uiLocale.pdfUnavailable}</span>
+              </span>
+            </div>
+          {/if}
+        </li>
+        <li>
+          <a class="about-link" href="https://github.com/sferhah/tamacahut_n_wuccen" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24" class="about-icon">
+              <path d="m8 17-5-5 5-5M16 7l5 5-5 5M14 4l-4 16" />
+            </svg>
+            <span class="about-link-text">
+              <span class="about-link-label">{uiLocale.sourceCode} <span aria-hidden="true">↗</span></span>
+            </span>
+          </a>
+        </li>
+      </ul>
     </div>
   </dialog>
 {/if}
@@ -954,8 +935,7 @@
     grid-column: 2;
   }
   .pagination-help,
-  .contents-btn,
-  .pdf-link {
+  .contents-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -965,25 +945,6 @@
     border-color: #e2e2e2;
     border-radius: 6px;
     color: #36434a;
-  }
-  .pdf-link {
-    box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    min-height: 40px;
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-  }
-  .pdf-link img {
-    display: block;
-    width: 22px;
-    height: 22px;
-  }
-  .pdf-link:hover,
-  .pdf-link:focus-visible {
-    border-color: #b6c0c5;
-    background: #f7f8f8;
   }
   .pagination-help {
     grid-column: 3;
@@ -1156,8 +1117,7 @@
     }
 
     .pagination-help,
-    .contents-btn,
-    .pdf-link {
+    .contents-btn {
       width: 38px;
       height: 38px;
       min-height: 38px;
@@ -1365,26 +1325,81 @@
     overflow: auto;
   }
 
-  .help-footer {
-    display: flex;
-    flex: 0 0 auto;
-    justify-content: flex-end;
-    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    border-top: 1px solid #ddd;
+  .about-modal {
+    width: min(440px, calc(100vw - 2rem));
+    color: #24343c;
   }
 
-  .help-footer a {
-    display: inline-flex;
+  .about-body {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .about-description {
+    margin: 0 0 1rem;
+    line-height: 1.5;
+    color: #36434a;
+  }
+
+  .about-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-link {
+    display: flex;
     align-items: center;
-    gap: 0.35rem;
-    color: #3F716B;
-    font-size: 0.875rem;
-    font-weight: 600;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
+    color: #24343c;
     text-decoration: none;
   }
 
-  .help-footer a:hover {
-    text-decoration: underline;
+  a.about-link:hover,
+  a.about-link:focus-visible {
+    border-color: #b6c0c5;
+    background: #f7f8f8;
+  }
+
+  .about-link img,
+  .about-icon {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+  }
+
+  .about-icon {
+    fill: none;
+    stroke: #3F716B;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .about-link-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .about-link-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .about-link-detail {
+    font-size: 0.8rem;
+    color: #637178;
+  }
+
+  .about-link-disabled {
+    opacity: 0.6;
   }
 
   .contents-modal {
@@ -1574,51 +1589,6 @@
     margin: 1.5rem 0;
     color: #637178;
     text-align: center;
-  }
-
-  /* Internal mapping table */
-  .help-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-    margin-top: 25px; /* Slightly reduced to match the slimmer title size */
-  }
-
-
-  .help-table th, .help-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    font-size: 1.1rem;
-  }
-
-  .help-table tbody td {
-    padding: 3px 4px;
-    vertical-align: baseline;
-  }
-
-  .help-table th {
-    background-color: white !important;
-    vertical-align: bottom;
-    padding: 4px;
-  }
-
-  .help-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background-color: white !important;
-    border-top: none;
-  }
-
-  .rotated {
-    transform: rotate(180deg);
-    writing-mode: vertical-rl;
-    text-orientation: sideways-left;
-    margin: 0 auto;
-    font-weight: bold;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    pointer-events: none;
   }
 
 
