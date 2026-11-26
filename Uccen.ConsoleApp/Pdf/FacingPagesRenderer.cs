@@ -443,13 +443,34 @@ public sealed class FacingPagesRenderer
         pdf.Save(stream);
         byte[] pdfBytes = stream.ToArray();
 
-        // Convert to Latin1 (1-to-1 byte mapping so binary streams aren't corrupted)
+        pdfBytes = MakePdfDeterministic(pdfBytes);
+
+        File.WriteAllBytes(outputPath, pdfBytes);
+    }
+
+    public static byte[] MakePdfDeterministic(byte[] pdfBytes)
+    {
         string pdfText = Encoding.Latin1.GetString(pdfBytes);
 
-        // Replace "/ModDate(D:20261126115648+01'00')" with spaces of the exact same length
-        pdfText = Regex.Replace(pdfText, @"/ModDate\([^\)]+\)", match => new string(' ', match.Length));
+        // 1. Blank out /ModDate(...) and /CreationDate(...) with spaces
+        pdfText = Regex.Replace(pdfText, @"/(ModDate|CreationDate)\([^\)]+\)",
+            m => new string(' ', m.Length));
 
-        File.WriteAllBytes(outputPath, Encoding.Latin1.GetBytes(pdfText));
+        // 2. Normalize XMP timestamps (e.g., <xmp:ModifyDate>2026-11-26T...</xmp:ModifyDate>)
+        pdfText = Regex.Replace(pdfText,
+            @"(<(?:xmp:ModifyDate|xmp:CreateDate|xmp:MetadataDate|photoshop:DateCreated)>)[^<]+(</[^>]+>)",
+            m => m.Groups[1].Value + "2000-01-01T00:00:00Z".PadRight(m.Length - m.Groups[1].Length - m.Groups[2].Length) + m.Groups[2].Value);
+
+        // 3. Replace random XMP UUIDs with a fixed zero UUID of exact same length (36 chars)
+        pdfText = Regex.Replace(pdfText,
+            @"(<(?:xmpMM:DocumentID|xmpMM:InstanceID)>uuid:)[0-9a-fA-F\-]{36}(</[^>]+>)",
+            "${1}00000000-0000-0000-0000-000000000000${2}");
+
+        // 4. Replace random trailer /ID[<hex><hex>] with zeros of exact same length
+        pdfText = Regex.Replace(pdfText, @"/ID\s*\[\s*<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*\]",
+            m => $"/ID[<{new string('0', m.Groups[1].Length)}><{new string('0', m.Groups[2].Length)}>]".PadRight(m.Length));
+
+        return Encoding.Latin1.GetBytes(pdfText);
     }
 
 
