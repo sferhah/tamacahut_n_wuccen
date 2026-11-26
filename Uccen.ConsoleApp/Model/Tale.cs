@@ -39,36 +39,61 @@ public static class TaleXt
         }
     }
 
+    private static readonly Regex UpdatedAtRegex = new(
+        @"\{\{updated_at(?:\|([^}]+))?\}\}",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    );
+
+    private static readonly CultureInfo DefaultCulture = new("fr-FR");
+
     public static void ApplyTemplates(this Tale tale)
     {
-        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
-        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase) ? string.Empty : s).ToList();
+        if (tale is null) return;
 
-        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => s.Replace("{{Indent}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
-        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => s.Replace("{{Indent}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
+        DateTime date = TaleXt.Date;
 
+        if (tale.Source?.Paragraphs is not null)
+        {
+            tale.Source.Paragraphs = ProcessParagraphs(tale.Source.Paragraphs, date);
+        }
 
-        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
-        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(s => s.Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase)).ToList();
-
-        tale.Source.Paragraphs = tale.Source.Paragraphs.Select(ApplyDate).ToList();
-        tale.Translation.Paragraphs = tale.Translation.Paragraphs.Select(ApplyDate).ToList();
+        if (tale.Translation?.Paragraphs is not null)
+        {
+            tale.Translation.Paragraphs = ProcessParagraphs(tale.Translation.Paragraphs, date);
+        }
     }
 
+    private static List<string> ProcessParagraphs(List<string> paragraphs, DateTime updatedAt)
+    {
+        return paragraphs.Select(p => ApplyTokens(p, updatedAt)).ToList();
+    }
 
-    public static string ApplyDate(string s)
-    {   
-        var culture = new CultureInfo("fr-FR");
+    private static string ApplyTokens(string s, DateTime updatedAt)
+    {
+        if (string.IsNullOrEmpty(s))
+            return s;
 
-        return Regex.Replace(
-            s,
-            @"\{\{updated_at(?:\|([^}]+))?\}\}",
-            match =>
-            {   
-                string format = match.Groups[1].Success ? match.Groups[1].Value.Trim() : "yyyy-MM-dd";
-                return TaleXt.Date.ToString(format, culture);
-            },
-            RegexOptions.IgnoreCase
-        );
+        if (string.Equals(s, "{{empty}}", StringComparison.OrdinalIgnoreCase))
+            return string.Empty;
+
+        s = s.Replace("{{Indent}}", "\u2003", StringComparison.OrdinalIgnoreCase)
+             .Replace("{{إزاحة}}", "\u2003", StringComparison.OrdinalIgnoreCase);
+
+        return ApplyDate(s, updatedAt);
+    }
+
+    public static string ApplyDate(string s, DateTime? updatedAt = null, CultureInfo? culture = null)
+    {
+        if (string.IsNullOrEmpty(s) || !s.Contains("{{updated_at", StringComparison.OrdinalIgnoreCase))
+            return s;
+
+        DateTime date = updatedAt ?? DateTime.Now;
+        CultureInfo targetCulture = culture ?? DefaultCulture;
+
+        return UpdatedAtRegex.Replace(s, match =>
+        {
+            string format = match.Groups[1].Success ? match.Groups[1].Value.Trim() : "yyyy-MM-dd";
+            return date.ToString(format, targetCulture);
+        });
     }
 }
