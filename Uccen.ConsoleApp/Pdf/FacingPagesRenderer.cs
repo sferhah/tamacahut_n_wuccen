@@ -437,9 +437,19 @@ public sealed class FacingPagesRenderer
             pdf.ViewerPreferences.Direction = PdfReadingDirection.RightToLeft;  // << /ViewerPreferences << /Direction /R2L >> >> 
         }
 
-        pdf.PageLayout = PdfPageLayout.TwoPageRight;                        // cover alone, then spreads 2|3, 4|5…
+        pdf.PageLayout = PdfPageLayout.TwoPageRight;                        // cover alone, then spreads 2|3, 4|5…            
+    
+        using var stream = new MemoryStream();
+        pdf.Save(stream);
+        byte[] pdfBytes = stream.ToArray();
 
-        pdf.Save(outputPath);
+        // Convert to Latin1 (1-to-1 byte mapping so binary streams aren't corrupted)
+        string pdfText = Encoding.Latin1.GetString(pdfBytes);
+
+        // Replace "/ModDate(D:20261126115648+01'00')" with spaces of the exact same length
+        pdfText = Regex.Replace(pdfText, @"/ModDate\([^\)]+\)", match => new string(' ', match.Length));
+
+        File.WriteAllBytes(outputPath, Encoding.Latin1.GetBytes(pdfText));
     }
 
 
