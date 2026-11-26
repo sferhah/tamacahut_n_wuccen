@@ -12,6 +12,11 @@
 
     public static string GetSveltePath()
     {
+        return Path.Combine(GetSlnPath(), $@"Uccen.SvelteApp");
+    }
+
+    public static string GetSlnPath()
+    {
         string path = Directory.GetParent(System.Reflection.Assembly.GetExecutingAssembly().Location).FullName;
 
         while (!Directory.GetFiles(path).Any(x => x.EndsWith(".sln")))
@@ -19,7 +24,7 @@
             path = Directory.GetParent(path).FullName;
         }
 
-        return Path.Combine(path, $@"Uccen.SvelteApp");
+        return path;
     }
 
     public static string GetFullPathWithinProject(string filename)

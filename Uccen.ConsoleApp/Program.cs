@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -71,6 +72,8 @@ static async Task GenerateBilingualPdf()
         return;
     }
 
+    UpdateReadMe();    
+
     var pdfFolder = PathHelper.GetFullPathWithinProject(@$"Resources\pdf");
     var di = new DirectoryInfo(pdfFolder);
 
@@ -141,6 +144,58 @@ static async Task GenerateBilingualPdf()
             PdfHelper.GenerateBilingualPdf(args);
         }
     }
+}
+
+static void UpdateReadMe()
+{
+    var jsonMappingFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\transliteration_table.json");
+    var rawRows = JsonSerializer.Deserialize<List<List<string>>>(File.ReadAllText(jsonMappingFilePath),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                ?? new List<List<string>>();
+
+    string table = ToMarkdownTable(rawRows);
+
+    string readmePath = Path.Combine(PathHelper.GetSlnPath(), @"README.md");
+
+    string readme = File.ReadAllText(readmePath, Encoding.UTF8);   
+
+    string startTag = "<!-- TABLE_START -->";
+    string endTag = "<!-- TABLE_END -->";
+
+    int startIndex = readme.IndexOf(startTag, StringComparison.Ordinal);
+    int endIndex = readme.IndexOf(endTag, StringComparison.Ordinal);
+
+    if (startIndex != -1 && endIndex != -1)
+    {
+        int replaceStart = startIndex + startTag.Length;
+        string updatedReadme = readme
+            .Remove(replaceStart, endIndex - replaceStart)
+            .Insert(replaceStart, Environment.NewLine + table);
+
+        File.WriteAllText(readmePath, updatedReadme, Encoding.UTF8);
+    }
+}
+
+static string ToMarkdownTable(List<List<string>> rawRows)
+{
+    if (rawRows == null || rawRows.Count == 0)
+        return string.Empty;
+
+    var sb = new StringBuilder();
+
+    // 1. Header row
+    sb.AppendLine("| " + string.Join(" | ", rawRows[0]) + " |");
+
+    // 2. Separator row
+    sb.AppendLine("| " + string.Join(" | ", rawRows[0].Select(_ => ":---")) + " |");
+
+    // 3. Data rows
+    foreach (var row in rawRows.Skip(1))
+    {
+        sb.AppendLine("| " + string.Join(" | ", row) + " |");
+    }
+
+    return sb.ToString();
 }
 
 
