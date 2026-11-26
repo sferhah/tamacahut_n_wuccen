@@ -47,7 +47,7 @@ public static class PptxHelper
 
             var cells = table.Descendants<DocumentFormat.OpenXml.Drawing.TableCell>();
 
-            if (cells.Count() != 9)
+            if (cells.Count() < 9)
             {
                 throw new ArgumentNullException("slidePart");
             }
