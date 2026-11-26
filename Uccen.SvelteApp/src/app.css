@@ -34,3 +34,53 @@ body {
   display: block;
   min-height: 100vh;
 }
+
+/* Base controls (components refine these with their own scoped styles) */
+select, button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+select {
+  height: 32px;
+  padding: 0 8px;
+}
+
+/* Modal dialogs (native <dialog>) */
+.modal {
+  flex-direction: column;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  max-width: 90%;
+  max-height: 85vh;
+  max-height: calc(100dvh - 2rem);
+  box-sizing: border-box;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal[open] {
+  display: flex;
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 5px;
+}

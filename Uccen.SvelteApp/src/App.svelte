@@ -1,177 +1,106 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
-  import { ConfigDeserializer, type ScriptConfig } from './ConfigDeserializer';
-  import { discardEmptyTales } from './StoryData';
-  import { TransliterationService } from './TransliterationService';
-  import locales from './locales.json';
+  import { onMount, tick } from "svelte";
+  import type { ScriptConfig } from "./ConfigDeserializer";
+  import { fetchTales, getIllustrationId, transliterateStory, type Story } from "./StoryData";
+  import AboutDialog from "./components/AboutDialog.svelte";
+  import ContentsDialog from "./components/ContentsDialog.svelte";
+  import PaginationBar from "./components/PaginationBar.svelte";
+  import Picker from "./components/Picker.svelte";
+  import StoryView, { type ColumnStyle } from "./components/StoryView.svelte";
+  import TextSizeControls from "./components/TextSizeControls.svelte";
+  import { isAndroidDevice, isIOSDevice } from "./lib/browser";
+  import { buildContentsItems } from "./lib/contents";
+  import { getDirection, getUiLocale } from "./lib/locale";
+  import {
+    DEFAULT_FONT_FACE,
+    DEFAULT_SCRIPT,
+    DEFAULT_TRANSLATION,
+    SCRIPTS,
+    TRANSLATIONS,
+    findTranslation,
+    isArabicTranslation
+  } from "./lib/options";
+  import { getPdfUrl } from "./lib/pdf";
+  import * as preferences from "./lib/preferences";
+  import { createTransliterator, loadScriptConfig, withNativeDisplayNames } from "./lib/scripts";
 
-  const DEFAULT_SCRIPT = "latn";
-  const DEFAULT_TRANSLATION = "und";
-  const PDF_SCRIPTS = new Set(["latn", "arab", "tfng"]);
-  const PDF_BASE_URL = "https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf";
-  const STORAGE_KEYS = {
-    script: "SelectedScript",
-    page: "SelectedIndex",
-    translation: "SelectedTranslation",
-    kabyleSize: "KabyleTextSizeIncrement",
-    translationSize: "TranslationTextSizeIncrement",
-    initialSizeEvaluated: "InitialTextSizeEvaluated"
-  };
-  const faceDefault = "Cambria,Consolas, Monaco, Menlo, 'Droid Sans Mono', 'Inconsolata', 'Courier New'";
-  const translations = [
-    { key: "und", pdfCode: "fra", displayName: "Français", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-   // { key: "fra", displayName: "Français2" },
-    { key: "eng", pdfCode: "eng", displayName: "English", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { key: "arb", pdfCode: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-    { key: "arq", pdfCode: "arq", displayName: "دارجة دزيرية", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 }
-  ];
-  const MIN_TEXT_SIZE_INCREMENT = -2;
-  const MAX_TEXT_SIZE_INCREMENT = 6;
-  const MOBILE_VIEWPORT_MAX_WIDTH = 600;
-
-  const initialScripts = [
-    { name: "latn", displayName: "Taqbaylit", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { name: "tfng", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "arab", displayName: "Arabic", isRtl: true, fontFace: "'Noto Naskh Arabic', sans-serif", textSizeIncrement: 3 },
-    { name: "hebr", displayName: "Hebrew", isRtl: true, fontFace: "'Noto Sans Hebrew', sans-serif", textSizeIncrement: 3 },
-    { name: "syrc", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "armi", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "phnx", displayName: "Phoenician", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "nbat", displayName: "Nabataean", isRtl: true, fontFace: "'Noto Sans Nabataean', sans-serif", textSizeIncrement: 0 },
-    { name: "sarb", displayName: "Musnad", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
-    { name: "cyrl", displayName: "Cyrillic", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 },
-    { name: "grek", displayName: "Greek", isRtl: false, fontFace: faceDefault, textSizeIncrement: 0 }
-  ];
-  type TranslationOption = (typeof translations)[number];
-  type ScriptOption = (typeof initialScripts)[number];
-  type Story = {
-    Source: { Title: string; Paragraphs: string[] };
-    Translation: { Title: string; Paragraphs: string[] };
-  };
-  type Book = {
-    Tales: Story[];
-  };
-  type DisplayStory = {
-    Source: Story["Source"];
-    Translation: Story["Translation"];
-  };
-  type ContentsItem = {
-    index: number;
-    sourceTitle: string;
-    translationTitle: string;
-  };
-  type LocaleKey = keyof typeof locales;
-
-  function readStoredInteger(key: string, fallback: number, min: number, max: number): number {
-    const storedValue = localStorage.getItem(key);
-    if (storedValue === null) return fallback;
-
-    const value = Number(storedValue);
-    return Number.isInteger(value) ? Math.max(min, Math.min(max, value)) : fallback;
-  }
-
-  function splitWikiText(line: string): { text: string; formatting: "bold" | "italic" | null }[] {
-    const segments: { text: string; formatting: "bold" | "italic" | null }[] = [];
-    const wikiTextPattern = /'''([\s\S]*?)'''|''([\s\S]*?)''/g;
-    let previousIndex = 0;
-    let match;
-
-    while ((match = wikiTextPattern.exec(line)) !== null) {
-      if (match.index > previousIndex) {
-        segments.push({ text: line.slice(previousIndex, match.index), formatting: null });
-      }
-
-      segments.push({ text: match[1] ?? match[2], formatting: match[1] !== undefined ? "bold" : "italic" });
-      previousIndex = wikiTextPattern.lastIndex;
-    }
-
-    if (previousIndex < line.length || segments.length === 0) {
-      segments.push({ text: line.slice(previousIndex), formatting: null });
-    }
-
-    return segments;
-  }
-
-  function containsArabicScript(text: string): boolean {
-    return /\p{Script=Arabic}/u.test(text);
-  }
-
-  function getPdfUrl(scriptCode: string, translationCode: string): string {
-    const scriptSuffix = scriptCode === DEFAULT_SCRIPT ? "" : `_${scriptCode}`;
-    const translationSuffix =
-      translationCode === "fra" || translationCode === "und" ? "" : `.${translationCode}`;
-    return `${PDF_BASE_URL}/tamacahut_n_wuccen${scriptSuffix}${translationSuffix}.pdf`;
-  }
-
+  // ── State ────────────────────────────────────────────────────────────────
   let tales: Story[] = [];
-  let tale: DisplayStory | null = null;
-  let taleIllustration: string | null = null;
-  let loading = true;
-  let loadingError = "";
-  let translationError = "";
-  let isAndroid = false;
-  let isIOS = false;
-  let openPicker: "script" | "translation" | null = null;
   let page = 0;
   let selectedScript = DEFAULT_SCRIPT;
   let selectedTranslation = DEFAULT_TRANSLATION;
-  let currentScript: ScriptOption = initialScripts[0];
-  let currentTranslation: TranslationOption = translations[0];
-  let pdfUrl = "";
-  let storyRequestId = 0;
-  let kabyleTextSizeIncrement = 0;
-  let translationTextSizeIncrement = 0;
-  let sourceTextSizeIncrement = 0;
-  let translatedTextSizeIncrement = 0;
-  let scripts: ScriptOption[] = initialScripts;
-  let pageCount = 0;
-  let uiLocaleKey: LocaleKey = "fra";
-  let uiLocale = locales.fra;
-  $: pageCount = tales.length;
-  $: taleIllustration = tales[page]?.Source.Title.match(/^#(\d+)/)?.[1] ?? null;
-  $: currentScript = scripts.find((script) => script.name === selectedScript) || initialScripts[0];
-  $: currentTranslation =
-    translations.find((translation) => translation.key === selectedTranslation) || translations[0];
-  $: pdfUrl = getPdfUrl(selectedScript, currentTranslation.pdfCode);
-  $: uiLocaleKey = selectedTranslation === "eng" ? "eng" : selectedTranslation === "arb" || selectedTranslation === "arq" ? "arb" : "fra";
-  $: uiLocale = locales[uiLocaleKey];
+  /** null when the Kabyle text is shown as-is (Latin) */
+  let scriptConfig: ScriptConfig | null = null;
+  let scripts = SCRIPTS;
+  let sourceTextSize = 0;
+  let translationTextSize = 0;
+
+  let loading = true;
+  let loadingError = "";
+  let translationError = "";
+  let useCustomPickers = false;
+  let isIOS = false;
+
+  let aboutDialog: ReturnType<typeof AboutDialog>;
+  let contentsDialog: ReturnType<typeof ContentsDialog>;
+
+  // ── Derived ──────────────────────────────────────────────────────────────
+  $: uiLocale = getUiLocale(selectedTranslation);
   $: if (typeof document !== "undefined") document.documentElement.lang = uiLocale.lang;
-  $: sourceTextSizeIncrement = kabyleTextSizeIncrement + currentScript.textSizeIncrement;
-  $: translatedTextSizeIncrement = translationTextSizeIncrement + currentTranslation.textSizeIncrement;
 
-  let currentConfig: ScriptConfig | null = null;
-  let rtl = false;
-  let face = faceDefault;
-  let dialogElement: HTMLDialogElement;
-  let contentsDialogElement: HTMLDialogElement;
-  let contentsSearch = "";
-  let contentsItems: ContentsItem[] = [];
-  let filteredContentsItems: ContentsItem[] = [];
-  $: contentsItems = buildContentsItems(tales, currentConfig);
-  $: filteredContentsItems = contentsItems.filter((item) =>
-    `${item.sourceTitle} ${item.translationTitle}`.toLocaleLowerCase().includes(contentsSearch.trim().toLocaleLowerCase())
-  );
+  $: currentScript = scripts.find((script) => script.name === selectedScript) || scripts[0];
+  $: currentTranslation = findTranslation(selectedTranslation);
+  $: transliterate = createTransliterator(scriptConfig);
 
+  $: story = tales[page] ? transliterateStory(tales[page], transliterate) : null;
+  $: contentsItems = buildContentsItems(tales, transliterate);
+  $: pdfUrl = getPdfUrl(selectedScript, currentTranslation);
+
+  $: scriptOptions = scripts.map((script) => ({ value: script.name, label: script.displayName }));
+  const translationOptions = TRANSLATIONS.map((translation) => ({
+    value: translation.key,
+    label: translation.displayName
+  }));
+
+  let sourceStyle: ColumnStyle;
+  $: sourceStyle = {
+    fontFace: scriptConfig ? currentScript.fontFace : DEFAULT_FONT_FACE,
+    sizeIncrement: sourceTextSize + currentScript.textSizeIncrement,
+    dir: scriptConfig?.direction === "rtl" ? "rtl" : "ltr",
+    arabicScript: selectedScript === "arab"
+  };
+
+  let translationStyle: ColumnStyle;
+  $: translationStyle = {
+    fontFace: currentTranslation.fontFace,
+    sizeIncrement: translationTextSize + currentTranslation.textSizeIncrement,
+    dir: currentTranslation.isRtl ? "rtl" : "ltr",
+    arabicScript: isArabicTranslation(selectedTranslation)
+  };
+
+  // ── Startup ──────────────────────────────────────────────────────────────
   onMount(() => {
-    const userAgent = navigator.userAgent;
-    isAndroid = /Android/i.test(userAgent);
-    isIOS = /iPhone|iPad|iPod/i.test(userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    useCustomPickers = isAndroidDevice();
+    isIOS = isIOSDevice();
     initialize();
   });
 
-  async function initialize() {
+  async function initialize(): Promise<void> {
     try {
-      restorePreferences();
-      const loadedTales = await fetchStories(selectedTranslation);
+      const saved = preferences.restorePreferences();
+      selectedTranslation = saved.translation;
+      sourceTextSize = saved.sourceTextSize;
+      translationTextSize = saved.translationTextSize;
+
+      const loadedTales = await loadTales(saved.translation);
       if (!loadedTales) {
         throw new Error("Initial story request was superseded");
       }
       tales = loadedTales;
-      page = Math.min(page, Math.max(0, loadedTales.length - 1));
-      localStorage.setItem(STORAGE_KEYS.page, page.toString());
-      changeScript(selectedScript, false);
-      loadTranslatedScriptNames();
+      page = clampPage(saved.page);
+      preferences.savePage(page);
+      changeScript(saved.script);
+      scripts = withNativeDisplayNames(SCRIPTS);
     } catch (error) {
       loadingError = uiLocale.storyLoadError;
       console.error("Application initialization error", error);
@@ -180,309 +109,47 @@
     }
   }
 
-  async function fetchStories(languageCode: string): Promise<Story[] | null> {
+  // ── Actions ──────────────────────────────────────────────────────────────
+  let storyRequestId = 0;
+
+  /** Resolves to null when a newer request was started in the meantime. */
+  async function loadTales(translationKey: string): Promise<Story[] | null> {
     const requestId = ++storyRequestId;
-    const fileName = languageCode === "und"
-      ? "tamacahut_n_wuccen.json"
-      : `tamacahut_n_wuccen.${languageCode}.json`;
-    const response = await fetch(`data/${fileName}`);
-    if (!response.ok) {
-      throw new Error(`Story request failed with status ${response.status}`);
-    }
-
-    const responseData: unknown = await response.json();
-    if (!isBook(responseData)) {
-      throw new Error("Story data must be a book containing valid tales");
-    }
-
-    return requestId === storyRequestId ? discardEmptyTales(responseData.Tales) : null;
+    const loadedTales = await fetchTales(translationKey);
+    return requestId === storyRequestId ? loadedTales : null;
   }
 
-  function isBook(value: unknown): value is Book {
-    if (typeof value !== "object" || value === null) return false;
-    const book = value as Partial<Book>;
-    return Array.isArray(book.Tales) && book.Tales.every(isStory);
+  function changeScript(scriptName: string): void {
+    selectedScript = scriptName;
+    scriptConfig = loadScriptConfig(scriptName);
+    preferences.saveScript(scriptName);
+    updateUrl();
   }
 
-  function isStory(value: unknown): value is Story {
-    if (typeof value !== "object" || value === null) return false;
-    const story = value as Partial<Story>;
-    return typeof story.Source?.Title === "string" &&
-      Array.isArray(story.Source.Paragraphs) &&
-      story.Source.Paragraphs.every((paragraph) => typeof paragraph === "string") &&
-      typeof story.Translation?.Title === "string" &&
-      Array.isArray(story.Translation.Paragraphs) &&
-      story.Translation.Paragraphs.every((paragraph) => typeof paragraph === "string");
-  }
-
-  async function handleTranslationChange(event: Event) {
-    if (event.currentTarget instanceof HTMLSelectElement) {
-      await changeTranslation(event.currentTarget.value);
-    }
-  }
-
-  async function changeTranslation(languageCode: string): Promise<void> {
+  async function changeTranslation(translationKey: string): Promise<void> {
     try {
-      const loadedTales = await fetchStories(languageCode);
+      const loadedTales = await loadTales(translationKey);
       if (!loadedTales) return;
 
       tales = loadedTales;
-      selectedTranslation = languageCode;
-      localStorage.setItem(STORAGE_KEYS.translation, selectedTranslation);
-      page = Math.min(page, Math.max(0, loadedTales.length - 1));
-      localStorage.setItem(STORAGE_KEYS.page, page.toString());
+      selectedTranslation = translationKey;
+      preferences.saveTranslation(translationKey);
+      page = clampPage(page);
+      preferences.savePage(page);
       translationError = "";
-      updateTale();
-      updateUrlPreferences();
+      updateUrl();
     } catch (error) {
       translationError = uiLocale.translationLoadError;
-      console.error(`Unable to load the ${languageCode} translation`, error);
+      console.error(`Unable to load the ${translationKey} translation`, error);
     }
   }
 
-  function togglePicker(name: "script" | "translation"): void {
-    openPicker = openPicker === name ? null : name;
-  }
+  async function goToPage(nextPage: number): Promise<void> {
+    if (nextPage < 0 || nextPage >= tales.length) return;
 
-  function handlePickerOutsideClick(event: MouseEvent) {
-    if (event.target instanceof Element && !event.target.closest(".custom-picker")) {
-      openPicker = null;
-    }
-  }
-
-  function handlePickerKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape" && openPicker) {
-      const pickerName = openPicker;
-      openPicker = null;
-      document.querySelector<HTMLButtonElement>(`[data-picker-trigger="${pickerName}"]`)?.focus();
-    }
-  }
-
-  function restorePreferences(): void {
-    const savedScript = localStorage.getItem(STORAGE_KEYS.script);
-    const savedTranslation = localStorage.getItem(STORAGE_KEYS.translation);
-    const savedKabyleSize = localStorage.getItem(STORAGE_KEYS.kabyleSize);
-    const savedTranslationSize = localStorage.getItem(STORAGE_KEYS.translationSize);
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlScript = urlParams.get("script");
-    const urlTranslation = urlParams.get("trans");
-    const urlPage = urlParams.get("page");
-
-    if (localStorage.getItem(STORAGE_KEYS.initialSizeEvaluated) === null) {
-      if (
-        window.innerWidth <= MOBILE_VIEWPORT_MAX_WIDTH &&
-        savedKabyleSize === null &&
-        savedTranslationSize === null
-      ) {
-        localStorage.setItem(STORAGE_KEYS.kabyleSize, MIN_TEXT_SIZE_INCREMENT.toString());
-        localStorage.setItem(STORAGE_KEYS.translationSize, MIN_TEXT_SIZE_INCREMENT.toString());
-      }
-      localStorage.setItem(STORAGE_KEYS.initialSizeEvaluated, "true");
-    }
-
-    const validUrlScript = initialScripts.find((script) => script.name === urlScript)?.name;
-    const validSavedScript = initialScripts.find((script) => script.name === savedScript)?.name;
-    selectedScript = validUrlScript || validSavedScript || DEFAULT_SCRIPT;
-    const validUrlTranslation = translations.find((translation) => translation.key === urlTranslation)?.key;
-    selectedTranslation = validUrlTranslation
-      ? validUrlTranslation
-      : savedTranslation === null
-        ? getBrowserTranslation()
-        : savedTranslation === "fra"
-          ? "und"
-          : translations.some((translation) => translation.key === savedTranslation)
-            ? savedTranslation
-            : DEFAULT_TRANSLATION;
-    page = urlPage !== null && /^[1-9]\d*$/.test(urlPage)
-      ? Number(urlPage) - 1
-      : readStoredInteger(STORAGE_KEYS.page, 0, 0, Number.MAX_SAFE_INTEGER);
-    kabyleTextSizeIncrement = readStoredInteger(
-      STORAGE_KEYS.kabyleSize,
-      0,
-      MIN_TEXT_SIZE_INCREMENT,
-      MAX_TEXT_SIZE_INCREMENT
-    );
-    translationTextSizeIncrement = readStoredInteger(
-      STORAGE_KEYS.translationSize,
-      0,
-      MIN_TEXT_SIZE_INCREMENT,
-      MAX_TEXT_SIZE_INCREMENT
-    );
-  }
-
-  function getBrowserTranslation(): string {
-    const languageCodes: Record<string, string> = { en: "eng", fr: "und", ar: "arb" };
-    const browserLanguages = [...(navigator.languages || []), navigator.language];
-
-    for (const browserLanguage of browserLanguages) {
-      const languageCode = browserLanguage?.trim().toLowerCase().split(/[-_]/)[0] || "";
-      const translationCode = languageCodes[languageCode];
-      if (translations.some((translation) => translation.key === translationCode)) {
-        return translationCode;
-      }
-    }
-
-    return DEFAULT_TRANSLATION;
-  }
-
-  function loadTranslatedScriptNames(): void {
-    scripts = initialScripts.map((script) => {
-      if (script.name === DEFAULT_SCRIPT) return script;
-
-      try {
-        const config = ConfigDeserializer.parse(script.name);
-        return {
-          ...script,
-          displayName: TransliterationService.transliterate("Taqbaylit", config)
-        };
-      } catch (error) {
-        console.error(`Unable to transliterate the menu for ${script.name}`, error);
-        return script;
-      }
-    });
-  }
-
-  function openAbout(): void {
-    dialogElement.showModal();
-  }
-
-  function closeAbout(): void {
-    dialogElement.close();
-  }
-
-  function isReadableContentsHeading(value: string): boolean {
-    return /[\p{L}]/u.test(value) && !/^#\d+$/u.test(value.trim());
-  }
-
-  function getContentsHeading(
-    title: string | undefined,
-    paragraphs: string[] | undefined,
-    transliterate: (text: string) => string
-  ): string {
-    const heading = transliterate(title || "").trim();
-    if (isReadableContentsHeading(heading)) return heading;
-
-    return transliterate(paragraphs?.[0] || "").trim().replace(/\s+/g, " ") || heading;
-  }
-
-  function buildContentsItems(storyList: Story[], config: ScriptConfig | null): ContentsItem[] {
-    const transliterate = (text: string) =>
-      config ? TransliterationService.transliterate(text, config) : text;
-
-    return storyList.map((item, index) => ({
-      index,
-      sourceTitle: getContentsHeading(item.Source?.Title, item.Source?.Paragraphs, transliterate),
-      translationTitle: getContentsHeading(
-        item.Translation?.Title,
-        item.Translation?.Paragraphs,
-        (text) => text
-      )
-    }));
-  }
-
-  function openContents(): void {
-    contentsSearch = "";
-    contentsDialogElement.showModal();
-    document.querySelector(`[data-contents-page="${page}"]`)?.scrollIntoView({ block: "nearest" });
-  }
-
-  function closeContents(): void {
-    contentsDialogElement.close();
-  }
-
-  function goToContentsPage(nextPage: number): void {
-    closeContents();
-    setPage(nextPage);
-  }
-
-  function handleContentsDialogClick(event: MouseEvent): void {
-    const bounds = contentsDialogElement.getBoundingClientRect();
-    const clickedOutside =
-      event.clientX < bounds.left ||
-      event.clientX > bounds.right ||
-      event.clientY < bounds.top ||
-      event.clientY > bounds.bottom;
-
-    if (clickedOutside) closeContents();
-  }
-
-  function handleDialogClick(event: MouseEvent): void {
-    const bounds = dialogElement.getBoundingClientRect();
-    const clickedOutside =
-      event.clientX < bounds.left ||
-      event.clientX > bounds.right ||
-      event.clientY < bounds.top ||
-      event.clientY > bounds.bottom;
-
-    if (clickedOutside) closeAbout();
-  }
-
-  function handleScriptChange(event: Event): void {
-    if (event.currentTarget instanceof HTMLSelectElement) {
-      changeScript(event.currentTarget.value);
-    }
-  }
-
-  function changeScript(scriptName: string, persistPage = true): void {
-    selectedScript = scriptName;
-    localStorage.setItem(STORAGE_KEYS.script, selectedScript);
-    if (persistPage) {
-      localStorage.setItem(STORAGE_KEYS.page, page.toString());
-    }
-
-    if (selectedScript === DEFAULT_SCRIPT) {
-      currentConfig = null;
-      rtl = false;
-      face = faceDefault;
-    } else {
-      try {
-        currentConfig = ConfigDeserializer.parse(selectedScript);
-        rtl = currentConfig.direction === "rtl";
-        face = scripts.find((script) => script.name === selectedScript)?.fontFace || faceDefault;
-      } catch (error) {
-        console.error(`Unable to load configuration for ${selectedScript}`, error);
-        currentConfig = null;
-        rtl = false;
-        face = faceDefault;
-      }
-    }
-
-    updateTale();
-    updateUrlPreferences();
-  }
-
-  function updateUrlPreferences(): void {
-    const url = new URL(window.location.href);
-    url.searchParams.set("trans", selectedTranslation);
-    url.searchParams.set("script", selectedScript);
-    url.searchParams.set("page", (page + 1).toString());
-    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
-  }
-
-  function updateTale(): void {
-    const rawTale = tales[page];
-    if (!rawTale) {
-      tale = null;
-      return;
-    }
-
-    const transliterate = (text: string) =>
-      currentConfig ? TransliterationService.transliterate(text, currentConfig) : text;
-
-    tale = {
-      Source: {
-        Title: transliterate(rawTale.Source.Title),
-        Paragraphs: rawTale.Source.Paragraphs.map(transliterate)
-      },
-      Translation: rawTale.Translation
-    };
-  }
-
-  async function setPage(nextPage: number): Promise<void> {
     page = nextPage;
-    localStorage.setItem(STORAGE_KEYS.page, page.toString());
-    updateUrlPreferences();
-    updateTale();
+    preferences.savePage(page);
+    updateUrl();
     await tick();
     if (isIOS) {
       window.scrollTo(0, 0);
@@ -491,390 +158,94 @@
     }
   }
 
-  function previous(): void {
-    if (page > 0) setPage(page - 1);
-  }
-
-  function next(): void {
-    if (page < pageCount - 1) setPage(page + 1);
-  }
-
-  function changeSize(target: "kabyle" | "translation", direction: number): void {
-    const isKabyle = target === "kabyle";
-    const storageKey = isKabyle ? STORAGE_KEYS.kabyleSize : STORAGE_KEYS.translationSize;
-    const currentSize = isKabyle ? kabyleTextSizeIncrement : translationTextSizeIncrement;
-    const nextSize = Math.max(
-      MIN_TEXT_SIZE_INCREMENT,
-      Math.min(MAX_TEXT_SIZE_INCREMENT, currentSize + direction)
-    );
-
-    if (isKabyle) {
-      kabyleTextSizeIncrement = nextSize;
+  function changeTextSize(target: preferences.TextSizeTarget, size: number): void {
+    const nextSize = preferences.clampTextSize(size);
+    if (target === "source") {
+      sourceTextSize = nextSize;
     } else {
-      translationTextSizeIncrement = nextSize;
+      translationTextSize = nextSize;
     }
-    localStorage.setItem(storageKey, nextSize.toString());
+    preferences.saveTextSize(target, nextSize);
+  }
+
+  function clampPage(value: number): number {
+    return Math.min(value, Math.max(0, tales.length - 1));
+  }
+
+  function updateUrl(): void {
+    preferences.updateUrl({ script: selectedScript, translation: selectedTranslation, page });
   }
 </script>
 
-<svelte:window on:click={handlePickerOutsideClick} on:keydown={handlePickerKeydown} />
-
 {#if loading}
-  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p><em>{uiLocale.loading}</em></p></div>
+  <div class="loader" lang={uiLocale.lang} dir={getDirection(uiLocale)}><p><em>{uiLocale.loading}</em></p></div>
 {:else if loadingError}
-  <div class="loader" role="alert" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p>{loadingError}</p></div>
-{:else if !tale}
-  <div class="loader" lang={uiLocale.lang} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}><p>{uiLocale.noStories}</p></div>
+  <div class="loader" role="alert" lang={uiLocale.lang} dir={getDirection(uiLocale)}><p>{loadingError}</p></div>
+{:else if !story}
+  <div class="loader" lang={uiLocale.lang} dir={getDirection(uiLocale)}><p>{uiLocale.noStories}</p></div>
 {:else}
   <main lang={uiLocale.lang} dir="ltr">
-    <table class="table">
-      <thead>
-        <tr>
-          <!-- Kabyle column: controls and text size -->
-          <td width="50%">
-            {#if isAndroid}
-              <div class="custom-picker">
-                <button
-                  type="button"
-                  class="picker-trigger"
-                  data-picker-trigger="script"
-                  aria-haspopup="listbox"
-                  aria-expanded={openPicker === "script"}
-                  on:click={() => togglePicker("script")}
-                >
-                  {currentScript.displayName}
-                  <span class="picker-chevron" aria-hidden="true"></span>
-                </button>
-                {#if openPicker === "script"}
-                  <div class="picker-menu" role="listbox" aria-label={uiLocale.transliteration}>
-                    {#each scripts as script}
-                      <button
-                        type="button"
-                        class="picker-option"
-                        role="option"
-                        aria-selected={selectedScript === script.name}
-                        on:click={() => {
-                          openPicker = null;
-                          changeScript(script.name);
-                        }}
-                      >
-                        {script.displayName}
-                      </button>
-                    {/each}
-                  </div>
-                {/if}
-              </div>
-            {:else}
-              <select value={selectedScript} on:change={handleScriptChange}>
-                {#each scripts as script}
-                  <option value={script.name}>{script.displayName}</option>
-                {/each}
-              </select>
-            {/if}
+    <StoryView
+      {story}
+      source={sourceStyle}
+      translation={translationStyle}
+      illustrationId={getIllustrationId(tales[page])}
+    >
+      <svelte:fragment slot="source-controls">
+        <Picker
+          options={scriptOptions}
+          value={selectedScript}
+          label={uiLocale.transliteration}
+          custom={useCustomPickers}
+          onchange={changeScript}
+        />
+        <TextSizeControls
+          size={sourceTextSize}
+          decreaseLabel={uiLocale.decreaseSize}
+          increaseLabel={uiLocale.increaseSize}
+          onchange={(size) => changeTextSize("source", size)}
+        />
+      </svelte:fragment>
 
-            <span class="size-controls">
-              <button on:click={() => changeSize('kabyle', -1)} disabled={kabyleTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label={uiLocale.decreaseSize}>
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
-                  <path d="M19 13H5v-2h14v2z" />
-                </svg>
-              </button>
-              <button on:click={() => changeSize('kabyle', 1)} disabled={kabyleTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label={uiLocale.increaseSize}>
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
-                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                </svg>
-              </button>
-            </span>
-          </td>
-
-          <!-- Translation column: controls and text size -->
-          <td width="50%">
-            {#if isAndroid}
-              <div class="custom-picker">
-                <button
-                  type="button"
-                  class="picker-trigger"
-                  data-picker-trigger="translation"
-                  aria-haspopup="listbox"
-                  aria-expanded={openPicker === "translation"}
-                  on:click={() => togglePicker("translation")}
-                >
-                  {currentTranslation.displayName}
-                  <span class="picker-chevron" aria-hidden="true"></span>
-                </button>
-                {#if openPicker === "translation"}
-                  <div class="picker-menu" role="listbox" aria-label={uiLocale.translation}>
-                    {#each translations as translation}
-                      <button
-                        type="button"
-                        class="picker-option"
-                        role="option"
-                        aria-selected={selectedTranslation === translation.key}
-                        on:click={() => {
-                          openPicker = null;
-                          changeTranslation(translation.key);
-                        }}
-                      >
-                        {translation.displayName}
-                      </button>
-                    {/each}
-                  </div>
-                {/if}
-              </div>
-            {:else}
-              <select value={selectedTranslation} on:change={handleTranslationChange}>
-                {#each translations as translation}
-                  <option value={translation.key}>{translation.displayName}</option>
-                {/each}
-              </select>
-            {/if}
-            {#if translationError}
-              <span role="alert">{translationError}</span>
-            {/if}
-            <span class="size-controls">
-              <button on:click={() => changeSize('translation', -1)} disabled={translationTextSizeIncrement <= MIN_TEXT_SIZE_INCREMENT} aria-label={uiLocale.decreaseSize}>
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
-                  <path d="M19 13H5v-2h14v2z" />
-                </svg>
-              </button>
-              <button on:click={() => changeSize('translation', 1)} disabled={translationTextSizeIncrement >= MAX_TEXT_SIZE_INCREMENT} aria-label={uiLocale.increaseSize}>
-                <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-btn">
-                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                </svg>
-              </button>
-            </span>
-          </td>
-        </tr>
-
-
-        <tr>
-          <th style="width: 50%">
-            <h2 style="font-family: {face}; font-size: {0.9 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-              {tale.Source.Title}
-            </h2>
-          </th>
-          <th style="width: 50%">
-            <h2 style="font-family: {currentTranslation.fontFace}; font-size: {0.9 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
-              {tale.Translation.Title}
-            </h2>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody class:centered={tale.Source.Title.startsWith("#")}>
-        {#if tale.Source.Paragraphs.length === tale.Translation.Paragraphs.length}
-          {#each tale.Source.Paragraphs as sourcePara, i}
-            <tr>
-              {#if sourcePara !== ""}
-                <td>
-                  <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-                    {#each sourcePara.split('\n') as line}
-                      {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em class:arabic-italic={containsArabicScript(segment.text)} class:arabic-script={selectedScript === "arab"}>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
-                      {/each}<br />
-                    {/each}
-                  </div>
-                </td>
-              {/if}
-              <td colspan={sourcePara === "" ? 2 : 1}>
-                <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
-                  {#each tale.Translation.Paragraphs[i].split('\n') as line}
-                    {#each splitWikiText(line) as segment}
-                      {#if segment.formatting === "italic"}<em class:arabic-italic={containsArabicScript(segment.text)} class:arabic-script={selectedTranslation === "arb" || selectedTranslation === "arq"}>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
-                    {/each}<br />
-                  {/each}
-                </div>
-              </td>
-            </tr>
-          {/each}
-        {:else}
-          <tr>
-            <td>
-              <div class="text-content" style="font-family: {face}; font-size: {1 + sourceTextSizeIncrement * 0.15}rem;" dir={rtl ? "rtl" : "ltr"}>
-                {#each tale.Source.Paragraphs as paragraph}
-                  <p>
-                    {#each paragraph.split('\n') as line}
-                      {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em class:arabic-italic={containsArabicScript(segment.text)} class:arabic-script={selectedScript === "arab"}>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
-                      {/each}<br />
-                    {/each}
-                  </p>
-                {/each}
-              </div>
-            </td>
-            <td>
-              <div class="text-content" style="font-family: {currentTranslation.fontFace}; font-size: {1 + translatedTextSizeIncrement * 0.15}rem;" dir={currentTranslation.isRtl ? "rtl" : "ltr"}>
-                {#each tale.Translation.Paragraphs as paragraph}
-                  <p>
-                    {#each paragraph.split('\n') as line}
-                      {#each splitWikiText(line) as segment}
-                        {#if segment.formatting === "italic"}<em class:arabic-italic={containsArabicScript(segment.text)} class:arabic-script={selectedTranslation === "arb" || selectedTranslation === "arq"}>{segment.text}</em>{:else if segment.formatting === "bold"}<strong>{segment.text}</strong>{:else}{segment.text}{/if}
-                      {/each}<br />
-                    {/each}
-                  </p>
-                {/each}
-              </div>
-            </td>
-          </tr>
+      <svelte:fragment slot="translation-controls">
+        <Picker
+          options={translationOptions}
+          value={selectedTranslation}
+          label={uiLocale.translation}
+          custom={useCustomPickers}
+          onchange={changeTranslation}
+        />
+        {#if translationError}
+          <span role="alert">{translationError}</span>
         {/if}
-        {#if taleIllustration !== null}
-          <tr>
-            <td colspan="2" class="illustration-cell">
-              <img src={`/images/${taleIllustration}.svg`} alt={`Illustration for tale ${taleIllustration}`} />
-            </td>
-          </tr>
-        {/if}
-      </tbody>
-    </table>
+        <TextSizeControls
+          size={translationTextSize}
+          decreaseLabel={uiLocale.decreaseSize}
+          increaseLabel={uiLocale.increaseSize}
+          onchange={(size) => changeTextSize("translation", size)}
+        />
+      </svelte:fragment>
+    </StoryView>
 
-    <nav class="pagination" aria-label={uiLocale.storyNavigation} dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}>
-      <div
-        class="reading-progress"
-        role="progressbar"
-        aria-label={uiLocale.readingProgress}
-        aria-valuemin="0"
-        aria-valuemax={pageCount}
-        aria-valuenow={page + 1}
-      >
-        <span class="reading-progress-fill" style={`width: ${((page + 1) / pageCount) * 100}%`}></span>
-      </div>
-      <div class="pagination-tools">
-        <button on:click={openContents} class="contents-btn" aria-label={uiLocale.tableOfContents} title={uiLocale.tableOfContents}>
-          <svg aria-hidden="true" viewBox="0 0 24 24" class="contents-icon">
-            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h8" />
-          </svg>
-          <span class="contents-label">{uiLocale.contents}</span>
-        </button>
-      </div>
-      <div class="pagination-controls">
-        <button on:click={previous} disabled={page <= 0} aria-label={uiLocale.previousPage}>
-          <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-            <path d="M14 7l-5 5 5 5V7z" />
-          </svg>
-        </button>
-        <span class="page-number" aria-label={uiLocale.pageOf.replace("{current}", String(page + 1)).replace("{total}", String(pageCount))}>
-          <span>{String(page + 1).padStart(2, "0")}</span>
-          <span class="page-separator" aria-hidden="true">/</span>
-          <span>{pageCount}</span>
-        </span>
-        <button on:click={next} disabled={page >= pageCount - 1} aria-label={uiLocale.nextPage}>
-          <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
-            <path d="M10 17l5-5-5-5v10z" />
-          </svg>
-        </button>
-      </div>
-      <button on:click={openAbout} class="help-btn pagination-help" aria-label={uiLocale.about} title={uiLocale.about}>
-        <span aria-hidden="true">i</span>
-      </button>
-    </nav>
+    <PaginationBar
+      {page}
+      pageCount={tales.length}
+      locale={uiLocale}
+      onpagechange={goToPage}
+      oncontents={() => contentsDialog.open()}
+      onabout={() => aboutDialog.open()}
+    />
   </main>
 
-  <dialog
-    bind:this={contentsDialogElement}
-    class="modal contents-modal"
-    aria-labelledby="contents-title"
-    aria-describedby="contents-summary"
-    lang={uiLocale.lang}
-    dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}
-    tabindex="-1"
-    on:click={handleContentsDialogClick}
-  >
-    <div class="contents-header">
-      <div>
-        <p class="contents-eyebrow">{uiLocale.storyIndex}</p>
-        <h3 id="contents-title">{uiLocale.contents}</h3>
-      </div>
-      <button on:click={closeContents} class="close-btn" aria-label={uiLocale.closeContents}>&times;</button>
-    </div>
-    <div class="contents-body">
-      <div class="contents-summary-row">
-        <p id="contents-summary">{uiLocale.contentsSummary}</p>
-        <span class="contents-count">{uiLocale.entries.replace("{count}", String(pageCount))}</span>
-      </div>
-      <label class="contents-search">
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <circle cx="10.8" cy="10.8" r="6.3" />
-          <path d="m15.5 15.5 4.2 4.2" />
-        </svg>
-        <input bind:value={contentsSearch} type="search" placeholder={uiLocale.findStory} aria-label={uiLocale.findStory} />
-      </label>
-      {#if filteredContentsItems.length > 0}
-        <ol class="contents-list">
-          {#each filteredContentsItems as item}
-            <li>
-              <button
-                type="button"
-                class:current={item.index === page}
-                aria-current={item.index === page ? "page" : undefined}
-                data-contents-page={item.index}
-                on:click={() => goToContentsPage(item.index)}
-              >
-                <span class="contents-index">{String(item.index + 1).padStart(2, "0")}</span>
-                <span class="contents-entry">
-                  <span class="contents-source">{item.sourceTitle}</span>
-                  {#if item.translationTitle && item.translationTitle !== item.sourceTitle}
-                    <span class="contents-translation">{item.translationTitle}</span>
-                  {/if}
-                </span>
-                {#if item.index === page}<span class="now-reading">{uiLocale.nowReading}</span>{/if}
-              </button>
-            </li>
-          {/each}
-        </ol>
-      {:else}
-        <p class="contents-empty" role="status">{uiLocale.noSearchResults.replace("{query}", contentsSearch)}</p>
-      {/if}
-    </div>
-  </dialog>
+  <ContentsDialog bind:this={contentsDialog} items={contentsItems} {page} locale={uiLocale} onselect={goToPage} />
 
-  <!-- About modal (native dialog) -->
-  <dialog
-    bind:this={dialogElement}
-    class="modal about-modal"
-    aria-labelledby="about-title"
-    lang={uiLocale.lang}
-    dir={uiLocale.direction === "rtl" ? "rtl" : "ltr"}
-    on:click={handleDialogClick}
-  >
-    <div class="modal-header">
-      <h3 id="about-title">{uiLocale.about}</h3>
-      <button on:click={closeAbout} class="close-btn" aria-label={uiLocale.close}>&times;</button>
-    </div>
-
-    <div class="modal-body about-body">
-      <p class="about-description">{uiLocale.aboutDescription}</p>
-      <ul class="about-links">
-        <li>
-          {#if PDF_SCRIPTS.has(selectedScript)}
-            <a class="about-link" href={pdfUrl}>
-              <img src="/images/pdf.svg" alt="" />
-              <span class="about-link-text">
-                <span class="about-link-label">{uiLocale.pdfVersion}</span>
-                <span class="about-link-detail"><bdi>{currentScript.displayName}</bdi> · <bdi>{currentTranslation.displayName}</bdi></span>
-              </span>
-            </a>
-          {:else}
-            <div class="about-link about-link-disabled">
-              <img src="/images/pdf.svg" alt="" />
-              <span class="about-link-text">
-                <span class="about-link-label">{uiLocale.pdfVersion}</span>
-                <span class="about-link-detail">{uiLocale.pdfUnavailable}</span>
-              </span>
-            </div>
-          {/if}
-        </li>
-        <li>
-          <a class="about-link" href="https://github.com/sferhah/tamacahut_n_wuccen" target="_blank" rel="noopener noreferrer">
-            <svg aria-hidden="true" viewBox="0 0 24 24" class="about-icon">
-              <path d="m8 17-5-5 5-5M16 7l5 5-5 5M14 4l-4 16" />
-            </svg>
-            <span class="about-link-text">
-              <span class="about-link-label">{uiLocale.sourceCode} <span aria-hidden="true">↗</span></span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </dialog>
+  <AboutDialog
+    bind:this={aboutDialog}
+    locale={uiLocale}
+    {pdfUrl}
+    scriptName={currentScript.displayName}
+    translationName={currentTranslation.displayName}
+  />
 {/if}
 
 <style>
@@ -888,708 +259,16 @@
     padding: 1rem 1rem 6rem;
     font-family: system-ui, sans-serif;
   }
+
   .loader {
     text-align: center;
     padding: 3rem;
     font-family: sans-serif;
-  }
-  .pagination {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 3;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: white;
-    border-top: 1px solid #ddd;
-  }
-  .reading-progress {
-    position: absolute;
-    top: -1px;
-    right: 0;
-    left: 0;
-    height: 3px;
-    overflow: hidden;
-    background: #eee;
-  }
-  .reading-progress-fill {
-    display: block;
-    height: 100%;
-    background: #3F716B;
-    transition: width 240ms ease;
-  }
-  .pagination-tools,
-  .pagination-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .pagination-tools {
-    grid-column: 1;
-    justify-self: start;
-  }
-  .pagination-controls {
-    grid-column: 2;
-  }
-  .pagination-help,
-  .contents-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    min-height: 40px;
-    padding: 0 0.75rem;
-    border-color: #e2e2e2;
-    border-radius: 6px;
-    color: #36434a;
-  }
-  .pagination-help {
-    grid-column: 3;
-    justify-self: end;
-    width: 40px;
-    padding: 0;
-    margin: 0;
-  }
-  .contents-btn {
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-  .contents-icon {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.6;
-  }
-  .pagination-tools button:hover,
-  .pagination-controls button:hover:not(:disabled) {
-    border-color: #b6c0c5;
-    background: #f7f8f8;
-  }
-  .page-number {
-    display: inline-flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 0.35rem;
-    min-width: 5.2rem;
-    color: #24343c;
-    font-size: 1rem;
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
-    user-select: none;
-  }
-  .page-separator {
-    color: #9ba4a8;
-    font-size: 0.8rem;
-    font-weight: 400;
-  }
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .table thead {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: white;
-  }
-  .table thead tr:first-child > td {
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-  .table thead th {
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
-  .table thead h2 {
-    margin: 0;
-  }
-  td, th {
-    padding: 12px;
-    vertical-align: top;
-    border-bottom: 1px solid #ddd;
-  }
-  .table tr > :nth-child(2) {
-    border-left: 2px dashed #bbb;
-  }
-  .table tbody tr:last-child > td {
-    border-bottom: none;
-  }
-  .size-controls {
-    float: right;
-  }
-  .text-content {
-    line-height: 1.6;
-  }
-  .text-content .arabic-italic {
-    background-color: #f5f5f5;
-  }
-  .text-content .arabic-script {
-    font-style: normal;
-  }
-  .centered .text-content {
-    text-align: center;
-  }
-  .illustration-cell {
-    text-align: center;
-  }
-  .illustration-cell img {
-    display: block;
-    width: min(100%, 600px);
-    max-height: 32rem;
-    margin: 1.5rem auto;
-    object-fit: contain;
-  }
-  select, button {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background: white;
-    cursor: pointer;
-  }
-  button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-    /* Keep SVG arrows consistent */
-  .icon-caret {
-    width: 24px;
-    height: 24px;
-    fill: currentColor; /* Match the button text color, including its disabled state */
-    vertical-align: middle;
-  }
-
-  .pagination[dir="rtl"] .icon-caret {
-    transform: scaleX(-1);
-  }
-
-  .pagination button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    width: 80px;
-  }
-  .pagination-tools button {
-    width: auto;
-  }
-
-  /* Plus and minus buttons */
-  .icon-btn {
-    width: 16px; /* Slightly smaller than the arrows for visual balance */
-    height: 16px;
-    fill: currentColor;
-    vertical-align: middle;
-  }
-
-  .size-controls button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    margin-left: 2px;
-  }
-  
-  .table td, .table th {
-    padding: 12px 16px;
   }
 
   @media (max-width: 600px) {
     main {
       padding: 0.75rem 0.5rem 6rem;
     }
-
-    .table td, .table th {
-      padding: 8px;
-    }
-
-    .pagination {
-      padding: 0.65rem 0.5rem;
-    }
-
-    .pagination-tools {
-      gap: 0.35rem;
-    }
-
-    .pagination-help,
-    .contents-btn {
-      width: 38px;
-      height: 38px;
-      min-height: 38px;
-      padding: 0;
-    }
-
-    .contents-label {
-      display: none;
-    }
-
-    .pagination-controls {
-      gap: 0.25rem;
-    }
-
-    .pagination-controls button {
-      width: 48px;
-      padding: 6px;
-    }
-
-    .page-number {
-      min-width: 4.5rem;
-      font-size: 0.92rem;
-    }
-
-    .contents-modal {
-      max-height: 88vh;
-    }
-
-    .contents-header {
-      padding: 0.9rem 1rem;
-    }
-
-    .contents-body {
-      padding: 0.9rem 1rem 1rem;
-    }
-
-    .contents-list {
-      max-height: 57vh;
-    }
   }
-
-
-
-    /* Help button */
-  .help-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    margin-left: 6px;
-    vertical-align: middle;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
-    box-sizing: border-box;
-    height: 32px; /* Match the plus and minus buttons */
-    width: 32px;
-  }
-
-  .help-btn:hover {
-    border-color: #ff3e00; /* Optional Svelte-orange hover effect */
-    background-color: #fffbf9;
-  }
-
-  .help-btn span {
-    color: #444;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .help-btn:hover span {
-    color: #ff3e00;
-  }
-
-
-  select {
-    height: 32px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 0 8px;
-    background: white;   
-  }
-
-  .custom-picker {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-    vertical-align: top;
-  }
-
-  .picker-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    max-width: 100%;
-    min-height: 32px;
-    padding: 5px 8px;
-    font-size: 14px;
-    line-height: 1.2;
-    white-space: nowrap;
-  }
-
-  .picker-chevron {
-    width: 7px;
-    height: 7px;
-    flex: 0 0 auto;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: translateY(-2px) rotate(45deg);
-  }
-
-  .picker-menu {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    z-index: 5;
-    width: max-content;
-    min-width: 100%;
-    max-width: min(80vw, 280px);
-    max-height: min(40vh, 320px);
-    overflow-y: auto;
-    padding: 4px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-  }
-
-  .picker-option {
-    display: block;
-    width: 100%;
-    min-height: 34px;
-    padding: 6px 8px;
-    border: 0;
-    border-radius: 3px;
-    font-size: 14px;
-    line-height: 1.2;
-    text-align: left;
-    white-space: normal;
-  }
-
-  .picker-option[aria-selected="true"] {
-    background: #f0f0f0;
-    font-weight: 600;
-  }
-
-  .picker-option:hover,
-  .picker-option:focus-visible {
-    background: #f4f4f4;
-    outline: none;
-  }
-
-  /* Style de la Pop-up Modale */
-  .modal {
-    flex-direction: column;
-    border: none;
-    border-radius: 8px;
-    padding: 0;
-    max-width: 90%;
-    max-height: 85vh;
-    max-height: calc(100dvh - 2rem);
-    box-sizing: border-box;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  }
-
-  .modal[open] {
-    display: flex;
-  }
-  
-  /* Effet d'arrière-plan semi-transparent quand la pop-up est ouverte */
-  .modal::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: #f4f4f4;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .modal-header h3 {
-    margin: 0;
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 0 5px;
-  }
-
-  .modal-body {
-    min-height: 0;
-    flex: 1 1 auto;
-    padding: 1rem;
-    overflow: auto;
-  }
-
-  .about-modal {
-    width: min(440px, calc(100vw - 2rem));
-    color: #24343c;
-  }
-
-  .about-body {
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  .about-description {
-    margin: 0 0 1rem;
-    line-height: 1.5;
-    color: #36434a;
-  }
-
-  .about-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .about-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 0.75rem;
-    border: 1px solid #e2e2e2;
-    border-radius: 8px;
-    color: #24343c;
-    text-decoration: none;
-  }
-
-  a.about-link:hover,
-  a.about-link:focus-visible {
-    border-color: #b6c0c5;
-    background: #f7f8f8;
-  }
-
-  .about-link img,
-  .about-icon {
-    flex: 0 0 auto;
-    width: 24px;
-    height: 24px;
-  }
-
-  .about-icon {
-    fill: none;
-    stroke: #3F716B;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .about-link-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    min-width: 0;
-  }
-
-  .about-link-label {
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-
-  .about-link-detail {
-    font-size: 0.8rem;
-    color: #637178;
-  }
-
-  .about-link-disabled {
-    opacity: 0.6;
-  }
-
-  .contents-modal {
-    width: min(560px, calc(100vw - 2rem));
-    max-width: 560px;
-    max-height: min(82vh, 760px);
-    overflow: hidden;
-    border: 1px solid #e8e8e8;
-    border-radius: 12px;
-    color: #24343c;
-  }
-
-  .contents-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.1rem 1.35rem;
-    border-bottom: 1px solid #e8e8e8;
-    background: #fff;
-  }
-
-  .contents-header h3 {
-    margin: 0;
-    font-size: 1.35rem;
-    letter-spacing: -0.02em;
-  }
-
-  .contents-eyebrow {
-    margin: 0 0 0.2rem;
-    color: #718087;
-    font-size: 0.67rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-  }
-
-  .contents-header .close-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    color: #5b686e;
-  }
-
-  .contents-body {
-    padding: 1rem 1.35rem 1.25rem;
-  }
-
-  .contents-summary-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.9rem;
-  }
-
-  .contents-summary-row p {
-    margin: 0;
-    color: #637178;
-    font-size: 0.88rem;
-  }
-
-  .contents-count {
-    flex: 0 0 auto;
-    color: #718087;
-    font-size: 0.75rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .contents-search {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    height: 42px;
-    padding: 0 0.75rem;
-    border: 1px solid #dfe4e6;
-    border-radius: 7px;
-    background: #fafbfb;
-  }
-
-  .contents-search:focus-within {
-    border-color: #aab8bf;
-    outline: 2px solid #e7edef;
-  }
-
-  .contents-search svg {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 auto;
-    fill: none;
-    stroke: #718087;
-    stroke-linecap: round;
-    stroke-width: 1.7;
-  }
-
-  .contents-search input {
-    width: 100%;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    font-size: 0.9rem;
-  }
-
-  .contents-list {
-    max-height: min(52vh, 470px);
-    overflow-y: auto;
-    margin: 0.85rem -0.45rem 0;
-    padding: 0 0.45rem;
-    list-style: none;
-    overscroll-behavior: contain;
-  }
-
-  .contents-list li + li {
-    margin-top: 0.2rem;
-  }
-
-  .contents-list button {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    width: 100%;
-    min-height: 58px;
-    padding: 0.65rem 0.7rem;
-    border-color: transparent;
-    border-radius: 7px;
-    text-align: start;
-  }
-
-  .contents-list button:hover {
-    background: #f5f7f7;
-  }
-
-  .contents-list button.current {
-    border-color: #cbded9;
-    background: #f3f8f6;
-  }
-
-  .contents-index {
-    width: 2rem;
-    flex: 0 0 auto;
-    color: #859197;
-    font-size: 0.74rem;
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-  }
-
-  .contents-entry {
-    display: flex;
-    min-width: 0;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .contents-source,
-  .contents-translation {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .contents-source {
-    color: #29383f;
-    font-size: 0.92rem;
-    font-weight: 600;
-  }
-
-  .contents-translation {
-    color: #778389;
-    font-size: 0.78rem;
-  }
-
-  .current .contents-index,
-  .current .contents-source {
-    color: #3F716B;
-  }
-
-  .now-reading {
-    flex: 0 0 auto;
-    color: #3F716B;
-    font-size: 0.61rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-  }
-
-  .contents-empty {
-    margin: 1.5rem 0;
-    color: #637178;
-    text-align: center;
-  }
-
-
 </style>
