@@ -20,6 +20,7 @@ Bilingual booklets (Kabyle text and translation side by side), also available fr
 | Cyrillic | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_cyrl.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_cyrl.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_cyrl.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_cyrl.arq.pdf) |
 | Greek | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_grek.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_grek.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_grek.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_grek.arq.pdf) |
 | Hebrew | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_hebr.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_hebr.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_hebr.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_hebr.arq.pdf) |
+| Syriac | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_syrc.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_syrc.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_syrc.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_syrc.arq.pdf) |
 
 ## Transliteration table
 
@@ -29,10 +30,10 @@ Columns use [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924) script codes: `
 | latn | arab | armi | cyrl | grek | hebr | nbat | phnx | sarb | syrc | tfng |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | a | أ | 𐡀ַ | а | α | אַ | 𐢁َ | 𐤀 | 𐩱 | ܐܲ | ⴰ |
-| i | ئ | 𐡀ִ | и | ι | אִ | 𐢁ِ | 𐤀𐤉 | 𐩱𐩺 | ܝܼ | ⵉ |
-| u | ؤ | 𐡀ֻ | у | υ | אֻ | 𐢁ُ | 𐤀𐤅 | 𐩱𐩥 | ܘܼ | ⵓ |
+| i | ئ | 𐡀ִ | и | ι | אִ | 𐢁ِ | 𐤀𐤉 | 𐩱𐩺 | ܐܼ | ⵉ |
+| u | ؤ | 𐡀ֻ | у | υ | אֻ | 𐢁ُ | 𐤀𐤅 | 𐩱𐩥 | ܐܿ | ⵓ |
 | o | ۉ | 𐡅ׄ | о | ο | וֹ | 𐢈ׄ | 𐤅ׄ | 𐩥ׄ | ܘܵ | ⵧ |
-| e | ٱ | 𐡀ֵ | е | ε | אֵ | 𐢁۫ |  |  |  | ⴻ |
+| e | ٱ | 𐡀ֵ | е | ε | אֵ | 𐢁۫ |  |  | ܐܹ | ⴻ |
 | b | ب | 𐡁 | б | β | ב | 𐢃 | 𐤁 | 𐩨 | ܒ | ⴱ |
 | g | ڨ | 𐡂 | г | γ | ג | 𐢄 | 𐤂 | 𐩴 | ܓ | ⴳ |
 | ǧ | ج | 𐡂ׄ | ђ | γ' | גׄ | 𐢄ׄ | 𐤂ׄ | 𐩴ׄ | ܓ̰ | ⴵ |
