@@ -99,6 +99,10 @@ static async Task GenerateBilingualPdf()
     var latnSize = 11.5; // "Noto Sans"
     var latnFont = "Cambria"; // "Noto Sans"
 
+    var hebrFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-Regular.ttf")
+        + "|"
+        + PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-Bold.ttf");
+
     var scripts = new[]
     {
         new { Name = "", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
@@ -108,8 +112,10 @@ static async Task GenerateBilingualPdf()
         // so these editions match the Latin one.
         new { Name = "_cyrl", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
         new { Name = "_grek", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
-        /*new { Name = "_hebr", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
-        new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
+        // Static Regular/Bold files: SkiaSharp loads a variable font at its default instance, which is Thin
+        // for NotoSansHebrew-VariableFont. At 11.5 pt, Noto Sans Hebrew already matches Cambria's apparent size.
+        new { Name = "_hebr", BodySize = latnSize, LineSpacing = 1.35, Font = hebrFont },
+        /*new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_armi", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_phnx", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_nbat", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
