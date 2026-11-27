@@ -4,15 +4,19 @@
   import { isBackdropClick } from "../lib/browser";
   import { getDirection, type UiLocale } from "../lib/locale";
 
-  export let items: ContentsItem[];
-  export let page: number;
-  export let locale: UiLocale;
-  export let onselect: (page: number) => void;
+  type Props = {
+    items: ContentsItem[];
+    page: number;
+    locale: UiLocale;
+    onselect: (page: number) => void;
+  };
+
+  let { items, page, locale, onselect }: Props = $props();
 
   let dialog: HTMLDialogElement;
-  let search = "";
+  let search = $state("");
 
-  $: filteredItems = filterContentsItems(items, search);
+  const filteredItems = $derived(filterContentsItems(items, search));
 
   export function open(): void {
     search = "";
@@ -38,14 +42,14 @@
   lang={locale.lang}
   dir={getDirection(locale)}
   tabindex="-1"
-  on:click={(event) => isBackdropClick(dialog, event) && close()}
+  onclick={(event) => isBackdropClick(dialog, event) && close()}
 >
   <div class="contents-header">
     <div>
       <p class="contents-eyebrow">{locale.storyIndex}</p>
       <h3 id="contents-title">{locale.contents}</h3>
     </div>
-    <button on:click={close} class="close-btn" aria-label={locale.closeContents}>&times;</button>
+    <button onclick={close} class="close-btn" aria-label={locale.closeContents}>&times;</button>
   </div>
   <div class="contents-body">
     <div class="contents-summary-row">
@@ -68,7 +72,7 @@
               class:current={item.index === page}
               aria-current={item.index === page ? "page" : undefined}
               data-contents-page={item.index}
-              on:click={() => select(item.index)}
+              onclick={() => select(item.index)}
             >
               <span class="contents-index">{String(item.index + 1).padStart(2, "0")}</span>
               <span class="contents-entry">

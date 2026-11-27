@@ -3,11 +3,15 @@
   import { isBackdropClick } from "../lib/browser";
   import { getDirection, type UiLocale } from "../lib/locale";
 
-  export let locale: UiLocale;
-  /** null when no PDF exists for the current script */
-  export let pdfUrl: string | null;
-  export let scriptName: string;
-  export let translationName: string;
+  type Props = {
+    locale: UiLocale;
+    /** null when no PDF exists for the current script */
+    pdfUrl: string | null;
+    scriptName: string;
+    translationName: string;
+  };
+
+  let { locale, pdfUrl, scriptName, translationName }: Props = $props();
 
   let dialog: HTMLDialogElement;
 
@@ -26,11 +30,11 @@
   aria-labelledby="about-title"
   lang={locale.lang}
   dir={getDirection(locale)}
-  on:click={(event) => isBackdropClick(dialog, event) && close()}
+  onclick={(event) => isBackdropClick(dialog, event) && close()}
 >
   <div class="modal-header">
     <h3 id="about-title">{locale.about}</h3>
-    <button on:click={close} class="close-btn" aria-label={locale.close}>&times;</button>
+    <button onclick={close} class="close-btn" aria-label={locale.close}>&times;</button>
   </div>
 
   <div class="modal-body">

@@ -2,16 +2,20 @@
 <script lang="ts">
   import { getDirection, type UiLocale } from "../lib/locale";
 
-  export let page: number;
-  export let pageCount: number;
-  export let locale: UiLocale;
-  export let onpagechange: (page: number) => void;
-  export let oncontents: () => void;
-  export let onabout: () => void;
+  type Props = {
+    page: number;
+    pageCount: number;
+    locale: UiLocale;
+    onpagechange: (page: number) => void;
+    oncontents: () => void;
+    onabout: () => void;
+  };
 
-  $: pageLabel = locale.pageOf
-    .replace("{current}", String(page + 1))
-    .replace("{total}", String(pageCount));
+  let { page, pageCount, locale, onpagechange, oncontents, onabout }: Props = $props();
+
+  const pageLabel = $derived(
+    locale.pageOf.replace("{current}", String(page + 1)).replace("{total}", String(pageCount))
+  );
 </script>
 
 <nav class="pagination" aria-label={locale.storyNavigation} dir={getDirection(locale)}>
@@ -26,7 +30,7 @@
     <span class="reading-progress-fill" style={`width: ${((page + 1) / pageCount) * 100}%`}></span>
   </div>
   <div class="pagination-tools">
-    <button on:click={oncontents} class="contents-btn" aria-label={locale.tableOfContents} title={locale.tableOfContents}>
+    <button onclick={oncontents} class="contents-btn" aria-label={locale.tableOfContents} title={locale.tableOfContents}>
       <svg aria-hidden="true" viewBox="0 0 24 24" class="contents-icon">
         <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16ZM4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8M8 10h8" />
       </svg>
@@ -34,7 +38,7 @@
     </button>
   </div>
   <div class="pagination-controls">
-    <button on:click={() => onpagechange(page - 1)} disabled={page <= 0} aria-label={locale.previousPage}>
+    <button onclick={() => onpagechange(page - 1)} disabled={page <= 0} aria-label={locale.previousPage}>
       <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
         <path d="M14 7l-5 5 5 5V7z" />
       </svg>
@@ -44,13 +48,13 @@
       <span class="page-separator" aria-hidden="true">/</span>
       <span>{pageCount}</span>
     </span>
-    <button on:click={() => onpagechange(page + 1)} disabled={page >= pageCount - 1} aria-label={locale.nextPage}>
+    <button onclick={() => onpagechange(page + 1)} disabled={page >= pageCount - 1} aria-label={locale.nextPage}>
       <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="icon-caret">
         <path d="M10 17l5-5-5-5v10z" />
       </svg>
     </button>
   </div>
-  <button on:click={onabout} class="help-btn pagination-help" aria-label={locale.about} title={locale.about}>
+  <button onclick={onabout} class="help-btn pagination-help" aria-label={locale.about} title={locale.about}>
     <span aria-hidden="true">i</span>
   </button>
 </nav>

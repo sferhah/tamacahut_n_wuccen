@@ -25,58 +25,61 @@
   import { createTransliterator, loadScriptConfig, withNativeDisplayNames } from "./lib/scripts";
 
   // ── State ────────────────────────────────────────────────────────────────
-  let tales: Story[] = [];
-  let page = 0;
-  let selectedScript = DEFAULT_SCRIPT;
-  let selectedTranslation = DEFAULT_TRANSLATION;
+  // $state.raw: these arrays are only ever replaced, never mutated, so deep tracking is unnecessary.
+  let tales: Story[] = $state.raw([]);
+  let scripts = $state.raw(SCRIPTS);
+  let page = $state(0);
+  let selectedScript = $state(DEFAULT_SCRIPT);
+  let selectedTranslation = $state(DEFAULT_TRANSLATION);
   /** null when the Kabyle text is shown as-is (Latin) */
-  let scriptConfig: ScriptConfig | null = null;
-  let scripts = SCRIPTS;
-  let sourceTextSize = 0;
-  let translationTextSize = 0;
+  let scriptConfig = $state.raw<ScriptConfig | null>(null);
+  let sourceTextSize = $state(0);
+  let translationTextSize = $state(0);
 
-  let loading = true;
-  let loadingError = "";
-  let translationError = "";
-  let useCustomPickers = false;
+  let loading = $state(true);
+  let loadingError = $state("");
+  let translationError = $state("");
+  let useCustomPickers = $state(false);
   let isIOS = false;
 
-  let aboutDialog: ReturnType<typeof AboutDialog>;
-  let contentsDialog: ReturnType<typeof ContentsDialog>;
+  let aboutDialog = $state<ReturnType<typeof AboutDialog>>();
+  let contentsDialog = $state<ReturnType<typeof ContentsDialog>>();
 
   // ── Derived ──────────────────────────────────────────────────────────────
-  $: uiLocale = getUiLocale(selectedTranslation);
-  $: if (typeof document !== "undefined") document.documentElement.lang = uiLocale.lang;
+  const uiLocale = $derived(getUiLocale(selectedTranslation));
+  $effect(() => {
+    document.documentElement.lang = uiLocale.lang;
+  });
 
-  $: currentScript = scripts.find((script) => script.name === selectedScript) || scripts[0];
-  $: currentTranslation = findTranslation(selectedTranslation);
-  $: transliterate = createTransliterator(scriptConfig);
+  const currentScript = $derived(scripts.find((script) => script.name === selectedScript) || scripts[0]);
+  const currentTranslation = $derived(findTranslation(selectedTranslation));
+  const transliterate = $derived(createTransliterator(scriptConfig));
 
-  $: story = tales[page] ? transliterateStory(tales[page], transliterate) : null;
-  $: contentsItems = buildContentsItems(tales, transliterate);
-  $: pdfUrl = getPdfUrl(selectedScript, currentTranslation);
+  const story = $derived(tales[page] ? transliterateStory(tales[page], transliterate) : null);
+  const contentsItems = $derived(buildContentsItems(tales, transliterate));
+  const pdfUrl = $derived(getPdfUrl(selectedScript, currentTranslation));
 
-  $: scriptOptions = scripts.map((script) => ({ value: script.name, label: script.displayName }));
+  const scriptOptions = $derived(
+    scripts.map((script) => ({ value: script.name, label: script.displayName }))
+  );
   const translationOptions = TRANSLATIONS.map((translation) => ({
     value: translation.key,
     label: translation.displayName
   }));
 
-  let sourceStyle: ColumnStyle;
-  $: sourceStyle = {
+  const sourceStyle: ColumnStyle = $derived({
     fontFace: scriptConfig ? currentScript.fontFace : DEFAULT_FONT_FACE,
     sizeIncrement: sourceTextSize + currentScript.textSizeIncrement,
     dir: scriptConfig?.direction === "rtl" ? "rtl" : "ltr",
     arabicScript: selectedScript === "arab"
-  };
+  });
 
-  let translationStyle: ColumnStyle;
-  $: translationStyle = {
+  const translationStyle: ColumnStyle = $derived({
     fontFace: currentTranslation.fontFace,
     sizeIncrement: translationTextSize + currentTranslation.textSizeIncrement,
     dir: currentTranslation.isRtl ? "rtl" : "ltr",
     arabicScript: isArabicTranslation(selectedTranslation)
-  };
+  });
 
   // ── Startup ──────────────────────────────────────────────────────────────
   onMount(() => {
@@ -191,7 +194,7 @@
       translation={translationStyle}
       illustrationId={getIllustrationId(tales[page])}
     >
-      <svelte:fragment slot="source-controls">
+      {#snippet sourceControls()}
         <Picker
           options={scriptOptions}
           value={selectedScript}
@@ -205,9 +208,9 @@
           increaseLabel={uiLocale.increaseSize}
           onchange={(size) => changeTextSize("source", size)}
         />
-      </svelte:fragment>
+      {/snippet}
 
-      <svelte:fragment slot="translation-controls">
+      {#snippet translationControls()}
         <Picker
           options={translationOptions}
           value={selectedTranslation}
@@ -224,7 +227,7 @@
           increaseLabel={uiLocale.increaseSize}
           onchange={(size) => changeTextSize("translation", size)}
         />
-      </svelte:fragment>
+      {/snippet}
     </StoryView>
 
     <PaginationBar
@@ -232,8 +235,8 @@
       pageCount={tales.length}
       locale={uiLocale}
       onpagechange={goToPage}
-      oncontents={() => contentsDialog.open()}
-      onabout={() => aboutDialog.open()}
+      oncontents={() => contentsDialog?.open()}
+      onabout={() => aboutDialog?.open()}
     />
   </main>
 

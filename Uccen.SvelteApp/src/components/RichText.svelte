@@ -2,9 +2,13 @@
 <script lang="ts">
   import { containsArabicScript, splitWikiText } from "../lib/wikiText";
 
-  export let text: string;
-  /** The surrounding text is in Arabic script, where italics are shown upright. */
-  export let arabicScript = false;
+  type Props = {
+    text: string;
+    /** The surrounding text is in Arabic script, where italics are shown upright. */
+    arabicScript?: boolean;
+  };
+
+  let { text, arabicScript = false }: Props = $props();
 </script>
 
 {#each text.split('\n') as line}

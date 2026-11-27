@@ -1,9 +1,9 @@
 <!--
   The two-column reading table: Kabyle source on the left, translation on the right.
-  The column controls (pickers, text size) are passed in through the `source-controls`
-  and `translation-controls` slots.
+  The column controls (pickers, text size) are passed in as the `sourceControls`
+  and `translationControls` snippets.
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   export type ColumnStyle = {
     fontFace: string;
     sizeIncrement: number;
@@ -14,15 +14,31 @@
 </script>
 
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Story } from "../StoryData";
   import RichText from "./RichText.svelte";
 
-  export let story: Story;
-  export let source: ColumnStyle;
-  export let translation: ColumnStyle;
-  export let illustrationId: string | null = null;
+  type Props = {
+    story: Story;
+    source: ColumnStyle;
+    translation: ColumnStyle;
+    illustrationId?: string | null;
+    sourceControls: Snippet;
+    translationControls: Snippet;
+  };
 
-  $: paragraphsAligned = story.Source.Paragraphs.length === story.Translation.Paragraphs.length;
+  let {
+    story,
+    source,
+    translation,
+    illustrationId = null,
+    sourceControls,
+    translationControls
+  }: Props = $props();
+
+  const paragraphsAligned = $derived(
+    story.Source.Paragraphs.length === story.Translation.Paragraphs.length
+  );
 
   function titleStyle(column: ColumnStyle): string {
     return `font-family: ${column.fontFace}; font-size: ${0.9 + column.sizeIncrement * 0.15}rem;`;
@@ -36,8 +52,8 @@
 <table class="table">
   <thead>
     <tr>
-      <td width="50%"><slot name="source-controls" /></td>
-      <td width="50%"><slot name="translation-controls" /></td>
+      <td width="50%">{@render sourceControls()}</td>
+      <td width="50%">{@render translationControls()}</td>
     </tr>
     <tr>
       <th style="width: 50%">

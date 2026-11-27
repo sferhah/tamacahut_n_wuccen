@@ -3,17 +3,21 @@
   Uses a native <select>, or a custom menu (`custom`) where the native one renders poorly (Android).
 -->
 <script lang="ts">
-  export let options: { value: string; label: string }[];
-  export let value: string;
-  export let label: string;
-  export let custom = false;
-  export let onchange: (value: string) => void;
+  type Props = {
+    options: { value: string; label: string }[];
+    value: string;
+    label: string;
+    custom?: boolean;
+    onchange: (value: string) => void;
+  };
 
-  let open = false;
-  let root: HTMLElement;
-  let trigger: HTMLButtonElement;
+  let { options, value, label, custom = false, onchange }: Props = $props();
 
-  $: selectedLabel = options.find((option) => option.value === value)?.label ?? "";
+  let open = $state(false);
+  let root = $state<HTMLElement>();
+  let trigger = $state<HTMLButtonElement>();
+
+  const selectedLabel = $derived(options.find((option) => option.value === value)?.label ?? "");
 
   function select(nextValue: string): void {
     open = false;
@@ -21,7 +25,7 @@
   }
 
   function handleWindowClick(event: MouseEvent): void {
-    if (open && event.target instanceof Node && !root.contains(event.target)) {
+    if (open && event.target instanceof Node && !root?.contains(event.target)) {
       open = false;
     }
   }
@@ -29,12 +33,12 @@
   function handleWindowKeydown(event: KeyboardEvent): void {
     if (open && event.key === "Escape") {
       open = false;
-      trigger.focus();
+      trigger?.focus();
     }
   }
 </script>
 
-<svelte:window on:click={handleWindowClick} on:keydown={handleWindowKeydown} />
+<svelte:window onclick={handleWindowClick} onkeydown={handleWindowKeydown} />
 
 {#if custom}
   <div class="custom-picker" bind:this={root}>
@@ -44,7 +48,7 @@
       aria-haspopup="listbox"
       aria-expanded={open}
       bind:this={trigger}
-      on:click={() => (open = !open)}
+      onclick={() => (open = !open)}
     >
       {selectedLabel}
       <span class="picker-chevron" aria-hidden="true"></span>
@@ -57,7 +61,7 @@
             class="picker-option"
             role="option"
             aria-selected={option.value === value}
-            on:click={() => select(option.value)}
+            onclick={() => select(option.value)}
           >
             {option.label}
           </button>
@@ -66,7 +70,7 @@
     {/if}
   </div>
 {:else}
-  <select {value} aria-label={label} on:change={(event) => onchange(event.currentTarget.value)}>
+  <select {value} aria-label={label} onchange={(event) => onchange(event.currentTarget.value)}>
     {#each options as option}
       <option value={option.value}>{option.label}</option>
     {/each}
