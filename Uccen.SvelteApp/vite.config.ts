@@ -5,8 +5,9 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [svelte(), VitePWA({
+    // The plugin injects the service worker registration itself; new versions install silently.
     registerType: "autoUpdate",
-    injectRegister: false,
+    injectRegister: "auto",
 
     pwaAssets: {
       disabled: false,
