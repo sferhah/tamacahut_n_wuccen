@@ -23,6 +23,7 @@
   import { getPdfUrl } from "./lib/pdf";
   import * as preferences from "./lib/preferences";
   import { createTransliterator, loadScriptConfig, withNativeDisplayNames } from "./lib/scripts";
+  import { swipe, type SwipeDirection } from "./lib/swipe";
 
   // ── State ────────────────────────────────────────────────────────────────
   // $state.raw: these arrays are only ever replaced, never mutated, so deep tracking is unnecessary.
@@ -161,6 +162,12 @@
     }
   }
 
+  /** Swiping left turns to the next page, like the bottom bar's arrows (mirrored for right-to-left). */
+  function handleSwipe(direction: SwipeDirection): void {
+    const towardsNext = getDirection(uiLocale) === "rtl" ? "right" : "left";
+    goToPage(direction === towardsNext ? page + 1 : page - 1);
+  }
+
   function changeTextSize(target: preferences.TextSizeTarget, size: number): void {
     const nextSize = preferences.clampTextSize(size);
     if (target === "source") {
@@ -187,7 +194,7 @@
 {:else if !story}
   <div class="loader" lang={uiLocale.lang} dir={getDirection(uiLocale)}><p>{uiLocale.noStories}</p></div>
 {:else}
-  <main lang={uiLocale.lang} dir="ltr">
+  <main lang={uiLocale.lang} dir="ltr" use:swipe={{ onswipe: handleSwipe }}>
     <StoryView
       {story}
       source={sourceStyle}
