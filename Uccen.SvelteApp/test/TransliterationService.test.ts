@@ -1,30 +1,14 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import test from "node:test";
-import { parseScriptConfig, type ScriptConfig, type ScriptConfigData } from "../src/ScriptConfig.ts";
+import { listScriptNames, readScriptConfig } from "../scripts/mappingFiles.ts";
 import { TransliterationService } from "../src/TransliterationService.ts";
 
-type Tale = {
-  Source: { Title: string; Paragraphs: string[] };
-  Translation: { Title: string; Paragraphs: string[] };
-};
-
 type Book = {
-  Tales: Tale[];
+  Tales: { Source: { Title: string; Paragraphs: string[] }; Translation: { Title: string } }[];
 };
 
-/** Same parsing as the app's ConfigDeserializer, reading the mapping file from disk. */
-function parseConfig(scriptName: string): ScriptConfig {
-  const data = JSON.parse(
-    readFileSync(
-      new URL(`../src/transliterationMappings/${scriptName}.json`, import.meta.url),
-      "utf8"
-    )
-  ) as ScriptConfigData;
-  return parseScriptConfig(scriptName, data);
-}
-
-const arabicConfig = parseConfig("arab");
+const arabicConfig = readScriptConfig("arab");
 
 const book = JSON.parse(
   readFileSync(new URL("../public/data/tamacahut_n_wuccen.json", import.meta.url), "utf8")
@@ -60,65 +44,24 @@ test("Arabic transliteration replaces non-breaking hyphens with kasheeda", () =>
   );
 });
 
-test("generates transliterated story files for every script mapping", () => {
-  const sourceDataDirectory = new URL("../public/data/", import.meta.url);
-  const outputDirectory = new URL("../../Uccen.ConsoleApp/Resources/json/", import.meta.url);
-  const mappingDirectory = new URL("../src/transliterationMappings/", import.meta.url);
-  const inputFiles = readdirSync(sourceDataDirectory)
-    .filter((fileName) => /^tamacahut_n_wuccen(?:\.[a-z]{3})?\.json$/.test(fileName))
-    .sort();
-  const scriptNames = readdirSync(mappingDirectory)
-    .filter((fileName) => fileName.endsWith(".json") && fileName !== "latn.json")
-    .map((fileName) => fileName.slice(0, -".json".length))
-    .sort();
-
-  assert.ok(inputFiles.length > 0, "Expected at least one source data file");
+test("every script mapping parses and transliterates", () => {
+  const scriptNames = listScriptNames();
   assert.ok(scriptNames.length > 0, "Expected at least one non-Latin script mapping");
 
-  let generatedFileCount = 0;
-  for (const inputFile of inputFiles) {
-    const book = JSON.parse(
-      readFileSync(new URL(inputFile, sourceDataDirectory), "utf8")
-    ) as Book;
-
-    for (const scriptName of scriptNames) {
-      const config = parseConfig(scriptName);
-      const transliteratedBook: Book = {
-        ...book,
-        Tales: book.Tales.map((tale) => ({
-          ...tale,
-          Source: {
-            ...tale.Source,
-            Title: TransliterationService.transliterate(tale.Source.Title, config),
-            Paragraphs: tale.Source.Paragraphs.map((paragraph) =>
-              TransliterationService.transliterate(paragraph, config)
-            )
-          }
-        }))
-      };
-      const localeSuffix = inputFile.match(/^tamacahut_n_wuccen(\.[a-z]{3})?\.json$/)?.[1] || "";
-      const outputFile = `tamacahut_n_wuccen_${scriptName}${localeSuffix}.json`;
-      const outputUrl = new URL(outputFile, outputDirectory);
-
-      writeFileSync(outputUrl, `${JSON.stringify(transliteratedBook, null, 2)}\n`, "utf8");
-      assert.deepEqual(JSON.parse(readFileSync(outputUrl, "utf8")), transliteratedBook);
-      generatedFileCount++;
-    }
+  for (const scriptName of scriptNames) {
+    const config = readScriptConfig(scriptName);
+    assert.notEqual(TransliterationService.transliterate("Taqbaylit", config), "Taqbaylit", scriptName);
   }
+});
 
-  assert.equal(generatedFileCount, inputFiles.length * scriptNames.length);
-
-  // Same summary table as App.svelte's loadHelpTable()
-  const helpTable = TransliterationService.getTransliterations(
-    Object.fromEntries(scriptNames.map((scriptName) => [scriptName, parseConfig(scriptName)]))
+test("the transliteration table has an ISO 15924 header and one column per script", () => {
+  const scriptNames = listScriptNames();
+  const table = TransliterationService.getTransliterations(
+    Object.fromEntries(scriptNames.map((scriptName) => [scriptName, readScriptConfig(scriptName)]))
   );
-  const helpTableUrl = new URL("transliteration_table.json", outputDirectory);
 
-  writeFileSync(
-    helpTableUrl,
-    `[\n${helpTable.map((row) => `  ${JSON.stringify(row)}`).join(",\n")}\n]\n`,
-    "utf8"
-  );
-  assert.deepEqual(JSON.parse(readFileSync(helpTableUrl, "utf8")), helpTable);
-  assert.deepEqual(helpTable[0], ["latn", ...scriptNames]);
+  assert.deepEqual(table[0], ["latn", ...scriptNames]);
+  for (const row of table.slice(1)) {
+    assert.equal(row.length, scriptNames.length + 1);
+  }
 });

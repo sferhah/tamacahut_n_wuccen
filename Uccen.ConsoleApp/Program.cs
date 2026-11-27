@@ -68,9 +68,9 @@ static async Task GenerateBilingualPdf()
     await GenerateJsonFiles();
     //return;
 
-    if (!ExecuteNpmTest())
+    // Check the transliteration first, then generate the transliterated JSON files and the mapping table.
+    if (!RunNpmScript("test") || !RunNpmScript("generate"))
     {
-        Console.WriteLine("Failed to execute npm test.");
         return;
     }
 
@@ -201,8 +201,9 @@ static string ToMarkdownTable(List<List<string>> rawRows)
 }
 
 
-static bool ExecuteNpmTest()
-{   
+/// <summary>Runs `npm run &lt;scriptName&gt;` in the Svelte project; true when it exits with code 0.</summary>
+static bool RunNpmScript(string scriptName)
+{
     string projectDirectory = PathHelper.GetSveltePath();
 
     if (!Directory.Exists(projectDirectory))
@@ -214,7 +215,7 @@ static bool ExecuteNpmTest()
     // 2. Adjust the command depending on the Operating System
     bool isWindows = OperatingSystem.IsWindows();
     string fileName = isWindows ? "cmd.exe" : "npm";
-    string arguments = isWindows ? "/c npm run test" : "run test";
+    string arguments = isWindows ? $"/c npm run {scriptName}" : $"run {scriptName}";
 
     // 3. Configure the process settings
     ProcessStartInfo startInfo = new ProcessStartInfo
@@ -230,7 +231,7 @@ static bool ExecuteNpmTest()
 
     try
     {
-        Console.WriteLine("Running 'npm run test'...");
+        Console.WriteLine($"Running 'npm run {scriptName}'...");
 
         // 4. Start the process
         using (Process process = Process.Start(startInfo))
@@ -253,18 +254,19 @@ static bool ExecuteNpmTest()
 
             if (!string.IsNullOrEmpty(error))
             {
-                Console.WriteLine("\n--- Errors Encountered ---");
+                Console.WriteLine("\n--- NPM Errors ---");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(error);
                 Console.ResetColor();
             }
-            else
+
+            if (process.ExitCode == 0)
             {
-                Console.WriteLine("\nNo errors encountered during the test run.");
+                Console.WriteLine($"\n'npm run {scriptName}' succeeded.");
                 return true;
             }
 
-            Console.WriteLine($"\nProcess exited with code: {process.ExitCode}");
+            Console.WriteLine($"\n'npm run {scriptName}' failed with exit code: {process.ExitCode}");
         }
     }
     catch (Exception ex)
