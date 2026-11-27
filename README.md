@@ -6,7 +6,7 @@
 
 Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle text according to the latest transcription standard[^3]. I also added translations in English, Standard Arabic, and Algerian Arabic. The PWA offers multiple transliterations of the Kabyle text: in addition to the original Latin text, several other scripts are available[^4]: Tifinagh, Arabic, Cyrillic, Greek, Hebrew, Syriac, Musnad, Phoenician, Aramaic and Nabataean.
 
-> **Translator's note — *Uccen* is the wolf.** Although French editions have traditionally rendered the Kabyle term "Uccen" as "chacal" (jackal), the translator has deliberately chosen "wolf" to remain faithful to the living language and cultural perception of native Kabyle speakers, for whom "Uccen" is the wolf — a linguistic intuition now confirmed by modern genetic studies.
+> **Translation note — *Uccen* is the wolf.** Although French editions have traditionally rendered the Kabyle term "Uccen" as "chacal" (jackal), I have deliberately chosen "wolf" to remain faithful to the living language and cultural perception of native Kabyle speakers, for whom "Uccen" is the wolf — a linguistic intuition now confirmed by modern genetic studies.
 
 ## PDF versions
 
