@@ -1,6 +1,7 @@
 import { DEFAULT_SCRIPT, type TranslationOption } from "./options";
 
-const PDF_SCRIPTS = new Set(["latn", "arab", "tfng"]);
+/** Scripts the console app builds PDFs for (Uccen.ConsoleApp/Program.cs). */
+const PDF_SCRIPTS = new Set(["latn", "arab", "tfng", "cyrl", "grek"]);
 const PDF_BASE_URL =
   "https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf";
 

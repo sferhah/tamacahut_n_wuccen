@@ -104,14 +104,16 @@ static async Task GenerateBilingualPdf()
         new { Name = "", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
         new { Name = "_tfng", BodySize = 10.5, LineSpacing = 1.35, Font = "Aptos" },
         new { Name = "_arab", BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont },
+        // Cambria covers every Cyrillic/Greek letter and combining mark the mappings produce,
+        // so these editions match the Latin one.
+        new { Name = "_cyrl", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
+        new { Name = "_grek", BodySize = latnSize, LineSpacing = 1.35, Font = latnFont },
         /*new { Name = "_hebr", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoSansHebrew-VariableFont_wdth,wght.ttf") },
         new { Name = "_syrc", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_armi", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_phnx", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
         new { Name = "_nbat", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_sarb", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_cyrl", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },
-        new { Name = "_grek", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
+        new { Name = "_sarb", BodySize = 10.5, LineSpacing = 1.35, Font = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-VariableFont_wght.ttf") },*/
     }.ToList();
 
     var translations = new[]
