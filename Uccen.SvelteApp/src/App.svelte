@@ -42,6 +42,8 @@
   let translationError = $state("");
   let useCustomPickers = $state(false);
   let isIOS = false;
+  /** Where the next page slides in from, in px (see StoryView). */
+  let slideFrom = $state(0);
 
   let aboutDialog = $state<ReturnType<typeof AboutDialog>>();
   let contentsDialog = $state<ReturnType<typeof ContentsDialog>>();
@@ -114,6 +116,7 @@
   }
 
   // ── Actions ──────────────────────────────────────────────────────────────
+  const PAGE_SLIDE_DISTANCE = 48;
   let storyRequestId = 0;
 
   /** Resolves to null when a newer request was started in the meantime. */
@@ -151,6 +154,9 @@
   async function goToPage(nextPage: number): Promise<void> {
     if (nextPage < 0 || nextPage >= tales.length) return;
 
+    // A later page comes in from the side the "next" arrow points to (the left in right-to-left).
+    const nextSide = getDirection(uiLocale) === "rtl" ? -1 : 1;
+    slideFrom = (nextPage > page ? nextSide : -nextSide) * PAGE_SLIDE_DISTANCE;
     page = nextPage;
     preferences.savePage(page);
     updateUrl();
@@ -200,6 +206,8 @@
       source={sourceStyle}
       translation={translationStyle}
       illustrationId={getIllustrationId(tales[page])}
+      pageKey={page}
+      {slideFrom}
     >
       {#snippet sourceControls()}
         <Picker

@@ -15,6 +15,8 @@
 
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { fly } from "svelte/transition";
   import type { Story } from "../StoryData";
   import RichText from "./RichText.svelte";
 
@@ -25,6 +27,10 @@
     illustrationId?: string | null;
     sourceControls: Snippet;
     translationControls: Snippet;
+    /** Changing it plays the page-turn animation (the page number). */
+    pageKey: number;
+    /** Horizontal offset, in px, the new page slides in from: > 0 from the right, < 0 from the left. */
+    slideFrom?: number;
   };
 
   let {
@@ -33,8 +39,13 @@
     translation,
     illustrationId = null,
     sourceControls,
-    translationControls
+    translationControls,
+    pageKey,
+    slideFrom = 0
   }: Props = $props();
+
+  const reduceMotion =
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const paragraphsAligned = $derived(
     story.Source.Paragraphs.length === story.Translation.Paragraphs.length
@@ -65,7 +76,12 @@
     </tr>
   </thead>
 
-  <tbody class:centered={story.Source.Title.startsWith("#")}>
+  {#key pageKey}
+  <!-- Page turn: the new page slides in (just fades in when the reader prefers reduced motion). -->
+  <tbody
+    class:centered={story.Source.Title.startsWith("#")}
+    in:fly={{ x: reduceMotion ? 0 : slideFrom, duration: 250, easing: cubicOut }}
+  >
     {#if paragraphsAligned}
       <!-- One row per paragraph, so each paragraph sits next to its translation. -->
       {#each story.Source.Paragraphs as sourceParagraph, i}
@@ -111,6 +127,7 @@
       </tr>
     {/if}
   </tbody>
+  {/key}
 </table>
 
 <style>
