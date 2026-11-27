@@ -10,7 +10,9 @@ Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle
 
 ## PDF versions
 
-Bilingual booklets (Kabyle text and translation side by side), also available from the app's *About* dialog:
+Bilingual booklets (Kabyle text and translation side by side), also available from the app's *About* dialog.
+
+There is deliberately no PDF for Aramaic, Phoenician, Nabataean and Musnad: my transliterations for these scripts borrow diacritics from other scripts (Hebrew, Arabic) that their fonts cannot render properly, and I'd rather publish nothing than a broken text. They remain available in the app.
 
 | Kabyle script | French | English | Standard Arabic | Algerian Arabic |
 | :--- | :--- | :--- | :--- | :--- |
