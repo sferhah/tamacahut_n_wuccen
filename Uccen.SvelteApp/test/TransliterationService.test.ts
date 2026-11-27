@@ -61,6 +61,10 @@ test("the transliteration table has an ISO 15924 header and one column per scrip
   );
 
   assert.deepEqual(table[0], ["latn", ...scriptNames]);
+  assert.deepEqual(
+    table[0],
+    ["latn", "tfng", "arab", "cyrl", "grek", "hebr", "syrc", "armi", "nbat", "phnx", "sarb"]
+  );
   for (const row of table.slice(1)) {
     assert.equal(row.length, scriptNames.length + 1);
   }
