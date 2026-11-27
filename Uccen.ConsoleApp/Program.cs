@@ -5,10 +5,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
+//axeddeɛ => axeddaɛ
+//ccbeḥ => ccbaḥ
+//yemdukal (var. dial. ?) => imeddukal est invariant (yimeddukal n'existe pas)
+
 //PptxHelper.ForceRtl(GetFullPathWithinProject("uccen.arb.pptx"));
 //return;
 
-TaleXt.Date = new DateTime(2026, 11, 26);
+TaleXt.Date = new DateTime(2026, 11, 27);
 
 await GenerateBilingualPdf();
 
