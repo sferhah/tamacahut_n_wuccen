@@ -1,17 +1,8 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import test from "node:test";
-import type { ScriptConfig } from "../src/ConfigDeserializer.ts";
+import { parseScriptConfig, type ScriptConfig, type ScriptConfigData } from "../src/ScriptConfig.ts";
 import { TransliterationService } from "../src/TransliterationService.ts";
-
-type MappingData = {
-  direction?: "ltr" | "rtl";
-  geminizer?: string;
-  nullVowel?: string;
-  initialSchwa?: string;
-  scriptType?: string;
-  mapping: Record<string, string>;
-};
 
 type Tale = {
   Source: { Title: string; Paragraphs: string[] };
@@ -22,33 +13,15 @@ type Book = {
   Tales: Tale[];
 };
 
+/** Same parsing as the app's ConfigDeserializer, reading the mapping file from disk. */
 function parseConfig(scriptName: string): ScriptConfig {
   const data = JSON.parse(
     readFileSync(
       new URL(`../src/transliterationMappings/${scriptName}.json`, import.meta.url),
       "utf8"
     )
-  ) as MappingData;
-  const mapping: Record<string, string> = {};
-
-  for (const [key, rawValue] of Object.entries(data.mapping)) {
-    const value = rawValue.replace(/[\u200E\u200F]/g, "");
-    mapping[key] = value;
-
-    if (key.toUpperCase() !== key) {
-      mapping[key.toUpperCase()] = value.toUpperCase();
-    }
-  }
-
-  return {
-    name: scriptName,
-    direction: data.direction || "ltr",
-    geminizer: String.fromCharCode(parseInt(data.geminizer || "0x00B2", 16)),
-    nullVowel: String.fromCharCode(parseInt(data.nullVowel || "0x00B0", 16)),
-    scriptType: data.scriptType || "Alphabet",
-    initialSchwa: data.initialSchwa || undefined,
-    mapping
-  };
+  ) as ScriptConfigData;
+  return parseScriptConfig(scriptName, data);
 }
 
 const arabicConfig = parseConfig("arab");
