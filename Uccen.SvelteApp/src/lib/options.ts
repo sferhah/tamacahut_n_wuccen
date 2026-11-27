@@ -2,11 +2,10 @@
 
 export const DEFAULT_SCRIPT = "latn";
 export const DEFAULT_TRANSLATION = "und";
-/**
- * Bundled in public/fonts and assembled in app.css: Noto Serif for Latin, Cyrillic and Greek,
- * Noto Naskh Arabic for Arabic script, all under this one family name.
- */
+/** Bundled in public/fonts (see app.css); covers Kabyle in Latin, Cyrillic and Greek scripts. */
 export const DEFAULT_FONT_FACE = "'Noto Serif', serif";
+/** Arabic letters from Noto Naskh Arabic; digits and Latin punctuation fall through to Noto Serif. */
+const ARABIC_FONT_FACE = "'Noto Naskh Arabic', 'Noto Serif', serif";
 
 export type ScriptOption = {
   /** ISO 15924 code, also the name of the mapping file in transliterationMappings/ */
@@ -29,7 +28,7 @@ export type TranslationOption = {
 export const SCRIPTS: ScriptOption[] = [
   { name: "latn", displayName: "Taqbaylit", isRtl: false, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 0 },
   { name: "tfng", displayName: "Tifinagh", isRtl: false, fontFace: "Calibri", textSizeIncrement: 0 },
-  { name: "arab", displayName: "Arabic", isRtl: true, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 3 },
+  { name: "arab", displayName: "Arabic", isRtl: true, fontFace: ARABIC_FONT_FACE, textSizeIncrement: 3 },
   { name: "hebr", displayName: "Hebrew", isRtl: true, fontFace: "'Noto Sans Hebrew', sans-serif", textSizeIncrement: 3 },
   { name: "syrc", displayName: "Syriac", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
   { name: "armi", displayName: "Aramaic", isRtl: true, fontFace: "Calibri", textSizeIncrement: 0 },
@@ -43,8 +42,8 @@ export const SCRIPTS: ScriptOption[] = [
 export const TRANSLATIONS: TranslationOption[] = [
   { key: "und", pdfCode: "fra", displayName: "Français", isRtl: false, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 0 },
   { key: "eng", pdfCode: "eng", displayName: "English", isRtl: false, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 0 },
-  { key: "arb", pdfCode: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 3 },
-  { key: "arq", pdfCode: "arq", displayName: "دارجة دزيرية", isRtl: true, fontFace: DEFAULT_FONT_FACE, textSizeIncrement: 3 }
+  { key: "arb", pdfCode: "arb", displayName: "عربية فصحى", isRtl: true, fontFace: ARABIC_FONT_FACE, textSizeIncrement: 3 },
+  { key: "arq", pdfCode: "arq", displayName: "دارجة دزيرية", isRtl: true, fontFace: ARABIC_FONT_FACE, textSizeIncrement: 3 }
 ];
 
 export function isKnownScript(name: string | null): name is string {

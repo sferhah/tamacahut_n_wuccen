@@ -1,3 +1,12 @@
+/* Arabic script (Google Fonts "arabic" subset). Used before Noto Serif in the Arabic font list. */
+@font-face {
+    font-family: "Noto Naskh Arabic";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/NotoNaskhArabic-Arabic.woff2") format("woff2");
+}
+
 @font-face {
     font-family: "Noto Sans Hebrew";
     font-style: normal;
@@ -15,13 +24,13 @@
 }
 
 /*
- * "Noto Serif": the one font family for Kabyle (Latin, Cyrillic, Greek and Arabic scripts)
- * and for every translation. It is assembled from several files, each covering its own
- * characters (unicode-range); browsers only download a file when the page uses one of them:
- *   - Noto Serif "latin" / "latin-ext" (Kabyle letters ɛ ɣ ḥ ṛ ṣ ṭ ẓ ḍ ǧ č ț ḏ ṯ…)
- *   - Noto Serif "cyrillic-greek" (custom subset, see below)
- *   - Noto Naskh Arabic "arabic" (declared last, see below)
- * All are variable fonts: one file covers every weight.
+ * Noto Serif: default font for Kabyle (Latin, Cyrillic and Greek scripts) and the translations,
+ * and fallback for the Latin characters (digits, punctuation) in Arabic text.
+ * Split into several files, each covering its own characters (unicode-range); browsers only
+ * download a file when the page uses one of them:
+ *   - "latin" / "latin-ext" (Kabyle letters ɛ ɣ ḥ ṛ ṣ ṭ ẓ ḍ ǧ č ț ḏ ṯ…)
+ *   - "cyrillic-greek" (custom subset, see below)
+ * Variable font: one file covers every weight.
  */
 @font-face {
     font-family: "Noto Serif";
@@ -82,23 +91,6 @@
     src: url("/fonts/NotoSerif-Italic-latin.woff2") format("woff2");
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
-/*
- * Arabic script: Noto Naskh Arabic, Noto Serif's Arabic companion (Google Fonts "arabic" subset).
- * Declared last on purpose: where ranges overlap, the last declared face wins, so the joining
- * controls U+200C-200E come from this file and Arabic letters join correctly.
- * Google's range is kept as is, minus U+2010-2011: those hyphens stay with Noto Serif so that
- * Kabyle words like "s‑yenna" don't get an Arabic-style hyphen. No italic: Arabic stays upright.
- */
-@font-face {
-    font-family: "Noto Serif";
-    font-style: normal;
-    font-weight: 400 700;
-    font-display: swap;
-    src: url("/fonts/NotoNaskhArabic-Arabic.woff2") format("woff2");
-    unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
-}
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: #ffffff;
