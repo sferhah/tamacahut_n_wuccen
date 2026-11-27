@@ -6,6 +6,22 @@
 
 Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle text according to the latest transcription standard[^3]. I also added translations in English, Standard Arabic, and Algerian Arabic. The PWA offers multiple transliterations of the Kabyle text: in addition to the original Latin text, several other scripts are available[^4]: Tifinagh, Arabic, Cyrillic, Greek, Hebrew, Syriac, Musnad, Phoenician, Aramaic and Nabataean.
 
+> **Translator's note — *Uccen* is the wolf.** Although French editions have traditionally rendered the Kabyle term "Uccen" as "chacal" (jackal), the translator has deliberately chosen "wolf" to remain faithful to the living language and cultural perception of native Kabyle speakers, for whom "Uccen" is the wolf — a linguistic intuition now confirmed by modern genetic studies.
+
+## PDF versions
+
+Bilingual booklets (Kabyle text and translation side by side), also available from the app's *About* dialog:
+
+| Kabyle script | French | English | Standard Arabic | Algerian Arabic |
+| :--- | :--- | :--- | :--- | :--- |
+| Latin | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen.arq.pdf) |
+| Tifinagh | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_tfng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_tfng.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_tfng.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_tfng.arq.pdf) |
+| Arabic | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_arab.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_arab.eng.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_arab.arb.pdf) | [PDF](https://raw.githubusercontent.com/sferhah/tamacahut_n_wuccen/master/Uccen.ConsoleApp/Resources/pdf/tamacahut_n_wuccen_arab.arq.pdf) |
+
+## Transliteration table
+
+Columns use [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924) script codes: `latn` Latin (source text) · `arab` Arabic · `armi` Imperial Aramaic · `cyrl` Cyrillic · `grek` Greek · `hebr` Hebrew · `nbat` Nabataean · `phnx` Phoenician · `sarb` Old South Arabian (Musnad) · `syrc` Syriac · `tfng` Tifinagh.
+
 <!-- TABLE_START -->
 | latn | arab | armi | cyrl | grek | hebr | nbat | phnx | sarb | syrc | tfng |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -50,10 +66,34 @@ Original text and translation (French) by Brahim ZELLAL, I've updated the Kabyle
 | ṛ | ر | 𐡓ׄ | р | ρ̇ | רׄ | 𐢛ׄ | 𐤓 | 𐩧 | ܪ | ⵕ |
 <!-- TABLE_END -->
 
+## For developers
+
+The repository holds two projects:
+
+| Project | Role |
+| :--- | :--- |
+| [`Uccen.SvelteApp`](Uccen.SvelteApp) | The web app (Svelte 5 + Vite, installable PWA). Deployed to Netlify on every push to `master` (see [`netlify.toml`](netlify.toml)). |
+| [`Uccen.ConsoleApp`](Uccen.ConsoleApp) | .NET tool that turns the source PowerPoint files (`Resources/pptx`) into the app's JSON data, runs the web app's tests, regenerates the transliterated JSON files and the table above, and builds the PDFs. |
+
+Web app commands (run in `Uccen.SvelteApp`, Node.js required):
+
+```sh
+npm install
+npm run dev        # local dev server
+npm test           # transliteration and font-coverage tests
+npm run generate   # transliterated JSON + transliteration table → Uccen.ConsoleApp/Resources/json
+npm run build      # type check + production build (dist/)
+```
+
+Each script's letter mapping lives in [`Uccen.SvelteApp/src/transliterationMappings`](Uccen.SvelteApp/src/transliterationMappings) (one JSON file per ISO 15924 code).
+
+## Licences
+
+- **Code** (both projects): [MIT](LICENSE).
+- **Translations and Kabyle text updates** by the maintainer — the English, Standard Arabic and Algerian Arabic translations, and the changes to the Kabyle text described above: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- **Fonts**: Noto fonts under the [SIL Open Font License 1.1](https://openfontlicense.org); each licence file sits next to its font in [`Uccen.SvelteApp/public/fonts`](Uccen.SvelteApp/public/fonts).
+
 [^1]: PWA: Progressive web app.
-[^2]: Chrome/Edge: click on 'install', Android/iOs: add to homepage [full tuto](https://www.projectlify.com/install-pwa).
+[^2]: Chrome/Edge: click the *Install* icon in the address bar. iPhone/iPad (Safari): Share → *Add to Home Screen*. Android (Chrome): menu ⋮ → *Add to Home screen* / *Install app*.
 [^3]: I did not have access to the 1962 edition, but to the reissued version of Tassadit YACINE (1999). Examples: • aț-țneṭleḍ (Tassadit Yacine) → ad tneṭleḍ • ț-țameqwrant (ț-țameqʷrant) → d tameqrant • a k-ččeɣ → ad k-ččeɣ • awal n-wuccen → awal n wuccen • tebbwi → tewwi. Sometimes I've taken the liberty to change some weird notations such as: • tiɣeggʷa → tiɣugga • yettembiẓẓiḍ → yettmiẓẓid.
 [^4]: With the exception of Tifinagh, script mappings are arbitrary and unstandardized.
-
-
-

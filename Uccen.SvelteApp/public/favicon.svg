@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  App icon: Uccen's head, taken from public/images/0.svg (same shapes and coordinates:
-  the jackal group "translate(118,232.5) scale(1.25)" and its halo centred on 357,282),
+  App icon: the head of Uccen (the wolf), taken from public/images/0.svg (same shapes and
+  coordinates: the wolf's group "translate(118,232.5) scale(1.25)" and its halo centred on 357,282),
   clipped to the halo so the neck ends at the circle's edge.
   Source of every PWA icon size (see pwa-assets.config.ts).
 -->
