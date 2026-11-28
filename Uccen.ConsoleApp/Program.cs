@@ -14,6 +14,13 @@ using System.Text.Unicode;
 
 TaleXt.Date = new DateTime(2026, 11, 27);
 
+// Child mode, started by GeneratePdfsInParallel: generate a single PDF edition in this process.
+if (args is ["--pdf", var editionKey])
+{
+    PdfHelper.GenerateBilingualPdf(GetPdfEditions()[editionKey]);
+    return;
+}
+
 await GenerateBilingualPdf();
 
 static async Task GenerateJsonFiles()
@@ -88,6 +95,52 @@ static async Task GenerateBilingualPdf()
         file.Delete();
     }
 
+    GeneratePdfsInParallel(GetPdfEditions().Keys);
+}
+
+/// <summary>
+/// Generates each PDF in its own child process ("--pdf &lt;edition&gt;"), several at a time.
+/// Not threads: within one process Skia shares installed fonts (Cambria, Segoe UI fallbacks)
+/// between documents, and concurrent PDF writing then corrupts their ToUnicode maps
+/// (pages look right, but copy/search returns garbage). Separate processes share nothing,
+/// so every PDF is byte-for-byte identical to a sequential run.
+/// </summary>
+static void GeneratePdfsInParallel(IEnumerable<string> editionKeys)
+{
+    var executable = Environment.ProcessPath ?? throw new InvalidOperationException("Unknown process path");
+    bool viaDotnetHost = Path.GetFileNameWithoutExtension(executable).Equals("dotnet", StringComparison.OrdinalIgnoreCase);
+    var failures = new System.Collections.Concurrent.ConcurrentBag<string>();
+
+    Parallel.ForEach(editionKeys, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, editionKey =>
+    {
+        var startInfo = new ProcessStartInfo(executable)
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        };
+        if (viaDotnetHost) startInfo.ArgumentList.Add(typeof(PdfHelper).Assembly.Location); // "dotnet Uccen.ConsoleApp.dll"
+        startInfo.ArgumentList.Add("--pdf");
+        startInfo.ArgumentList.Add(editionKey);
+
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException($"Cannot start {executable}");
+        var output = process.StandardOutput.ReadToEndAsync();
+        var error = process.StandardError.ReadToEndAsync();
+        process.WaitForExit();
+
+        Console.Write(output.Result);
+        if (process.ExitCode != 0)
+            failures.Add($"{editionKey}: exit code {process.ExitCode}{Environment.NewLine}{error.Result}");
+    });
+
+    if (!failures.IsEmpty)
+        throw new Exception("PDF generation failed:" + Environment.NewLine + string.Join(Environment.NewLine, failures));
+}
+
+/// <summary>Every PDF edition (script × translation), keyed by its file name without extension.</summary>
+static Dictionary<string, PdfHelperArgs> GetPdfEditions()
+{
     var arSize = 14.0;
     var arLineSpacing = 1.0;
     var arFont = PathHelper.GetFullPathWithinProject(@"Resources\fonts\NotoNaskhArabic-Regular.ttf")
@@ -135,17 +188,18 @@ static async Task GenerateBilingualPdf()
         new { Name = ".arq", IsRtl = true, BodySize = arSize, LineSpacing = arLineSpacing, Font = arFont, BackCoverSize = arBackCoverSize, BackCoverLineSpacing = arBackCoverLineSpacing }
     }.ToList();
 
+    var editions = new Dictionary<string, PdfHelperArgs>();
+
     foreach (var translation in translations)
     {
         foreach (var script in scripts)
-        {   
-            var jsonFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\tamacahut_n_wuccen{script.Name}{translation.Name}.json");
-            var pdfFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\tamacahut_n_wuccen{script.Name}{translation.Name}.pdf");
+        {
+            var fileName = $"tamacahut_n_wuccen{script.Name}{translation.Name}";
 
-            var args = new PdfHelperArgs
+            editions[fileName] = new PdfHelperArgs
             {
-                JsonFilePath = jsonFilePath,
-                PdfFilePath = pdfFilePath,
+                JsonFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\json\{fileName}.json"),
+                PdfFilePath = PathHelper.GetFullPathWithinProject(@$"Resources\pdf\{fileName}.pdf"),
                 SourceFont = script.Font,
                 LanguageFont = translation.Font,
                 RightToLeftBook = translation.IsRtl,
@@ -159,10 +213,10 @@ static async Task GenerateBilingualPdf()
 
                 PageMultiple = 4, // booklet
             };
-
-            PdfHelper.GenerateBilingualPdf(args);
         }
     }
+
+    return editions;
 }
 
 static void UpdateReadMe()

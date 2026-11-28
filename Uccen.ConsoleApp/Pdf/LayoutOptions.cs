@@ -32,6 +32,12 @@ public class LayoutOptions
     public string SourceFont { get; set; } = "Calibri";
     public string TranslationFont { get; set; } = "Calibri";
 
+    /// <summary>
+    /// Resolves the font names above to typefaces. Set per document (never via the global
+    /// FontMapper.Default) so several PDFs can be generated in parallel.
+    /// </summary>
+    public FontMapper FontMapper { get; set; } = FontMapper.Default;
+
     public double SourceBodySize { get; set; } = 10.5;
     public double TranslationBodySize { get; set; } = 10.5;
     public double SourceTitleSize { get; set; } = 15;

@@ -25,14 +25,14 @@ public static class PdfHelper
 {
     public static void GenerateBilingualPdf(PdfHelperArgs args)
     {
-
+        // One mapper per document (not the global FontMapper.Default), so PDFs can be generated in parallel.
         var mapper = new FileFontMapper();
-        FontMapper.Default = mapper;
 
         string Font(string arg) => FileFontMapper.IsPath(arg) ? mapper.Register(arg) : arg;
 
         var options = new LayoutOptions
         {
+            FontMapper = mapper,
             SourceFont = Font(args.SourceFont),
             TranslationFont = Font(args.LanguageFont),
             RightToLeftBook = args.RightToLeftBook,

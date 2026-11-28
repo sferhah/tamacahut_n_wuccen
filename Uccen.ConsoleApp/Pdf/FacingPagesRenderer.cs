@@ -64,6 +64,7 @@ public sealed class FacingPagesRenderer
 
         var tb = new TextBlock
         {
+            FontMapper = _o.FontMapper,
             MaxWidth = (float)(maxWidth ?? _textW),
             BaseDirection = rtl ? TextDirection.RTL : TextDirection.LTR,
             Alignment = isTitle || centerContent ? TextAlignment.Center : rtl ? TextAlignment.Right : TextAlignment.Left,
@@ -585,6 +586,7 @@ public sealed class FacingPagesRenderer
         var clean = Normalize(text);
         var tb = new TextBlock
         {
+            FontMapper = _o.FontMapper,
             MaxWidth = (float)width,
             Alignment = TextAlignment.Center,
             BaseDirection = IsRtl(clean) ? TextDirection.RTL : TextDirection.LTR,
@@ -641,6 +643,7 @@ public sealed class FacingPagesRenderer
         {
             var num = new TextBlock
             {
+                FontMapper = _o.FontMapper,
                 MaxWidth = (float)_textW,
                 Alignment = isLeftPage ? TextAlignment.Left : TextAlignment.Right,
             };
