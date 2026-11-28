@@ -88,6 +88,7 @@ npm install
 npm run dev        # local dev server
 npm test           # transliteration and font-coverage tests
 npm run generate   # transliterated JSON + transliteration table → Uccen.ConsoleApp/Resources/json
+npm run build-fonts # rebuild the Noto Serif Cyrillic/Greek subset after adding a character to the cyrl/grek mappings
 npm run build      # type check + production build (dist/)
 ```
 
